@@ -265,256 +265,21 @@ $youtube_url = Settings::get('youtube_url', '');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .contact-hero {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 80px 0 60px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .contact-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s infinite linear;
-        }
-        
-        .contact-hero-content {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .contact-section {
-            padding: 60px 0;
-        }
-        
-        .contact-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            height: 100%;
-            overflow: hidden;
-        }
-        
-        .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .contact-card-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        
-        .contact-card-body {
-            padding: 30px;
-        }
-        
-        .contact-info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: var(--light-color);
-            border-radius: 10px;
-            transition: var(--transition);
-        }
-        
-        .contact-info-item:hover {
-            background: #e3f2fd;
-            transform: translateX(5px);
-        }
-        
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            background: var(--primary-gradient);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            margin-right: 15px;
-            flex-shrink: 0;
-        }
-        
-        .contact-details h6 {
-            margin: 0;
-            font-weight: 600;
-            color: var(--dark-color);
-        }
-        
-        .contact-details p {
-            margin: 5px 0 0 0;
-            color: var(--secondary-color);
-        }
-        
-        .contact-details a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .contact-details a:hover {
-            color: var(--dark-color);
-        }
-        
-        .form-floating {
-            margin-bottom: 20px;
-        }
-        
-        .form-floating .form-control {
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            transition: var(--transition);
-        }
-        
-        .form-floating .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-        
-        .btn-send {
-            background: var(--primary-gradient);
-            border: none;
-            border-radius: 50px;
-            padding: 15px 40px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-send:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
-        }
-        
-        .btn-send::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .btn-send:hover::before {
-            left: 100%;
-        }
-        
-        .social-links-contact {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .social-link-contact {
-            width: 50px;
-            height: 50px;
-            background: var(--light-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--secondary-color);
-            font-size: 1.2rem;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .social-link-contact:hover {
-            color: white;
-            transform: translateY(-3px);
-        }
-        
-        .social-link-contact.facebook:hover { background: #3b5998; }
-        .social-link-contact.twitter:hover { background: #1da1f2; }
-        .social-link-contact.instagram:hover { background: #e4405f; }
-        .social-link-contact.linkedin:hover { background: #0077b5; }
-        .social-link-contact.youtube:hover { background: #ff0000; }
-        
-        .alert-custom {
-            border: none;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .alert-success-custom {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            color: #155724;
-            border-left: 5px solid #28a745;
-        }
-        
-        .alert-danger-custom {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            color: #721c24;
-            border-left: 5px solid #dc3545;
-        }
-        
-        .captcha-container {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        
-        .captcha-question {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        
-        .security-info {
-            background: #e3f2fd;
-            border: 1px solid #2196f3;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #1565c0;
-        }
-        
-        .honeypot {
-            position: absolute;
-            left: -9999px;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Hero Section -->
-    <section class="contact-hero">
-        <div class="contact-hero-content">
+    <section class="hero-carousel-section">
+        <div class="hero-slide">
+            <div class="hero-background"></div>
+            <div class="hero-overlay"></div>
             <div class="container">
-                <h1 class="display-4 fw-bold mb-3">Contáctanos</h1>
-                <p class="lead mb-0">¿Tienes alguna pregunta? Estamos aquí para ayudarte</p>
+                <div class="hero-content text-center">
+                    <h1 class="hero-title">Contáctanos</h1>
+                    <p class="hero-description">¿Tienes alguna pregunta? Estamos aquí para ayudarte</p>
+                </div>
             </div>
         </div>
     </section>
@@ -530,18 +295,18 @@ $youtube_url = Settings::get('youtube_url', '');
     </div>
     
     <!-- Contact Section -->
-    <section class="contact-section">
+    <section class="contact-section py-5">
         <div class="container">
             <!-- Alertas -->
             <?php if ($success): ?>
-                <div class="alert alert-success-custom alert-custom">
+                <div class="alert alert-success alert-custom">
                     <i class="fas fa-check-circle me-2"></i>
                     <?php echo htmlspecialchars($success); ?>
                 </div>
             <?php endif; ?>
 
             <?php if ($error): ?>
-                <div class="alert alert-danger-custom alert-custom">
+                <div class="alert alert-danger alert-custom">
                     <i class="fas fa-exclamation-circle me-2"></i>
                     <?php echo htmlspecialchars($error); ?>
                 </div>
@@ -667,7 +432,7 @@ $youtube_url = Settings::get('youtube_url', '');
                                     
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" class="form-control" id="name" name="name" 
                                                        value="<?php echo htmlspecialchars($form_data['name']); ?>" 
                                                        placeholder="Tu nombre" required minlength="2" maxlength="50">
@@ -675,7 +440,7 @@ $youtube_url = Settings::get('youtube_url', '');
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="email" class="form-control" id="email" name="email" 
                                                        value="<?php echo htmlspecialchars($form_data['email']); ?>" 
                                                        placeholder="tu@email.com" required maxlength="100">
@@ -686,7 +451,7 @@ $youtube_url = Settings::get('youtube_url', '');
                                     
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="tel" class="form-control" id="phone" name="phone" 
                                                        value="<?php echo htmlspecialchars($form_data['phone']); ?>" 
                                                        placeholder="Teléfono" maxlength="20">
@@ -694,7 +459,7 @@ $youtube_url = Settings::get('youtube_url', '');
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <div class="form-floating">
+                                            <div class="form-floating mb-3">
                                                 <input type="text" class="form-control" id="subject" name="subject" 
                                                        value="<?php echo htmlspecialchars($form_data['subject']); ?>" 
                                                        placeholder="Asunto del mensaje" required minlength="5" maxlength="100">
@@ -703,7 +468,7 @@ $youtube_url = Settings::get('youtube_url', '');
                                         </div>
                                     </div>
                                     
-                                    <div class="form-floating">
+                                    <div class="form-floating mb-3">
                                         <textarea class="form-control" id="message" name="message" 
                                                   style="height: 150px" placeholder="Tu mensaje" required 
                                                   minlength="10" maxlength="2000"><?php echo htmlspecialchars($form_data['message']); ?></textarea>
@@ -713,15 +478,15 @@ $youtube_url = Settings::get('youtube_url', '');
                                     <!-- CAPTCHA -->
                                     <div class="captcha-container">
                                         <div class="captcha-question"><?php echo $captcha_question; ?></div>
-                                        <input type="number" class="form-control d-inline-block" name="captcha" 
-                                               style="width: 80px; margin: 0 auto;" required min="0" max="20">
-                                        <small class="text-muted d-block mt-2">
+                                        <input type="number" class="form-control captcha-input" name="captcha" 
+                                               required min="0" max="20">
+                                        <small class="text-muted captcha-help">
                                             <i class="fas fa-info-circle"></i> Resuelve esta operación para verificar que eres humano
                                         </small>
                                     </div>
                                     
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-primary btn-send">
+                                        <button type="submit" class="btn btn-corporate btn-send">
                                             <i class="fas fa-paper-plane me-2"></i>
                                             Enviar Mensaje
                                         </button>

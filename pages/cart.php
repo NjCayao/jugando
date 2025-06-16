@@ -33,63 +33,6 @@ $siteName = Settings::get('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .cart-page {
-            min-height: 70vh;
-        }
-        
-        .cart-item {
-            padding: 2rem;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            background: white;
-            transition: all 0.3s ease;
-        }
-        
-        .cart-item:hover {
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        
-        .product-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .quantity-controls {
-            width: 140px;
-        }
-        
-        .cart-summary {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 2rem;
-            position: sticky;
-            top: 20px;
-        }
-        
-        .empty-cart {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
-        
-        .proceed-buttons {
-            margin-top: 2rem;
-        }
-        
-        .continue-shopping {
-            border-color: #6c757d;
-            color: #6c757d;
-        }
-        
-        .continue-shopping:hover {
-            background: #6c757d;
-            color: white;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -109,7 +52,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
     <div class="container cart-page my-5">
         <div class="row">
             <div class="col-12">
-                <h1 class="mb-4">
+                <h1 class="section-title mb-4">
                     <i class="fas fa-shopping-cart me-3"></i>
                     Carrito de Compras
                     <?php if (!$cartEmpty): ?>
@@ -125,7 +68,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                 <i class="fas fa-shopping-cart fa-5x text-muted mb-4"></i>
                 <h3 class="text-muted mb-3">Tu carrito está vacío</h3>
                 <p class="text-muted mb-4">¡Explora nuestros productos y encuentra algo increíble!</p>
-                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-primary btn-lg">
+                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-corporate btn-lg">
                     <i class="fas fa-search me-2"></i>Explorar Productos
                 </a>
             </div>
@@ -142,32 +85,32 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                         <?php if ($item['image']): ?>
                                             <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
                                                  alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                                 class="product-image img-fluid">
+                                                 class="product-image">
                                         <?php else: ?>
-                                            <div class="product-image bg-light d-flex align-items-center justify-content-center">
-                                                <i class="fas fa-image text-muted fa-2x"></i>
+                                            <div class="no-image">
+                                                <i class="fas fa-image"></i>
                                             </div>
                                         <?php endif; ?>
                                     </div>
                                     
                                     <!-- Información del Producto -->
                                     <div class="col-md-4">
-                                        <h5 class="mb-2">
+                                        <h5 class="product-title mb-2">
                                             <a href="<?php echo SITE_URL; ?>/producto/<?php echo $item['slug']; ?>" 
-                                               class="text-decoration-none text-dark">
+                                               class="text-decoration-none">
                                                 <?php echo htmlspecialchars($item['name']); ?>
                                             </a>
                                         </h5>
                                         <?php if ($item['category_name']): ?>
-                                            <p class="text-muted mb-2">
+                                            <p class="product-category mb-2">
                                                 <small><i class="fas fa-tag me-1"></i><?php echo htmlspecialchars($item['category_name']); ?></small>
                                             </p>
                                         <?php endif; ?>
                                         <p class="mb-0">
                                             <?php if ($item['is_free']): ?>
-                                                <span class="badge bg-success">GRATIS</span>
+                                                <span class="product-badge free">GRATIS</span>
                                             <?php else: ?>
-                                                <strong class="text-primary"><?php echo formatPrice($item['price']); ?></strong>
+                                                <strong class="product-price"><?php echo formatPrice($item['price']); ?></strong>
                                             <?php endif; ?>
                                         </p>
                                     </div>
@@ -177,15 +120,18 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                         <div class="quantity-controls">
                                             <label class="form-label">Cantidad:</label>
                                             <div class="input-group">
-                                                <button class="btn btn-outline-secondary quantity-btn" type="button" 
-                                                        data-action="decrease" data-product-id="<?php echo $productId; ?>">
+                                                <button class="btn btn-outline-primary quantity-btn" type="button" 
+                                                        data-action="decrease" data-product-id="<?php echo $productId; ?>"
+                                                        title="Disminuir cantidad">
                                                     <i class="fas fa-minus"></i>
                                                 </button>
-                                                <input type="number" class="form-control text-center quantity-input" 
+                                                <input type="number" class="form-control quantity-input" 
                                                        value="<?php echo $item['quantity']; ?>" min="1" max="10" 
-                                                       data-product-id="<?php echo $productId; ?>">
-                                                <button class="btn btn-outline-secondary quantity-btn" type="button" 
-                                                        data-action="increase" data-product-id="<?php echo $productId; ?>">
+                                                       data-product-id="<?php echo $productId; ?>"
+                                                       aria-label="Cantidad del producto">
+                                                <button class="btn btn-outline-primary quantity-btn" type="button" 
+                                                        data-action="increase" data-product-id="<?php echo $productId; ?>"
+                                                        title="Aumentar cantidad">
                                                     <i class="fas fa-plus"></i>
                                                 </button>
                                             </div>
@@ -196,9 +142,9 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                     <div class="col-md-3 text-center">
                                         <div class="item-subtotal mb-3">
                                             <?php if ($item['is_free']): ?>
-                                                <h5 class="text-success mb-0">GRATIS</h5>
+                                                <h5 class="price-free mb-0">GRATIS</h5>
                                             <?php else: ?>
-                                                <h5 class="text-primary mb-0"><?php echo formatPrice($item['price'] * $item['quantity']); ?></h5>
+                                                <h5 class="price mb-0"><?php echo formatPrice($item['price'] * $item['quantity']); ?></h5>
                                                 <?php if ($item['quantity'] > 1): ?>
                                                     <small class="text-muted"><?php echo formatPrice($item['price']); ?> c/u</small>
                                                 <?php endif; ?>
@@ -282,7 +228,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                         
                         <!-- Botones de acción -->
                         <div class="proceed-buttons">
-                            <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-success btn-lg w-100 mb-3">
+                            <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-corporate btn-lg w-100 mb-3">
                                 <i class="fas fa-credit-card me-2"></i>
                                 <?php echo $cartTotals['total'] > 0 ? 'Proceder al Pago' : 'Confirmar Pedido Gratuito'; ?>
                             </a>

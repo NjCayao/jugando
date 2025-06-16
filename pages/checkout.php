@@ -36,7 +36,7 @@ if (!$checkoutData['valid']) {
 $stripeEnabled = Settings::get('stripe_enabled', '0') == '1';
 $paypalEnabled = Settings::get('paypal_enabled', '0') == '1';
 $mercadopagoEnabled = Settings::get('mercadopago_enabled', '0') == '1';
-$defaultPaymentMethod = Settings::get('default_payment_method', 'stripe');
+$defaultPaymentMethod = Settings::get('default_payment_method', 'mercadopago');
 
 // Verificar que al menos una pasarela esté habilitada
 $hasPaymentMethods = $stripeEnabled || $paypalEnabled || $mercadopagoEnabled;
@@ -66,162 +66,6 @@ $pageTitle = 'Checkout - Finalizar Compra';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .checkout-page {
-            min-height: 70vh;
-        }
-        
-        .checkout-step {
-            padding: 2rem;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .step-header {
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: #007bff;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 1rem;
-        }
-        
-        .payment-method {
-            border: 2px solid #dee2e6;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .payment-method:hover {
-            border-color: #007bff;
-        }
-        
-        .payment-method.selected {
-            border-color: #007bff;
-            background: #f8f9ff;
-        }
-        
-        .payment-method input[type="radio"] {
-            margin-right: 1rem;
-        }
-        
-        .payment-logo {
-            height: 30px;
-            width: auto;
-        }
-        
-        .order-summary {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 2rem;
-            position: sticky;
-            top: 20px;
-        }
-        
-        .order-item {
-            padding: 1rem 0;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .order-item:last-child {
-            border-bottom: none;
-        }
-        
-        .checkout-form .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .payment-form {
-            display: none;
-            padding-top: 1.5rem;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        .payment-form.active {
-            display: block;
-        }
-        
-        .security-badges {
-            text-align: center;
-            margin-top: 2rem;
-        }
-        
-        .security-badge {
-            display: inline-block;
-            margin: 0 1rem;
-            opacity: 0.7;
-        }
-        
-        .processing-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-        
-        /* Stripe Elements */
-        .StripeElement {
-            background-color: white;
-            padding: 12px 16px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-            transition: box-shadow 150ms ease;
-        }
-        
-        .StripeElement--focus {
-            box-shadow: 0 0 0 3px rgba(59, 153, 252, .15);
-            border-color: #80bdff;
-        }
-        
-        .StripeElement--invalid {
-            border-color: #dc3545;
-        }
-        
-        /* PayPal */
-        #paypal-button-container {
-            min-height: 50px;
-        }
-        
-        /* MercadoPago */
-        #mercadopago-button {
-            min-height: 50px;
-        }
-        
-        @media (max-width: 768px) {
-            .checkout-step {
-                padding: 1.5rem;
-            }
-            
-            .order-summary {
-                position: static;
-                margin-top: 2rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
@@ -242,8 +86,10 @@ $pageTitle = 'Checkout - Finalizar Compra';
     <div class="container checkout-page my-5">
         <!-- Header -->
         <div class="text-center mb-5">
-            <h1><i class="fas fa-credit-card me-3"></i>Finalizar Compra</h1>
-            <p class="text-muted">Completa tu información para procesar el pedido</p>
+            <h1 class="section-title">
+                <i class="fas fa-credit-card me-3"></i>Finalizar Compra
+            </h1>
+            <p class="section-subtitle">Completa tu información para procesar el pedido</p>
         </div>
         
         <div class="row">
@@ -266,7 +112,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             <div class="alert alert-info">
                                 <h6><i class="fas fa-info-circle me-2"></i>¿Ya tienes cuenta?</h6>
                                 <p class="mb-2">Inicia sesión para una experiencia más rápida</p>
-                                <a href="<?php echo SITE_URL; ?>/pages/login.php?redirect=checkout" class="btn btn-sm btn-primary">
+                                <a href="<?php echo SITE_URL; ?>/pages/login.php?redirect=checkout" class="btn btn-sm btn-corporate">
                                     <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                                 </a>
                             </div>
@@ -355,34 +201,40 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                 </div>
                             <?php else: ?>
                                 <div class="payment-methods">
-                                    <?php if ($stripeEnabled): ?>
-                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'stripe' ? 'selected' : ''; ?>" 
-                                             data-method="stripe">
+                                    <?php if ($mercadopagoEnabled): ?>
+                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'mercadopago' ? 'selected' : ''; ?>" 
+                                             data-method="mercadopago">
                                             <div class="d-flex align-items-center">
-                                                <input type="radio" name="payment_method" value="stripe" id="stripe" 
-                                                       <?php echo $defaultPaymentMethod == 'stripe' ? 'checked' : ''; ?>>
-                                                <label for="stripe" class="flex-grow-1">
+                                                <input type="radio" name="payment_method" value="mercadopago" id="mercadopago"
+                                                       <?php echo $defaultPaymentMethod == 'mercadopago' ? 'checked' : ''; ?>>
+                                                <label for="mercadopago" class="flex-grow-1">
                                                     <div class="d-flex align-items-center">
-                                                        <div>
-                                                            <h6 class="mb-1">Tarjeta de Crédito/Débito</h6>
-                                                            <small class="text-muted">Visa, Mastercard, American Express</small>
+                                                        <div class="flex-grow-1">
+                                                            <h6 class="mb-1">MercadoPago</h6>
+                                                            <small class="text-muted">Tarjetas, billeteras digitales y más</small>
+                                                            <div class="yape-indicator mt-1">
+                                                                <span class="badge bg-success me-2">
+                                                                    <i class="fas fa-mobile-alt me-1"></i>Yape
+                                                                </span>
+                                                                <small class="text-success">¡Paga con Yape disponible!</small>
+                                                            </div>
                                                         </div>
                                                         <div class="payment-logo ms-auto">
-                                                            <i class="fab fa-cc-stripe fa-2x text-primary"></i>
+                                                            <i class="fas fa-credit-card fa-2x text-success me-2"></i>
+                                                            <i class="fas fa-wallet fa-2x text-primary"></i>
                                                         </div>
                                                     </div>
                                                 </label>
                                             </div>
                                             
-                                            <div class="payment-form" id="stripe-form">
-                                                <div id="stripe-card-element">
-                                                    <!-- Stripe Elements se insertará aquí -->
+                                            <div class="payment-form" id="mercadopago-form">
+                                                <div id="mercadopago-button" class="payment-button-container">
+                                                    <!-- MercadoPago Button se insertará aquí -->
                                                 </div>
-                                                <div id="stripe-card-errors" role="alert" class="text-danger mt-2"></div>
                                                 <div class="mt-2">
                                                     <small class="text-muted">
-                                                        <i class="fas fa-lock me-1"></i>
-                                                        Tus datos están protegidos con encriptación SSL
+                                                        <i class="fas fa-shield-alt me-1"></i>
+                                                        Incluye Yape, tarjetas locales, billeteras digitales y más opciones
                                                     </small>
                                                 </div>
                                             </div>
@@ -409,7 +261,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                             </div>
                                             
                                             <div class="payment-form" id="paypal-form">
-                                                <div id="paypal-button-container">
+                                                <div id="paypal-button-container" class="payment-button-container">
                                                     <!-- PayPal Buttons se insertarán aquí -->
                                                 </div>
                                                 <div class="mt-2">
@@ -422,38 +274,39 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <?php if ($mercadopagoEnabled): ?>
-                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'mercadopago' ? 'selected' : ''; ?>" 
-                                             data-method="mercadopago">
+                                    <!-- <?php if ($stripeEnabled): ?>
+                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'stripe' ? 'selected' : ''; ?>" 
+                                             data-method="stripe">
                                             <div class="d-flex align-items-center">
-                                                <input type="radio" name="payment_method" value="mercadopago" id="mercadopago"
-                                                       <?php echo $defaultPaymentMethod == 'mercadopago' ? 'checked' : ''; ?>>
-                                                <label for="mercadopago" class="flex-grow-1">
+                                                <input type="radio" name="payment_method" value="stripe" id="stripe" 
+                                                       <?php echo $defaultPaymentMethod == 'stripe' ? 'checked' : ''; ?>>
+                                                <label for="stripe" class="flex-grow-1">
                                                     <div class="d-flex align-items-center">
                                                         <div>
-                                                            <h6 class="mb-1">MercadoPago + Yape</h6>
-                                                            <small class="text-muted">Tarjetas locales y billeteras digitales</small>
+                                                            <h6 class="mb-1">Tarjeta de Crédito/Débito</h6>
+                                                            <small class="text-muted">Visa, Mastercard, American Express</small>
                                                         </div>
                                                         <div class="payment-logo ms-auto">
-                                                            <i class="fas fa-credit-card fa-2x text-success"></i>
+                                                            <i class="fab fa-cc-stripe fa-2x text-primary"></i>
                                                         </div>
                                                     </div>
                                                 </label>
                                             </div>
                                             
-                                            <div class="payment-form" id="mercadopago-form">
-                                                <div id="mercadopago-button">
-                                                    <!-- MercadoPago Button se insertará aquí -->
+                                            <div class="payment-form" id="stripe-form">
+                                                <div id="stripe-card-element" class="stripe-element">
+                                                     Stripe Elements se insertará aquí 
                                                 </div>
+                                                <div id="stripe-card-errors" role="alert" class="text-danger mt-2"></div>
                                                 <div class="mt-2">
                                                     <small class="text-muted">
-                                                        <i class="fas fa-mobile-alt me-1"></i>
-                                                        Incluye Yape, billeteras y tarjetas locales
+                                                        <i class="fas fa-lock me-1"></i>
+                                                        Tus datos están protegidos con encriptación SSL
                                                     </small>
                                                 </div>
                                             </div>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php endif; ?> -->
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -499,7 +352,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     
                     <!-- Botón de envío -->
                     <div class="d-grid gap-2">
-                        <button type="submit" id="submit-button" class="btn btn-success btn-lg" 
+                        <button type="submit" id="submit-button" class="btn btn-corporate btn-lg" 
                                 <?php echo (!$hasPaymentMethods && $requiresPayment) ? 'disabled' : ''; ?>>
                             <i class="fas fa-lock me-2"></i>
                             <?php echo $requiresPayment ? 'Procesar Pago' : 'Confirmar Pedido Gratuito'; ?>
@@ -543,10 +396,9 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                     <?php if ($item['image']): ?>
                                         <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
                                              alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                             class="order-item-image">
                                     <?php else: ?>
-                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                             style="width: 50px; height: 50px;">
+                                        <div class="order-item-image no-image">
                                             <i class="fas fa-image text-muted"></i>
                                         </div>
                                     <?php endif; ?>
@@ -565,7 +417,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     <?php endforeach; ?>
                     
                     <!-- Totales -->
-                    <div class="mt-4 pt-3 border-top">
+                    <div class="order-totals">
                         <?php if ($checkoutData['totals']['subtotal'] > 0): ?>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Subtotal:</span>
@@ -596,7 +448,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     </div>
                     
                     <!-- Información adicional -->
-                    <div class="mt-4 pt-3 border-top">
+                    <div class="order-benefits">
                         <small class="text-muted">
                             <strong>Este pedido incluye:</strong><br>
                             • Descarga inmediata<br>

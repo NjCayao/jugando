@@ -165,105 +165,13 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .category-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 60px 0;
-            margin-bottom: 40px;
-        }
-        
-        .category-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 20px;
-        }
-        
-        .category-icon img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-        
-        .stats-card {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .stats-number {
-            font-size: 2rem;
-            font-weight: 700;
-            display: block;
-        }
-        
-        .stats-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-        
-        .filter-section {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .sort-section {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .other-categories {
-            margin-top: 50px;
-        }
-        
-        .category-card-small {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        
-        .category-card-small:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category-card-small .icon {
-            width: 50px;
-            height: 50px;
-            background: #f8f9fa;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            color: #007bff;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Category Header -->
-    <div class="category-header">
+    <div class="category-header bg-gradient-luxury">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
@@ -275,9 +183,9 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                             <i class="fas fa-folder"></i>
                         <?php endif; ?>
                     </div>
-                    <h1 class="display-4 mb-3"><?php echo htmlspecialchars($category['name']); ?></h1>
+                    <h1 class="luxury-title mb-3"><?php echo htmlspecialchars($category['name']); ?></h1>
                     <?php if ($category['description']): ?>
-                        <p class="lead mb-4"><?php echo htmlspecialchars($category['description']); ?></p>
+                        <p class="hero-description mb-4"><?php echo htmlspecialchars($category['description']); ?></p>
                     <?php endif; ?>
                     
                     <!-- Breadcrumb -->
@@ -293,27 +201,27 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                     <div class="row g-3">
                         <div class="col-6">
                             <div class="stats-card">
-                                <span class="stats-number"><?php echo $stats['total_products']; ?></span>
-                                <span class="stats-label">Productos</span>
+                                <span class="stat-number"><?php echo $stats['total_products']; ?></span>
+                                <span class="stat-label">Productos</span>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="stats-card">
-                                <span class="stats-number"><?php echo $stats['free_products']; ?></span>
-                                <span class="stats-label">Gratuitos</span>
+                                <span class="stat-number"><?php echo $stats['free_products']; ?></span>
+                                <span class="stat-label">Gratuitos</span>
                             </div>
                         </div>
                         <?php if ($stats['paid_products'] > 0): ?>
                             <div class="col-6">
                                 <div class="stats-card">
-                                    <span class="stats-number"><?php echo formatPrice($stats['min_price']); ?></span>
-                                    <span class="stats-label">Desde</span>
+                                    <span class="stat-number"><?php echo formatPrice($stats['min_price']); ?></span>
+                                    <span class="stat-label">Desde</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="stats-card">
-                                    <span class="stats-number"><?php echo formatPrice($stats['avg_price']); ?></span>
-                                    <span class="stats-label">Promedio</span>
+                                    <span class="stat-number"><?php echo formatPrice($stats['avg_price']); ?></span>
+                                    <span class="stat-label">Promedio</span>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -359,7 +267,7 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                         </div>
                         
                         <div class="col-md-1">
-                            <button type="submit" class="btn btn-primary w-100">
+                            <button type="submit" class="btn btn-corporate w-100">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -399,7 +307,7 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                         <?php endforeach; ?>
                         
                         <label class="me-2">Ordenar por:</label>
-                        <select name="orden" class="form-select" style="width: auto;" onchange="this.form.submit()">
+                        <select name="orden" class="form-select" onchange="this.form.submit()">
                             <option value="recientes" <?php echo $sort === 'recientes' ? 'selected' : ''; ?>>Más Recientes</option>
                             <option value="nombre" <?php echo $sort === 'nombre' ? 'selected' : ''; ?>>Nombre A-Z</option>
                             <option value="precio_asc" <?php echo $sort === 'precio_asc' ? 'selected' : ''; ?>>Precio: Menor a Mayor</option>
@@ -413,11 +321,11 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
         
         <!-- Grid de Productos -->
         <?php if (empty($products)): ?>
-            <div class="text-center py-5">
+            <div class="empty-cart text-center py-5">
                 <i class="fas fa-search fa-3x text-muted mb-3"></i>
                 <h4 class="text-muted">No se encontraron productos</h4>
                 <p class="text-muted">No hay productos que coincidan con los filtros aplicados</p>
-                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-primary">Ver Todos los Productos</a>
+                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-corporate">Ver Todos los Productos</a>
             </div>
         <?php else: ?>
             <div class="row g-4">
@@ -435,7 +343,7 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                                     </div>
                                 <?php endif; ?>
                                 <div class="product-overlay">
-                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-primary">Ver Detalles</a>
+                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-corporate">Ver Detalles</a>
                                 </div>
                                 <?php if ($product['is_free']): ?>
                                     <span class="product-badge free">GRATIS</span>
@@ -445,14 +353,15 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                                 <?php endif; ?>
                             </div>
                             <div class="product-info">
+                                <div class="product-category"><?php echo htmlspecialchars($category['name']); ?></div>
                                 <h5 class="product-title">
-                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none text-dark">
+                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none">
                                         <?php echo htmlspecialchars($product['name']); ?>
                                     </a>
                                 </h5>
                                 <p class="product-description"><?php echo htmlspecialchars($product['short_description']); ?></p>
                                 
-                                <div class="product-meta">
+                                <div class="product-meta mb-3">
                                     <small class="text-muted">
                                         <i class="fas fa-code-branch"></i> <?php echo $product['version_count']; ?> versiones
                                         <span class="ms-2">
@@ -525,24 +434,23 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
         
         <!-- Otras Categorías -->
         <?php if (!empty($otherCategories)): ?>
-            <div class="other-categories">
-                <h3 class="mb-4">Explorar Otras Categorías</h3>
+            <div class="other-categories mt-5">
+                <h3 class="section-title mb-4">Explorar Otras Categorías</h3>
                 <div class="row g-4">
                     <?php foreach ($otherCategories as $otherCategory): ?>
                         <div class="col-md-6 col-lg-3">
                             <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $otherCategory['slug']; ?>" class="text-decoration-none">
                                 <div class="category-card-small">
-                                    <div class="icon">
+                                    <div class="category-icon">
                                         <?php if ($otherCategory['image']): ?>
                                             <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $otherCategory['image']; ?>" 
-                                                 alt="<?php echo htmlspecialchars($otherCategory['name']); ?>" 
-                                                 style="width: 30px; height: 30px; border-radius: 50%;">
+                                                 alt="<?php echo htmlspecialchars($otherCategory['name']); ?>">
                                         <?php else: ?>
                                             <i class="fas fa-folder"></i>
                                         <?php endif; ?>
                                     </div>
-                                    <h6 class="mb-2"><?php echo htmlspecialchars($otherCategory['name']); ?></h6>
-                                    <p class="text-muted mb-0"><?php echo $otherCategory['product_count']; ?> productos</p>
+                                    <h6 class="category-title mb-2"><?php echo htmlspecialchars($otherCategory['name']); ?></h6>
+                                    <p class="product-count mb-0"><?php echo $otherCategory['product_count']; ?> productos</p>
                                 </div>
                             </a>
                         </div>
