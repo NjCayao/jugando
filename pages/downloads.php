@@ -133,283 +133,111 @@ $siteName = getSetting('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .page-header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 3rem 0 2rem;
-        }
-        
-        .stats-row {
-            margin-top: -2rem;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .stat-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border: none;
-        }
-        
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .stat-icon.products { background: #e8f5e8; color: #28a745; }
-        .stat-icon.downloads { background: #e3f2fd; color: #1976d2; }
-        .stat-icon.updates { background: #fff3e0; color: #f57c00; }
-        .stat-icon.used { background: #f3e5f5; color: #7b1fa2; }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .filter-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-        
-        .product-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-        
-        .product-header {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .product-body {
-            padding: 1.5rem;
-        }
-        
-        .product-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            background: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        
-        .license-info {
-            background: #e7f3ff;
-            border: 1px solid #b8daff;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .download-progress {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 8px;
-            overflow: hidden;
-            margin: 0.5rem 0;
-        }
-        
-        .download-progress-bar {
-            background: linear-gradient(90deg, #28a745, #20c997);
-            height: 100%;
-            transition: width 0.3s ease;
-        }
-        
-        .version-badge {
-            background: #007bff;
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #6c757d;
-        }
-        
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-        .breadcrumb-custom {
-            background: transparent;
-            padding: 1rem 0;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
-            color: rgba(255,255,255,0.7);
-        }
-        
-        .breadcrumb-custom .breadcrumb-item a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item.active {
-            color: white;
-        }
-        
-        .download-btn {
-            background: linear-gradient(45deg, #28a745, #20c997);
-            border: none;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-            color: white;
-        }
-        
-        .download-btn:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .updates-badge {
-            background: #28a745;
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 10px;
-            font-size: 0.75rem;
-        }
-        
-        .updates-badge.expired {
-            background: #dc3545;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Page Header -->
-    <div class="page-header">
+    <div class="hero-cards-section">
         <div class="container">
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="breadcrumb-custom">
+            <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Mis Descargas</li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>" class="text-white-50">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard" class="text-white-50">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white">Mis Descargas</li>
                 </ol>
             </nav>
             
             <div class="row align-items-center">
                 <div class="col-md-8">
-                    <h1 class="display-5 mb-2">Mis Descargas</h1>
-                    <p class="lead mb-0">
-                        Accede a todos tus productos y gestiona tus descargas
-                    </p>
+                    <div class="hero-card-content text-white">
+                        <h1 class="luxury-title">Mis Descargas</h1>
+                        <p class="hero-card-description">
+                            Accede a todos tus productos y gestiona tus descargas
+                        </p>
+                    </div>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-light btn-lg">
-                        <i class="fas fa-store me-2"></i>Explorar Productos
-                    </a>
+                <div class="col-md-4">
+                    <div class="hero-actions text-md-end">
+                        <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-primary btn-lg">
+                            <i class="fas fa-store me-2"></i>Explorar Productos
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
     <!-- Stats Cards -->
-    <div class="container stats-row">
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon products">
-                        <i class="fas fa-box"></i>
+    <section class="stats-section">
+        <div class="container stats-container">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $stats['total_products']; ?></div>
+                            <div class="stat-label">Productos Adquiridos</div>
+                            <div class="stat-code">products.total</div>
+                        </div>
                     </div>
-                    <div class="stat-number"><?php echo $stats['total_products']; ?></div>
-                    <small class="text-muted">Productos Adquiridos</small>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon downloads">
-                        <i class="fas fa-download"></i>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $stats['available_downloads']; ?></div>
+                            <div class="stat-label">Descargas Disponibles</div>
+                            <div class="stat-code">downloads.available</div>
+                        </div>
                     </div>
-                    <div class="stat-number"><?php echo $stats['available_downloads']; ?></div>
-                    <small class="text-muted">Descargas Disponibles</small>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon updates">
-                        <i class="fas fa-sync-alt"></i>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $stats['with_updates']; ?></div>
+                            <div class="stat-label">Con Actualizaciones</div>
+                            <div class="stat-code">updates.active</div>
+                        </div>
                     </div>
-                    <div class="stat-number"><?php echo $stats['with_updates']; ?></div>
-                    <small class="text-muted">Con Actualizaciones</small>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card">
-                    <div class="stat-icon used">
-                        <i class="fas fa-chart-line"></i>
+                <div class="col-md-3">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number"><?php echo $stats['total_downloads_used']; ?></div>
+                            <div class="stat-label">Total Descargado</div>
+                            <div class="stat-code">downloads.used</div>
+                        </div>
                     </div>
-                    <div class="stat-number"><?php echo $stats['total_downloads_used']; ?></div>
-                    <small class="text-muted">Total Descargado</small>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     
     <!-- Main Content -->
     <div class="container my-5">
         <!-- Mostrar mensajes -->
         <?php if ($success): ?>
-            <div class="alert alert-success alert-dismissible">
+            <div class="alert alert-success alert-dismissible fade show">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($success); ?>
             </div>
         <?php endif; ?>
         
         <?php if ($error): ?>
-            <div class="alert alert-danger alert-dismissible">
+            <div class="alert alert-danger alert-dismissible fade show">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fas fa-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error); ?>
             </div>
@@ -417,58 +245,71 @@ $siteName = getSetting('site_name', 'MiSistema');
         
         <!-- Filtros -->
         <?php if (!empty($userCategories)): ?>
-            <div class="filter-card">
-                <h5 class="mb-3">Filtrar por Categoría</h5>
-                <div class="d-flex flex-wrap gap-2">
-                    <a href="<?php echo SITE_URL; ?>/mis-descargas" 
-                       class="btn btn-sm <?php echo empty($category) ? 'btn-primary' : 'btn-outline-primary'; ?>">
-                        Todas (<?php echo $stats['total_products']; ?>)
-                    </a>
-                    <?php foreach ($userCategories as $cat): ?>
-                        <a href="<?php echo SITE_URL; ?>/mis-descargas?categoria=<?php echo urlencode($cat['slug']); ?>" 
-                           class="btn btn-sm <?php echo $category === $cat['slug'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
-                            <?php echo htmlspecialchars($cat['name']); ?> (<?php echo $cat['product_count']; ?>)
+            <div class="category-card mb-4">
+                <div class="category-content p-4">
+                    <h5 class="category-title mb-3">Filtrar por Categoría</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="<?php echo SITE_URL; ?>/mis-descargas" 
+                           class="btn btn-sm <?php echo empty($category) ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                            Todas (<?php echo $stats['total_products']; ?>)
                         </a>
-                    <?php endforeach; ?>
+                        <?php foreach ($userCategories as $cat): ?>
+                            <a href="<?php echo SITE_URL; ?>/mis-descargas?categoria=<?php echo urlencode($cat['slug']); ?>" 
+                               class="btn btn-sm <?php echo $category === $cat['slug'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
+                                <?php echo htmlspecialchars($cat['name']); ?> (<?php echo $cat['product_count']; ?>)
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         <?php endif; ?>
         
         <!-- Lista de Productos -->
         <?php if (empty($userProducts)): ?>
-            <div class="empty-state">
-                <i class="fas fa-cloud-download-alt"></i>
-                <h4>No tienes productos para descargar</h4>
-                <p class="mb-4">Cuando compres productos, aparecerán aquí para que puedas descargarlos</p>
-                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-success btn-lg">
+            <div class="text-center py-5">
+                <div class="category-icon mx-auto mb-4">
+                    <i class="fas fa-cloud-download-alt"></i>
+                </div>
+                <h4 class="category-title">No tienes productos para descargar</h4>
+                <p class="category-description mb-4">Cuando compres productos, aparecerán aquí para que puedas descargarlos</p>
+                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-corporate btn-lg">
                     <i class="fas fa-store me-2"></i>Explorar Productos
                 </a>
             </div>
         <?php else: ?>
-            <div class="row">
+            <div class="row g-4">
                 <?php foreach ($userProducts as $product): ?>
                     <div class="col-12">
                         <div class="product-card">
-                            <div class="product-header">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
+                            <div class="product-info p-4">
+                                <div class="row align-items-start">
+                                    <div class="col-md-2">
                                         <div class="product-image">
                                             <?php if ($product['product_image']): ?>
                                                 <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['product_image']; ?>" 
-                                                     alt="<?php echo htmlspecialchars($product['product_name']); ?>">
+                                                     alt="<?php echo htmlspecialchars($product['product_name']); ?>"
+                                                     class="img-fluid rounded">
                                             <?php else: ?>
-                                                <i class="fas fa-cube text-muted fa-2x"></i>
+                                                <div class="no-image">
+                                                    <i class="fas fa-cube"></i>
+                                                </div>
                                             <?php endif; ?>
                                         </div>
-                                        <div>
-                                            <h5 class="mb-1">
-                                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" 
-                                                   class="text-decoration-none text-dark">
-                                                    <?php echo htmlspecialchars($product['product_name']); ?>
-                                                </a>
-                                            </h5>
-                                            <p class="text-muted mb-1"><?php echo htmlspecialchars($product['category_name']); ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="product-category"><?php echo htmlspecialchars($product['category_name']); ?></div>
+                                        <h5 class="product-title">
+                                            <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>">
+                                                <?php echo htmlspecialchars($product['product_name']); ?>
+                                            </a>
+                                        </h5>
+                                        <?php if ($product['short_description']): ?>
+                                            <p class="product-description"><?php echo htmlspecialchars($product['short_description']); ?></p>
+                                        <?php endif; ?>
+                                        
+                                        <div class="mt-3">
                                             <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
                                                 Adquirido: <?php echo formatDate($product['purchase_date']); ?>
                                                 <?php if ($product['order_number']): ?>
                                                     | Orden: #<?php echo $product['order_number']; ?>
@@ -476,75 +317,72 @@ $siteName = getSetting('site_name', 'MiSistema');
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="text-end">
-                                        <span class="version-badge">
-                                            v<?php echo htmlspecialchars($product['current_version'] ?? '1.0'); ?>
-                                        </span>
-                                        <?php if ($product['updates_until']): ?>
-                                            <?php if (strtotime($product['updates_until']) > time()): ?>
-                                                <div class="updates-badge mt-2">
-                                                    Updates hasta <?php echo formatDate($product['updates_until']); ?>
+                                    <div class="col-md-4">
+                                        <div class="text-end">
+                                            <div class="mb-3">
+                                                <span class="badge bg-primary">
+                                                    v<?php echo htmlspecialchars($product['current_version'] ?? '1.0'); ?>
+                                                </span>
+                                                
+                                                <?php if ($product['updates_until']): ?>
+                                                    <?php if (strtotime($product['updates_until']) > time()): ?>
+                                                        <div class="badge bg-success mt-2">
+                                                            Updates hasta <?php echo formatDate($product['updates_until']); ?>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <div class="badge bg-danger mt-2">
+                                                            Updates expirados
+                                                        </div>
+                                                    <?php endif; ?>
+                                                <?php else: ?>
+                                                    <div class="badge bg-success mt-2">
+                                                        Updates ilimitados
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            
+                                            <!-- Progress Bar de Descargas -->
+                                            <div class="mb-3">
+                                                <small class="text-muted d-block">
+                                                    Descargas: <?php echo $product['downloads_used']; ?>/<?php echo $product['downloads_limit']; ?>
+                                                </small>
+                                                <?php 
+                                                $percentage = $product['downloads_limit'] > 0 ? ($product['downloads_used'] / $product['downloads_limit']) * 100 : 0;
+                                                ?>
+                                                <div class="progress" style="height: 6px;">
+                                                    <div class="progress-bar bg-success" style="width: <?php echo min(100, $percentage); ?>%"></div>
                                                 </div>
-                                            <?php else: ?>
-                                                <div class="updates-badge expired mt-2">
-                                                    Updates expirados
-                                                </div>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <div class="updates-badge mt-2">
-                                                Updates ilimitados
                                             </div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="product-body">
-                                <?php if ($product['short_description']): ?>
-                                    <p class="text-muted mb-3"><?php echo htmlspecialchars($product['short_description']); ?></p>
-                                <?php endif; ?>
-                                
-                                <div class="license-info">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-4">
-                                            <div class="mb-2">
-                                                <strong>Descargas utilizadas:</strong>
-                                                <span class="float-end"><?php echo $product['downloads_used']; ?>/<?php echo $product['downloads_limit']; ?></span>
-                                            </div>
-                                            <?php 
-                                            $percentage = $product['downloads_limit'] > 0 ? ($product['downloads_used'] / $product['downloads_limit']) * 100 : 0;
-                                            ?>
-                                            <div class="download-progress">
-                                                <div class="download-progress-bar" style="width: <?php echo min(100, $percentage); ?>%"></div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="text-center">
-                                                <div><strong><?php echo $product['version_count']; ?></strong></div>
-                                                <small class="text-muted">Versiones disponibles</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 text-end">
-                                            <div class="d-flex gap-2 justify-content-end">
+                                            
+                                            <!-- Botones de Acción -->
+                                            <div class="product-actions">
                                                 <?php if ($product['demo_url']): ?>
-                                                    <a href="<?php echo $product['demo_url']; ?>" target="_blank" class="btn btn-outline-info">
+                                                    <a href="<?php echo $product['demo_url']; ?>" target="_blank" 
+                                                       class="btn btn-outline-info btn-sm mb-2">
                                                         <i class="fas fa-eye me-1"></i>Demo
                                                     </a>
                                                 <?php endif; ?>
                                                 
-                                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" class="btn btn-outline-primary">
+                                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" 
+                                                   class="btn btn-outline-primary btn-sm mb-2">
                                                     <i class="fas fa-info me-1"></i>Detalles
                                                 </a>
                                                 
                                                 <?php if ($product['downloads_used'] < $product['downloads_limit']): ?>
-                                                    <button class="download-btn" onclick="downloadProduct(<?php echo $product['product_id']; ?>)">
+                                                    <button class="btn btn-corporate btn-sm" onclick="downloadProduct(<?php echo $product['product_id']; ?>)">
                                                         <i class="fas fa-download me-1"></i>Descargar
                                                     </button>
                                                 <?php else: ?>
-                                                    <button class="download-btn" disabled>
+                                                    <button class="btn btn-secondary btn-sm" disabled>
                                                         <i class="fas fa-ban me-1"></i>Límite Alcanzado
                                                     </button>
                                                 <?php endif; ?>
+                                            </div>
+                                            
+                                            <div class="mt-2">
+                                                <small class="text-muted">
+                                                    <?php echo $product['version_count']; ?> versiones disponibles
+                                                </small>
                                             </div>
                                         </div>
                                     </div>
@@ -557,9 +395,9 @@ $siteName = getSetting('site_name', 'MiSistema');
             
             <!-- Paginación -->
             <?php if ($totalPages > 1): ?>
-                <div class="pagination-container mt-5">
+                <div class="d-flex justify-content-center mt-5">
                     <nav aria-label="Paginación de productos">
-                        <ul class="pagination justify-content-center">
+                        <ul class="pagination">
                             <?php if ($page > 1): ?>
                                 <li class="page-item">
                                     <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $page - 1])); ?>">

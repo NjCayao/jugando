@@ -169,168 +169,16 @@ $siteName = Settings::get('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .auth-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        
-        .auth-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s infinite linear;
-        }
-        
-        .auth-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-        
-        .auth-header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 3rem 2rem 2rem;
-            text-align: center;
-        }
-        
-        .auth-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2.5rem;
-        }
-        
-        .auth-body {
-            padding: 2rem;
-        }
-        
-        .form-floating label {
-            color: #6c757d;
-        }
-        
-        .form-floating > .form-control:focus ~ label {
-            color: #007bff;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #6c757d;
-            cursor: pointer;
-            z-index: 10;
-        }
-        
-        .password-toggle:hover {
-            color: #007bff;
-        }
-        
-        .social-login {
-            border-top: 1px solid #dee2e6;
-            padding-top: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .btn-social {
-            width: 100%;
-            margin-bottom: 0.5rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        
-        .btn-google {
-            background: #dd4b39;
-            border-color: #dd4b39;
-            color: white;
-        }
-        
-        .btn-facebook {
-            background: #3b5998;
-            border-color: #3b5998;
-            color: white;
-        }
-        
-        .auth-footer {
-            background: #f8f9fa;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        .forgot-password {
-            color: #6c757d;
-            font-size: 0.9rem;
-            text-decoration: none;
-            margin-top: 1rem;
-            display: inline-block;
-        }
-        
-        .forgot-password:hover {
-            color: #007bff;
-            text-decoration: underline;
-        }
-        
-        @keyframes float {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100px); }
-        }
-        
-        .demo-credentials {
-            background: #e7f3ff;
-            border: 1px solid #b8daff;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .demo-credentials h6 {
-            color: #0c5460;
-            margin-bottom: 0.5rem;
-        }
-        
-        .demo-credentials .credentials {
-            background: rgba(255,255,255,0.7);
-            padding: 0.5rem;
-            border-radius: 4px;
-            font-family: monospace;
-            margin: 0.25rem 0;
-        }
-    </style>
 </head>
 <body>
-    <div class="auth-section">
+    <div class="hero-cards-section min-vh-100 d-flex align-items-center">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <div class="auth-card">
+                <div class="col-lg-6 col-md-8">
+                    <div class="contact-card">
                         <!-- Header -->
-                        <div class="auth-header">
-                            <div class="auth-icon">
+                        <div class="contact-card-header">
+                            <div class="contact-icon mx-auto mb-3">
                                 <i class="fas fa-sign-in-alt"></i>
                             </div>
                             <h2 class="mb-2">Iniciar Sesión</h2>
@@ -338,7 +186,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                         </div>
                         
                         <!-- Body -->
-                        <div class="auth-body">
+                        <div class="contact-card-body">
                             <!-- Mostrar mensajes -->
                             <?php if (!empty($errors)): ?>
                                 <div class="alert alert-danger">
@@ -360,11 +208,13 @@ $siteName = Settings::get('site_name', 'MiSistema');
                             
                             <!-- Credenciales de demo (solo en desarrollo) -->
                             <?php if (strpos(SITE_URL, 'localhost') !== false): ?>
-                                <div class="demo-credentials">
+                                <div class="alert alert-info">
                                     <h6><i class="fas fa-info-circle me-1"></i>Credenciales de prueba:</h6>
-                                    <div class="credentials">Email: demo@misistema.com</div>
-                                    <div class="credentials">Contraseña: 123456</div>
-                                    <small class="text-muted">Solo visible en desarrollo</small>
+                                    <div class="mt-2">
+                                        <strong>Email:</strong> demo@misistema.com<br>
+                                        <strong>Contraseña:</strong> 123456
+                                    </div>
+                                    <small class="text-muted d-block mt-2">Solo visible en desarrollo</small>
                                 </div>
                             <?php endif; ?>
                             
@@ -392,7 +242,8 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                     <label for="password">
                                         <i class="fas fa-lock me-2"></i>Contraseña
                                     </label>
-                                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" 
+                                            style="z-index: 10; border: none; background: none;" onclick="togglePassword()">
                                         <i class="fas fa-eye" id="toggleIcon"></i>
                                     </button>
                                 </div>
@@ -405,27 +256,27 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                             Recordarme
                                         </label>
                                     </div>
-                                    <a href="/pages/forgot-password.php" class="forgot-password">
+                                    <a href="<?php echo SITE_URL; ?>/pages/forgot-password.php" class="text-decoration-none">
                                         ¿Olvidaste tu contraseña?
                                     </a>
                                 </div>
                                 
                                 <!-- Botón de Login -->
-                                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                <button type="submit" class="btn-send w-100 mb-3">
                                     <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                                 </button>
                             </form>
-                        </div>
-                        
-                        <!-- Footer -->
-                        <div class="auth-footer">
-                            <p class="mb-0">
-                                ¿No tienes cuenta? <a href="<?php echo SITE_URL; ?>/pages/register.php" class="text-decoration-none">Crear Cuenta</a>
-                            </p>
-                            <div class="mt-2">
-                                <a href="<?php echo SITE_URL; ?>" class="text-muted text-decoration-none">
-                                    <i class="fas fa-arrow-left me-1"></i>Volver al inicio
-                                </a>
+                            
+                            <!-- Footer Links -->
+                            <div class="text-center pt-3 border-top">
+                                <p class="mb-2">
+                                    ¿No tienes cuenta? <a href="<?php echo SITE_URL; ?>/pages/register.php" class="text-decoration-none">Crear Cuenta</a>
+                                </p>
+                                <div>
+                                    <a href="<?php echo SITE_URL; ?>" class="text-muted text-decoration-none">
+                                        <i class="fas fa-arrow-left me-1"></i>Volver al inicio
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -474,7 +325,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
             
             // Auto-completar credenciales demo en desarrollo
             <?php if (strpos(SITE_URL, 'localhost') !== false): ?>
-                document.querySelector('.demo-credentials').addEventListener('click', function() {
+                document.querySelector('.alert-info').addEventListener('click', function() {
                     emailInput.value = 'demo@misistema.com';
                     passwordInput.value = '123456';
                     emailInput.classList.add('is-valid');
@@ -505,16 +356,6 @@ $siteName = Settings::get('site_name', 'MiSistema');
                 toggleIcon.classList.remove('fa-eye-slash');
                 toggleIcon.classList.add('fa-eye');
             }
-        }
-        
-        function loginWithGoogle() {
-            // Implementar más adelante
-            alert('Login con Google próximamente disponible');
-        }
-        
-        function loginWithFacebook() {
-            // Implementar más adelante
-            alert('Login con Facebook próximamente disponible');
         }
         
         // Auto-focus en email al cargar

@@ -127,326 +127,221 @@ $pageTitle = 'Pago Pendiente';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .pending-page {
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .pending-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            color: #333;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-        
-        .pending-icon {
-            font-size: 5rem;
-            margin-bottom: 2rem;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .order-summary {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .payment-info {
-            background: #e8f4fd;
-            border: 2px solid #bee5eb;
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
-        }
-        
-        .instructions {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .status-tracker {
-            background: white;
-            border-radius: 10px;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #dee2e6;
-        }
-        
-        .timeline-item {
-            position: relative;
-            margin-bottom: 2rem;
-        }
-        
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #28a745;
-        }
-        
-        .timeline-item.pending::before {
-            background: #ffc107;
-            animation: blink 1.5s infinite;
-        }
-        
-        .timeline-item.future::before {
-            background: #dee2e6;
-        }
-        
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
-        
-        .refresh-notice {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            z-index: 1000;
-        }
-        
-        .auto-refresh {
-            font-size: 0.8rem;
-            color: #6c757d;
-            text-align: center;
-            margin-top: 1rem;
-        }
-        
-        .contact-support {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            text-align: center;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Refresh Notice -->
-    <div class="refresh-notice" id="refresh-notice" style="display: none;">
-        <i class="fas fa-sync-alt fa-spin me-2"></i>
-        Verificando estado del pago...
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <div id="refresh-notice" class="alert alert-info d-none">
+            <i class="fas fa-sync-alt fa-spin me-2"></i>
+            Verificando estado del pago...
+        </div>
     </div>
     
     <!-- Pending Page -->
-    <div class="pending-page">
+    <div class="hero-cards-section min-vh-75 d-flex align-items-center">
         <div class="container">
-            <div class="pending-card text-center">
-                <!-- Pending Icon -->
-                <div class="pending-icon text-<?php echo $currentPayment['color']; ?>">
-                    <i class="<?php echo $currentPayment['icon']; ?>"></i>
-                </div>
-                
-                <!-- Title & Description -->
-                <h1 class="display-4 mb-3">Pago en Proceso</h1>
-                <p class="lead mb-4"><?php echo $currentPayment['description']; ?></p>
-                
-                <!-- Order Summary -->
-                <div class="order-summary">
-                    <h4 class="mb-3">
-                        <i class="fas fa-receipt me-2"></i>
-                        Orden #<?php echo htmlspecialchars($order['order_number']); ?>
-                    </h4>
-                    
-                    <div class="row text-start">
-                        <div class="col-md-6">
-                            <div class="order-meta">
-                                <strong>Cliente:</strong> <?php echo htmlspecialchars($order['customer_name']); ?><br>
-                                <strong>Email:</strong> <?php echo htmlspecialchars($order['customer_email']); ?><br>
-                                <strong>Fecha:</strong> <?php echo formatDateTime($order['created_at']); ?>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="crystal-inner">
+                        <div class="crystal-content p-4 text-center">
+                            <!-- Pending Icon -->
+                            <div class="category-icon mx-auto mb-4 text-<?php echo $currentPayment['color']; ?>">
+                                <i class="<?php echo $currentPayment['icon']; ?>" style="font-size: 4rem; animation: pulse 2s infinite;"></i>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="order-meta">
-                                <strong>Método:</strong> <?php echo $currentPayment['name']; ?><br>
-                                <strong>Total:</strong> <?php echo formatPrice($order['total_amount']); ?><br>
-                                <strong>Items:</strong> <?php echo $order['items_count']; ?> producto(s)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Payment Info -->
-                <div class="payment-info">
-                    <h5 class="text-info mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Información del Procesamiento
-                    </h5>
-                    <p><strong>Tiempo estimado:</strong> <?php echo $currentPayment['typical_time']; ?></p>
-                    <p class="mb-0">Te notificaremos por email tan pronto como el pago sea confirmado.</p>
-                </div>
-                
-                <!-- Status Tracker -->
-                <div class="status-tracker">
-                    <h5 class="mb-4">Estado del Proceso</h5>
-                    <div class="timeline text-start">
-                        <div class="timeline-item">
-                            <h6>Orden Creada</h6>
-                            <small class="text-muted">
-                                <?php echo formatDateTime($order['created_at']); ?>
-                            </small>
-                        </div>
-                        <div class="timeline-item">
-                            <h6>Datos Enviados</h6>
-                            <small class="text-muted">Información enviada al procesador</small>
-                        </div>
-                        <div class="timeline-item pending">
-                            <h6>Verificando Pago</h6>
-                            <small class="text-warning">
-                                <i class="fas fa-spinner fa-spin me-1"></i>
-                                En proceso...
-                            </small>
-                        </div>
-                        <div class="timeline-item future">
-                            <h6>Pago Confirmado</h6>
-                            <small class="text-muted">Pendiente</small>
-                        </div>
-                        <div class="timeline-item future">
-                            <h6>Productos Disponibles</h6>
-                            <small class="text-muted">Pendiente</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Instructions -->
-                <div class="instructions">
-                    <h5 class="text-warning mb-3">
-                        <i class="fas fa-list-check me-2"></i>
-                        Qué Esperar
-                    </h5>
-                    <ul class="text-start">
-                        <?php foreach ($currentPayment['instructions'] as $instruction): ?>
-                            <li><?php echo $instruction; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-                
-                <!-- Products Preview -->
-                <div class="order-summary">
-                    <h5 class="mb-3">Productos Incluidos</h5>
-                    <?php foreach ($orderItems as $item): ?>
-                        <div class="d-flex align-items-center mb-3 p-2 bg-white rounded">
-                            <div class="me-3">
-                                <?php if ($item['image']): ?>
-                                    <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
-                                         alt="<?php echo htmlspecialchars($item['product_name']); ?>"
-                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
-                                <?php else: ?>
-                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                         style="width: 50px; height: 50px;">
-                                        <i class="fas fa-box text-muted"></i>
+                            
+                            <!-- Title & Description -->
+                            <h1 class="crystal-title mb-3">Pago en Proceso</h1>
+                            <p class="crystal-description mb-4"><?php echo $currentPayment['description']; ?></p>
+                            
+                            <!-- Order Summary -->
+                            <div class="category-card mb-4">
+                                <div class="category-content p-4">
+                                    <h4 class="category-title mb-3">
+                                        <i class="fas fa-receipt me-2"></i>
+                                        Orden #<?php echo htmlspecialchars($order['order_number']); ?>
+                                    </h4>
+                                    
+                                    <div class="row text-start">
+                                        <div class="col-md-6">
+                                            <div>
+                                                <strong>Cliente:</strong> <?php echo htmlspecialchars($order['customer_name']); ?><br>
+                                                <strong>Email:</strong> <?php echo htmlspecialchars($order['customer_email']); ?><br>
+                                                <strong>Fecha:</strong> <?php echo formatDateTime($order['created_at']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div>
+                                                <strong>Método:</strong> <?php echo $currentPayment['name']; ?><br>
+                                                <strong>Total:</strong> <?php echo formatPrice($order['total_amount']); ?><br>
+                                                <strong>Items:</strong> <?php echo $order['items_count']; ?> producto(s)
+                                            </div>
+                                        </div>
                                     </div>
-                                <?php endif; ?>
+                                </div>
                             </div>
-                            <div class="flex-grow-1 text-start">
-                                <h6 class="mb-1"><?php echo htmlspecialchars($item['product_name']); ?></h6>
-                                <small class="text-muted">
-                                    <?php if ($item['is_free']): ?>
-                                        Gratuito
-                                    <?php else: ?>
-                                        <?php echo formatPrice($item['price']); ?>
-                                        <?php if ($item['quantity'] > 1): ?>
-                                            x<?php echo $item['quantity']; ?>
-                                        <?php endif; ?>
-                                    <?php endif; ?>
+                            
+                            <!-- Payment Info -->
+                            <div class="alert alert-info">
+                                <h5 class="alert-heading">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Información del Procesamiento
+                                </h5>
+                                <p><strong>Tiempo estimado:</strong> <?php echo $currentPayment['typical_time']; ?></p>
+                                <p class="mb-0">Te notificaremos por email tan pronto como el pago sea confirmado.</p>
+                            </div>
+                            
+                            <!-- Status Tracker -->
+                            <div class="category-card mb-4">
+                                <div class="category-content p-4">
+                                    <h5 class="category-title mb-4">Estado del Proceso</h5>
+                                    <div class="text-start">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="badge bg-success rounded-pill me-3">1</div>
+                                            <div>
+                                                <h6 class="mb-1">Orden Creada</h6>
+                                                <small class="text-muted"><?php echo formatDateTime($order['created_at']); ?></small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="badge bg-success rounded-pill me-3">2</div>
+                                            <div>
+                                                <h6 class="mb-1">Datos Enviados</h6>
+                                                <small class="text-muted">Información enviada al procesador</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="badge bg-warning rounded-pill me-3">3</div>
+                                            <div>
+                                                <h6 class="mb-1">Verificando Pago</h6>
+                                                <small class="text-warning">
+                                                    <i class="fas fa-spinner fa-spin me-1"></i>
+                                                    En proceso...
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="badge bg-secondary rounded-pill me-3">4</div>
+                                            <div>
+                                                <h6 class="mb-1">Pago Confirmado</h6>
+                                                <small class="text-muted">Pendiente</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="badge bg-secondary rounded-pill me-3">5</div>
+                                            <div>
+                                                <h6 class="mb-1">Productos Disponibles</h6>
+                                                <small class="text-muted">Pendiente</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Instructions -->
+                            <div class="alert alert-warning">
+                                <h5 class="alert-heading">
+                                    <i class="fas fa-list-check me-2"></i>
+                                    Qué Esperar
+                                </h5>
+                                <ul class="text-start mb-0">
+                                    <?php foreach ($currentPayment['instructions'] as $instruction): ?>
+                                        <li><?php echo $instruction; ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                            </div>
+                            
+                            <!-- Products Preview -->
+                            <div class="category-card mb-4">
+                                <div class="category-content p-4">
+                                    <h5 class="category-title mb-3">Productos Incluidos</h5>
+                                    <?php foreach ($orderItems as $item): ?>
+                                        <div class="d-flex align-items-center mb-3 p-2 bg-light rounded">
+                                            <div class="me-3">
+                                                <?php if ($item['image']): ?>
+                                                    <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
+                                                         alt="<?php echo htmlspecialchars($item['product_name']); ?>"
+                                                         class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                                <?php else: ?>
+                                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center text-white" 
+                                                         style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-box"></i>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                            <div class="flex-grow-1 text-start">
+                                                <h6 class="mb-1"><?php echo htmlspecialchars($item['product_name']); ?></h6>
+                                                <small class="text-muted">
+                                                    <?php if ($item['is_free']): ?>
+                                                        Gratuito
+                                                    <?php else: ?>
+                                                        <?php echo formatPrice($item['price']); ?>
+                                                        <?php if ($item['quantity'] > 1): ?>
+                                                            x<?php echo $item['quantity']; ?>
+                                                        <?php endif; ?>
+                                                    <?php endif; ?>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mb-4">
+                                <button onclick="checkOrderStatus()" class="btn btn-corporate me-3">
+                                    <i class="fas fa-sync-alt me-2"></i>Verificar Estado
+                                </button>
+                                
+                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-outline-primary">
+                                    <i class="fas fa-search me-2"></i>Seguir Comprando
+                                </a>
+                            </div>
+                            
+                            <!-- Auto Refresh Notice -->
+                            <div class="text-muted mb-4">
+                                <small>
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Esta página se actualiza automáticamente cada 5 minutos
+                                </small>
+                            </div>
+                            
+                            <!-- Contact Support -->
+                            <div class="category-card">
+                                <div class="category-content p-4">
+                                    <h6 class="category-title mb-3">¿El pago se está tardando más de lo esperado?</h6>
+                                    <p class="category-description mb-3">
+                                        Si han pasado más de <?php echo $currentPayment['typical_time']; ?> desde tu pago, 
+                                        contacta a nuestro equipo de soporte.
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <a href="<?php echo SITE_URL; ?>/contacto?order=<?php echo $order['order_number']; ?>" 
+                                               class="btn btn-outline-secondary w-100 mb-2">
+                                                <i class="fas fa-envelope me-2"></i>Contactar Soporte
+                                            </a>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="https://wa.me/<?php echo Settings::get('whatsapp_number', ''); ?>?text=Hola,%20tengo%20una%20consulta%20sobre%20la%20orden%20<?php echo $order['order_number']; ?>" 
+                                               target="_blank" class="btn btn-outline-success w-100 mb-2">
+                                                <i class="fab fa-whatsapp me-2"></i>WhatsApp
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Security Notice -->
+                            <div class="alert alert-info mt-4">
+                                <h6><i class="fas fa-shield-alt me-2"></i>Pago Seguro</h6>
+                                <small>
+                                    Tu pago está siendo procesado de forma segura. No cierres esta ventana hasta recibir la confirmación.
                                 </small>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="mt-4">
-                    <button onclick="checkOrderStatus()" class="btn btn-primary btn-lg me-3">
-                        <i class="fas fa-sync-alt me-2"></i>Verificar Estado
-                    </button>
-                    
-                    <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-search me-2"></i>Seguir Comprando
-                    </a>
-                </div>
-                
-                <!-- Auto Refresh Notice -->
-                <div class="auto-refresh">
-                    <i class="fas fa-info-circle me-1"></i>
-                    Esta página se actualiza automáticamente cada 5 minutos
-                </div>
-                
-                <!-- Contact Support -->
-                <div class="contact-support">
-                    <h6 class="mb-3">¿El pago se está tardando más de lo esperado?</h6>
-                    <p class="text-muted mb-3">
-                        Si han pasado más de <?php echo $currentPayment['typical_time']; ?> desde tu pago, 
-                        contacta a nuestro equipo de soporte.
-                    </p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <a href="<?php echo SITE_URL; ?>/contacto?order=<?php echo $order['order_number']; ?>" 
-                               class="btn btn-outline-secondary w-100 mb-2">
-                                <i class="fas fa-envelope me-2"></i>Contactar Soporte
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="https://wa.me/<?php echo Settings::get('whatsapp_number', ''); ?>?text=Hola,%20tengo%20una%20consulta%20sobre%20la%20orden%20<?php echo $order['order_number']; ?>" 
-                               target="_blank" class="btn btn-outline-success w-100 mb-2">
-                                <i class="fab fa-whatsapp me-2"></i>WhatsApp
-                            </a>
-                        </div>
                     </div>
-                </div>
-                
-                <!-- Security Notice -->
-                <div class="alert alert-info mt-4">
-                    <h6><i class="fas fa-shield-alt me-2"></i>Pago Seguro</h6>
-                    <small>
-                        Tu pago está siendo procesado de forma segura. No cierres esta ventana hasta recibir la confirmación.
-                    </small>
                 </div>
             </div>
         </div>
@@ -458,6 +353,14 @@ $pageTitle = 'Pago Pendiente';
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
+    
+    <style>
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    </style>
     
     <script>
         let checkInterval;
@@ -513,11 +416,11 @@ $pageTitle = 'Pago Pendiente';
         }
         
         function showRefreshNotice() {
-            document.getElementById('refresh-notice').style.display = 'block';
+            document.getElementById('refresh-notice').classList.remove('d-none');
         }
         
         function hideRefreshNotice() {
-            document.getElementById('refresh-notice').style.display = 'none';
+            document.getElementById('refresh-notice').classList.add('d-none');
         }
         
         // Prevenir que el usuario cierre accidentalmente

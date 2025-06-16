@@ -99,114 +99,16 @@ $siteName = Settings::get('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .auth-section {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        
-        .auth-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s infinite linear;
-        }
-        
-        .auth-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-            max-width: 450px;
-            margin: 0 auto;
-        }
-        
-        .auth-header {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
-            color: white;
-            padding: 3rem 2rem 2rem;
-            text-align: center;
-        }
-        
-        .auth-icon {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 2.5rem;
-        }
-        
-        .auth-body {
-            padding: 2rem;
-        }
-        
-        .form-floating label {
-            color: #6c757d;
-        }
-        
-        .form-floating > .form-control:focus ~ label {
-            color: #007bff;
-        }
-        
-        .auth-footer {
-            background: #f8f9fa;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            border-top: 1px solid #dee2e6;
-        }
-        
-        .info-box {
-            background: #e7f3ff;
-            border: 1px solid #b8daff;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .info-box h6 {
-            color: #0c5460;
-            margin-bottom: 0.5rem;
-        }
-        
-        .info-box ul {
-            margin-bottom: 0;
-            padding-left: 1.2rem;
-        }
-        
-        .info-box li {
-            color: #0c5460;
-            margin-bottom: 0.25rem;
-        }
-        
-        @keyframes float {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100px); }
-        }
-    </style>
 </head>
 <body>
-    <div class="auth-section">
+    <div class="hero-cards-section min-vh-100 d-flex align-items-center">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-6">
-                    <div class="auth-card">
+                <div class="col-lg-6 col-md-8">
+                    <div class="contact-card">
                         <!-- Header -->
-                        <div class="auth-header">
-                            <div class="auth-icon">
+                        <div class="contact-card-header">
+                            <div class="contact-icon mx-auto mb-3">
                                 <i class="fas fa-key"></i>
                             </div>
                             <h2 class="mb-2">Recuperar Contraseña</h2>
@@ -214,7 +116,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                         </div>
                         
                         <!-- Body -->
-                        <div class="auth-body">
+                        <div class="contact-card-body">
                             <!-- Mostrar mensajes -->
                             <?php if (!empty($errors)): ?>
                                 <div class="alert alert-danger">
@@ -246,9 +148,9 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                 </div>
                             <?php else: ?>
                                 <!-- Información del proceso -->
-                                <div class="info-box">
+                                <div class="alert alert-info">
                                     <h6><i class="fas fa-info-circle me-1"></i>¿Cómo funciona?</h6>
-                                    <ul>
+                                    <ul class="mb-0">
                                         <li>Ingresa tu email registrado</li>
                                         <li>Te enviaremos un enlace seguro</li>
                                         <li>Haz clic en el enlace y crea una nueva contraseña</li>
@@ -270,23 +172,23 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                     
                                     <!-- Botón -->
                                     <div class="d-grid gap-2 mb-3">
-                                        <button type="submit" class="btn btn-primary btn-lg">
+                                        <button type="submit" class="btn-send">
                                             <i class="fas fa-paper-plane me-2"></i>Enviar Instrucciones
                                         </button>
                                     </div>
                                 </form>
                             <?php endif; ?>
-                        </div>
-                        
-                        <!-- Footer -->
-                        <div class="auth-footer">
-                            <p class="mb-2">
-                                ¿Recordaste tu contraseña? <a href="/pages/login.php" class="text-decoration-none">Iniciar Sesión</a>
-                            </p>
-                            <div>
-                                <a href="<?php echo SITE_URL; ?>" class="text-muted text-decoration-none">
-                                    <i class="fas fa-home me-1"></i>Volver al inicio
-                                </a>
+                            
+                            <!-- Footer Links -->
+                            <div class="text-center mt-4 pt-4 border-top">
+                                <p class="mb-2">
+                                    ¿Recordaste tu contraseña? <a href="/pages/login.php" class="text-decoration-none">Iniciar Sesión</a>
+                                </p>
+                                <div>
+                                    <a href="<?php echo SITE_URL; ?>" class="text-muted text-decoration-none">
+                                        <i class="fas fa-home me-1"></i>Volver al inicio
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>

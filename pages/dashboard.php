@@ -131,238 +131,36 @@ $siteName = getSetting('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .dashboard-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-        }
-        
-        .user-avatar {
-            width: 80px;
-            height: 80px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin-right: 1rem;
-        }
-        
-        .stats-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            height: 100%;
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-2px);
-        }
-        
-        .stats-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stats-icon.orders { background: #e3f2fd; color: #1976d2; }
-        .stats-icon.spent { background: #f3e5f5; color: #7b1fa2; }
-        .stats-icon.downloads { background: #e8f5e8; color: #388e3c; }
-        .stats-icon.licenses { background: #fff3e0; color: #f57c00; }
-        
-        .stats-number {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stats-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-        
-        .section-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-        
-        .section-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .section-body {
-            padding: 1.5rem;
-        }
-        
-        .order-item {
-            padding: 1rem;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .order-item:hover {
-            border-color: #007bff;
-            box-shadow: 0 2px 8px rgba(0,123,255,0.1);
-        }
-        
-        .order-status {
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        
-        .status-completed { background: #d4edda; color: #155724; }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-failed { background: #f8d7da; color: #721c24; }
-        
-        .product-license {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .product-license:hover {
-            border-color: #007bff;
-            background: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.1);
-        }
-        
-        .product-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-        }
-        
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        
-        .license-info {
-            background: #e7f3ff;
-            border: 1px solid #b8daff;
-            border-radius: 6px;
-            padding: 0.75rem;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .quick-actions {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-        }
-        
-        .action-btn {
-            background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1rem;
-            text-align: center;
-            text-decoration: none;
-            color: #495057;
-            transition: all 0.3s ease;
-            display: block;
-        }
-        
-        .action-btn:hover {
-            border-color: #007bff;
-            color: #007bff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,123,255,0.15);
-        }
-        
-        .action-btn i {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-        
-        .welcome-section {
-            background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: #6c757d;
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-    </style>
 </head>
 <body>
     <!-- Header principal del sitio -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
-    <!-- Dashboard Header -->
-    <div class="dashboard-header">
+    <!-- Dashboard Header Compacto -->
+    <div class="dashboard-header-compact">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="welcome-section">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="dashboard-welcome">
                         <div class="d-flex align-items-center">
-                            <div class="user-avatar">
+                            <div class="dashboard-avatar">
                                 <i class="fas fa-user"></i>
                             </div>
                             <div>
-                                <h2 class="text-dark mb-1">
-                                    ¡Hola, <?php echo htmlspecialchars($user['first_name']); ?>! 👋
-                                </h2>
-                                <p class="text-muted mb-0">
-                                    Bienvenido a tu dashboard personal. Aquí puedes gestionar tus compras y descargas.
-                                </p>
-                                <small class="text-muted">
-                                    Miembro desde <?php echo formatDate($user['created_at'], 'F Y'); ?>
-                                </small>
+                                <h2 class="mb-1">¡Hola, <?php echo htmlspecialchars($user['first_name']); ?>! 👋</h2>
+                                <p class="mb-1 opacity-90">Bienvenido a tu dashboard personal</p>
+                                <small class="opacity-75">Miembro desde <?php echo formatDate($user['created_at'], 'F Y'); ?></small>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="d-flex justify-content-end gap-2">
-                        <a href="<?php echo SITE_URL; ?>/perfil" class="btn btn-light">
-                            <i class="fas fa-user-edit me-2"></i>Editar Perfil
+                <div class="col-lg-4 mt-3 mt-lg-0">
+                    <div class="d-flex justify-content-lg-end justify-content-center align-items-center" style="position: relative; z-index: 10;">
+                        <a href="<?php echo SITE_URL; ?>/perfil" class="btn btn-light me-2" style="position: relative; z-index: 11;">
+                            <i class="fas fa-user-edit me-1"></i>Perfil
                         </a>
-                        <a href="<?php echo SITE_URL; ?>/logout" class="btn btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión
+                        <a href="<?php echo SITE_URL; ?>/logout" class="btn btn-outline-light" style="position: relative; z-index: 11;">
+                            <i class="fas fa-sign-out-alt me-1"></i>Salir
                         </a>
                     </div>
                 </div>
@@ -371,120 +169,139 @@ $siteName = getSetting('site_name', 'MiSistema');
     </div>
     
     <!-- Main Content -->
-    <div class="container my-4">
+    <div class="container my-5">
         <!-- Mostrar mensajes -->
         <?php if ($success): ?>
-            <div class="alert alert-success alert-dismissible">
+            <div class="alert alert-success alert-dismissible fade show">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($success); ?>
             </div>
         <?php endif; ?>
         
         <?php if ($error): ?>
-            <div class="alert alert-danger alert-dismissible">
+            <div class="alert alert-danger alert-dismissible fade show">
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 <i class="fas fa-exclamation-triangle me-2"></i><?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
         
-        <!-- Estadísticas -->
-        <div class="row g-4 mb-4">
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <div class="stats-icon orders">
-                        <i class="fas fa-shopping-bag"></i>
+        <!-- Estadísticas Compactas -->
+        <div class="dashboard-stats">
+            <div class="row g-3">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card-compact">
+                        <div class="stats-icon-compact">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="stats-number-compact"><?php echo $stats['total_orders']; ?></div>
+                        <div class="stats-label-compact">Compras Realizadas</div>
                     </div>
-                    <div class="stats-number"><?php echo $stats['total_orders']; ?></div>
-                    <div class="stats-label">Compras Realizadas</div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <div class="stats-icon spent">
-                        <i class="fas fa-dollar-sign"></i>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card-compact">
+                        <div class="stats-icon-compact">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-number-compact"><?php echo formatPrice($stats['total_spent']); ?></div>
+                        <div class="stats-label-compact">Total Invertido</div>
                     </div>
-                    <div class="stats-number"><?php echo formatPrice($stats['total_spent']); ?></div>
-                    <div class="stats-label">Total Invertido</div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <div class="stats-icon downloads">
-                        <i class="fas fa-download"></i>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card-compact">
+                        <div class="stats-icon-compact">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <div class="stats-number-compact"><?php echo $stats['total_downloads']; ?></div>
+                        <div class="stats-label-compact">Descargas</div>
                     </div>
-                    <div class="stats-number"><?php echo $stats['total_downloads']; ?></div>
-                    <div class="stats-label">Descargas Realizadas</div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stats-card">
-                    <div class="stats-icon licenses">
-                        <i class="fas fa-key"></i>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card-compact">
+                        <div class="stats-icon-compact">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="stats-number-compact"><?php echo $stats['active_licenses']; ?></div>
+                        <div class="stats-label-compact">Licencias Activas</div>
                     </div>
-                    <div class="stats-number"><?php echo $stats['active_licenses']; ?></div>
-                    <div class="stats-label">Licencias Activas</div>
                 </div>
             </div>
         </div>
         
         <!-- Acciones Rápidas -->
-        <div class="quick-actions">
+        <div class="quick-actions-compact">
             <h5 class="mb-3">Acciones Rápidas</h5>
             <div class="row g-3">
-                <div class="col-md-3">
-                    <a href="<?php echo SITE_URL; ?>/productos" class="action-btn">
-                        <i class="fas fa-store"></i>
-                        <div>Explorar Productos</div>
+                <div class="col-lg-3 col-md-6">
+                    <a href="<?php echo SITE_URL; ?>/productos" class="action-card-compact">
+                        <div class="action-icon-compact">
+                            <i class="fas fa-store"></i>
+                        </div>
+                        <h6 class="action-title-compact">Explorar Productos</h6>
+                        <p class="action-description-compact">Descubre nuestro catálogo</p>
                     </a>
                 </div>
-                <div class="col-md-3">
-                    <a href="<?php echo SITE_URL; ?>/mis-compras" class="action-btn">
-                        <i class="fas fa-receipt"></i>
-                        <div>Mis Compras</div>
+                <div class="col-lg-3 col-md-6">
+                    <a href="<?php echo SITE_URL; ?>/mis-compras" class="action-card-compact">
+                        <div class="action-icon-compact">
+                            <i class="fas fa-receipt"></i>
+                        </div>
+                        <h6 class="action-title-compact">Mis Compras</h6>
+                        <p class="action-description-compact">Historial de pedidos</p>
                     </a>
                 </div>
-                <div class="col-md-3">
-                    <a href="<?php echo SITE_URL; ?>/mis-descargas" class="action-btn">
-                        <i class="fas fa-cloud-download-alt"></i>
-                        <div>Mis Descargas</div>
+                <div class="col-lg-3 col-md-6">
+                    <a href="<?php echo SITE_URL; ?>/mis-descargas" class="action-card-compact">
+                        <div class="action-icon-compact">
+                            <i class="fas fa-cloud-download-alt"></i>
+                        </div>
+                        <h6 class="action-title-compact">Mis Descargas</h6>
+                        <p class="action-description-compact">Archivos descargados</p>
                     </a>
                 </div>
-                <div class="col-md-3">
-                    <a href="<?php echo SITE_URL; ?>/contacto" class="action-btn">
-                        <i class="fas fa-life-ring"></i>
-                        <div>Soporte</div>
+                <div class="col-lg-3 col-md-6">
+                    <a href="<?php echo SITE_URL; ?>/contacto" class="action-card-compact">
+                        <div class="action-icon-compact">
+                            <i class="fas fa-life-ring"></i>
+                        </div>
+                        <h6 class="action-title-compact">Soporte</h6>
+                        <p class="action-description-compact">¿Necesitas ayuda?</p>
                     </a>
                 </div>
             </div>
         </div>
         
-        <div class="row">
+        <div class="row g-4">
             <!-- Mis Productos -->
             <div class="col-lg-8">
-                <div class="section-card">
-                    <div class="section-header">
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">
-                                <i class="fas fa-box me-2"></i>Mis Productos
-                            </h5>
-                            <a href="<?php echo SITE_URL; ?>/mis-compras" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+                            <h4 class="section-title-compact">
+                                <div class="section-icon-compact">
+                                    <i class="fas fa-box"></i>
+                                </div>
+                                Mis Productos
+                            </h4>
+                            <a href="<?php echo SITE_URL; ?>/mis-compras" class="btn btn-corporate btn-sm">Ver Todos</a>
                         </div>
                     </div>
-                    <div class="section-body">
+                    <div class="section-body-compact">
                         <?php if (empty($userProducts)): ?>
-                            <div class="empty-state">
-                                <i class="fas fa-box-open"></i>
-                                <h6>No tienes productos aún</h6>
+                            <div class="empty-state-compact">
+                                <div class="empty-icon-compact">
+                                    <i class="fas fa-box-open"></i>
+                                </div>
+                                <h5>No tienes productos aún</h5>
                                 <p>Explora nuestro catálogo y encuentra el software perfecto para ti</p>
-                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-primary">
+                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-corporate">
                                     <i class="fas fa-store me-2"></i>Explorar Productos
                                 </a>
                             </div>
                         <?php else: ?>
                             <?php foreach ($userProducts as $product): ?>
-                                <div class="product-license">
-                                    <div class="d-flex">
-                                        <div class="product-image">
+                                <div class="user-product-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="product-image-compact">
                                             <?php if ($product['product_image']): ?>
                                                 <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['product_image']; ?>" 
                                                      alt="<?php echo htmlspecialchars($product['product_name']); ?>">
@@ -492,37 +309,25 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                 <i class="fas fa-cube text-muted"></i>
                                             <?php endif; ?>
                                         </div>
-                                        <div class="flex-grow-1">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div>
-                                                    <h6 class="mb-1">
-                                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" class="text-decoration-none">
-                                                            <?php echo htmlspecialchars($product['product_name']); ?>
-                                                        </a>
-                                                    </h6>
-                                                    <small class="text-muted">
-                                                        <?php echo htmlspecialchars($product['category_name']); ?> • 
-                                                        Versión actual: <?php echo htmlspecialchars($product['current_version'] ?? 'N/A'); ?>
-                                                    </small>
-                                                </div>
-                                                <div class="text-end">
-                                                    <a href="<?php echo SITE_URL; ?>/download?product=<?php echo $product['product_id']; ?>" 
-                                                       class="btn btn-sm btn-primary">
-                                                        <i class="fas fa-download me-1"></i>Descargar
-                                                    </a>
-                                                </div>
+                                        <div class="product-info-compact">
+                                            <div class="product-meta-compact">
+                                                <i class="fas fa-tag me-1"></i><?php echo htmlspecialchars($product['category_name']); ?>
                                             </div>
-                                            
-                                            <div class="license-info">
+                                            <h5 class="product-title-compact">
+                                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>">
+                                                    <?php echo htmlspecialchars($product['product_name']); ?>
+                                                </a>
+                                            </h5>
+                                            <div class="license-info-compact">
                                                 <div class="row">
+                                                    <div class="col-md-4">
+                                                        <strong>Versión:</strong> <?php echo htmlspecialchars($product['current_version'] ?? 'N/A'); ?>
+                                                    </div>
                                                     <div class="col-md-4">
                                                         <strong>Descargas:</strong> <?php echo $product['downloads_used']; ?>/<?php echo $product['downloads_limit']; ?>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <strong>Versiones:</strong> <?php echo $product['version_count']; ?> disponibles
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <strong>Updates hasta:</strong> 
+                                                        <strong>Updates:</strong> 
                                                         <?php if ($product['updates_until']): ?>
                                                             <?php echo formatDate($product['updates_until']); ?>
                                                         <?php else: ?>
@@ -530,6 +335,15 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="ms-auto">
+                                            <a href="<?php echo SITE_URL; ?>/download?product=<?php echo $product['product_id']; ?>" 
+                                               class="btn btn-corporate">
+                                                <i class="fas fa-download me-2"></i>Descargar
+                                            </a>
+                                            <div class="text-center mt-2">
+                                                <small class="text-muted"><?php echo $product['version_count']; ?> versiones</small>
                                             </div>
                                         </div>
                                     </div>
@@ -543,67 +357,84 @@ $siteName = getSetting('site_name', 'MiSistema');
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Últimas Compras -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-receipt me-2"></i>Últimas Compras
-                        </h6>
+                <div class="sidebar-card-compact">
+                    <div class="sidebar-header-compact">
+                        <h5 class="section-title-compact">
+                            <div class="section-icon-compact">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                            Últimas Compras
+                        </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="sidebar-body-compact">
                         <?php if (empty($recentOrders)): ?>
-                            <div class="text-center text-muted">
-                                <i class="fas fa-receipt fa-2x mb-2 opacity-50"></i>
-                                <p class="mb-0">Sin compras aún</p>
-                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-sm btn-primary mt-2">
-                                    <i class="fas fa-store me-1"></i>Explorar Productos
+                            <div class="empty-state-compact">
+                                <div class="empty-icon-compact">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <p>Sin compras aún</p>
+                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-corporate btn-sm">
+                                    <i class="fas fa-store me-1"></i>Explorar
                                 </a>
                             </div>
                         <?php else: ?>
                             <?php foreach ($recentOrders as $order): ?>
-                                <div class="order-item">
+                                <div class="order-item-compact">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <div>
                                             <strong>#<?php echo $order['order_number']; ?></strong>
                                             <div>
-                                                <span class="order-status status-<?php echo $order['payment_status']; ?>">
+                                                <?php 
+                                                $statusClass = '';
+                                                switch($order['payment_status']) {
+                                                    case 'completed': $statusClass = 'badge bg-success'; break;
+                                                    case 'pending': $statusClass = 'badge bg-warning'; break;
+                                                    case 'failed': $statusClass = 'badge bg-danger'; break;
+                                                    default: $statusClass = 'badge bg-secondary';
+                                                }
+                                                ?>
+                                                <span class="<?php echo $statusClass; ?>">
                                                     <?php echo ucfirst($order['payment_status']); ?>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="text-end">
-                                            <div class="fw-bold"><?php echo formatPrice($order['total_amount']); ?></div>
+                                            <div class="fw-bold text-primary"><?php echo formatPrice($order['total_amount']); ?></div>
                                             <small class="text-muted"><?php echo $order['item_count']; ?> productos</small>
                                         </div>
                                     </div>
-                                    <small class="text-muted">
-                                        <?php echo timeAgo($order['created_at']); ?>
-                                    </small>
+                                    <small class="text-muted"><?php echo timeAgo($order['created_at']); ?></small>
                                 </div>
                             <?php endforeach; ?>
-                            <div class="text-center mt-3">
-                                <a href="<?php echo SITE_URL; ?>/mis-compras" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                            <div class="text-center">
+                                <a href="<?php echo SITE_URL; ?>/mis-compras" class="btn btn-outline-primary btn-sm">Ver Todas</a>
                             </div>
                         <?php endif; ?>
                     </div>
                 </div>
                 
                 <!-- Productos Recomendados -->
-                <div class="section-card">
-                    <div class="section-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-star me-2"></i>Recomendados para Ti
-                        </h6>
+                <div class="sidebar-card-compact">
+                    <div class="sidebar-header-compact">
+                        <h5 class="section-title-compact">
+                            <div class="section-icon-compact">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            Recomendados
+                        </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="sidebar-body-compact">
                         <?php if (empty($recommendedProducts)): ?>
-                            <div class="text-center text-muted">
-                                <i class="fas fa-star fa-2x mb-2 opacity-50"></i>
-                                <p class="mb-0">Cargando recomendaciones...</p>
+                            <div class="empty-state-compact">
+                                <div class="empty-icon-compact">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p>Cargando recomendaciones...</p>
                             </div>
                         <?php else: ?>
                             <?php foreach (array_slice($recommendedProducts, 0, 3) as $product): ?>
-                                <div class="d-flex mb-3">
-                                    <div class="product-image me-3" style="width: 50px; height: 50px;">
+                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="recommended-item-compact">
+                                    <div class="recommended-image-compact">
                                         <?php if ($product['image']): ?>
                                             <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['image']; ?>" 
                                                  alt="<?php echo htmlspecialchars($product['name']); ?>">
@@ -612,13 +443,9 @@ $siteName = getSetting('site_name', 'MiSistema');
                                         <?php endif; ?>
                                     </div>
                                     <div class="flex-grow-1">
-                                        <h6 class="mb-1">
-                                            <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none">
-                                                <?php echo htmlspecialchars($product['name']); ?>
-                                            </a>
-                                        </h6>
                                         <small class="text-muted d-block"><?php echo htmlspecialchars($product['category_name']); ?></small>
-                                        <div class="mt-1">
+                                        <h6 class="mb-1"><?php echo htmlspecialchars($product['name']); ?></h6>
+                                        <div>
                                             <?php if ($product['is_free']): ?>
                                                 <span class="badge bg-success">GRATIS</span>
                                             <?php else: ?>
@@ -626,10 +453,10 @@ $siteName = getSetting('site_name', 'MiSistema');
                                             <?php endif; ?>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             <?php endforeach; ?>
-                            <div class="text-center mt-3">
-                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-sm btn-outline-primary">Ver Más Productos</a>
+                            <div class="text-center">
+                                <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-outline-primary btn-sm">Ver Más</a>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -648,7 +475,7 @@ $siteName = getSetting('site_name', 'MiSistema');
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Animar las estadísticas al cargar
-            const statsNumbers = document.querySelectorAll('.stats-number');
+            const statsNumbers = document.querySelectorAll('.stat-number');
             statsNumbers.forEach(stat => {
                 const finalValue = parseInt(stat.textContent.replace(/[^\d]/g, ''));
                 if (finalValue > 0) {

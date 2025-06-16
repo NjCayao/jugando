@@ -125,136 +125,6 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-
-    <style>
-        .product-gallery img {
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-badges {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            z-index: 10;
-        }
-
-        .product-badges .badge {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .price-section {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-        }
-
-        .price-original {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #28a745;
-        }
-
-        .price-free {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #28a745;
-        }
-
-        .product-actions {
-            margin-top: 20px;
-        }
-
-        .product-actions .btn {
-            padding: 12px 30px;
-            font-weight: 600;
-            border-radius: 25px;
-        }
-
-        .product-meta {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        .meta-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .meta-item:last-child {
-            border-bottom: none;
-        }
-
-        .version-timeline {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .version-item {
-            border-left: 3px solid #007bff;
-            padding-left: 15px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-
-        .version-item::before {
-            content: '';
-            position: absolute;
-            left: -7px;
-            top: 5px;
-            width: 10px;
-            height: 10px;
-            background: #007bff;
-            border-radius: 50%;
-        }
-
-        .version-item.current {
-            border-left-color: #28a745;
-        }
-
-        .version-item.current::before {
-            background: #28a745;
-        }
-
-        .related-products {
-            margin-top: 50px;
-        }
-
-        .sticky-purchase {
-            position: sticky;
-            top: 20px;
-        }
-
-        .demo-button {
-            margin-top: 15px;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
-
-        .feature-list i {
-            color: #28a745;
-            margin-right: 10px;
-        }
-    </style>
 </head>
 
 <body>
@@ -280,123 +150,125 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
     </div>
 
     <!-- Main Content -->
-    <div class="container my-5">
+    <div class="container my-4">
         <div class="row">
             <!-- Contenido Principal -->
             <div class="col-lg-8">
                 <!-- Galería del Producto -->
-                <div class="product-gallery mb-4 position-relative">
-                    <?php if ($product['image']): ?>
-                        <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['image']; ?>"
-                            alt="<?php echo htmlspecialchars($product['name']); ?>"
-                            class="img-fluid w-100" style="max-height: 400px; object-fit: cover;">
-                    <?php else: ?>
-                        <div class="no-image d-flex align-items-center justify-content-center" style="height: 400px; background: #f8f9fa; border-radius: 10px;">
-                            <i class="fas fa-image fa-5x text-muted"></i>
-                        </div>
-                    <?php endif; ?>
+                <div class="product-card mb-4 position-relative">
+                    <div class="product-image" style="height: 400px;">
+                        <?php if ($product['image']): ?>
+                            <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['image']; ?>"
+                                alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                class="img-fluid w-100 h-100" style="object-fit: cover;">
+                        <?php else: ?>
+                            <div class="no-image d-flex align-items-center justify-content-center h-100">
+                                <i class="fas fa-image fa-5x"></i>
+                            </div>
+                        <?php endif; ?>
+                    </div>
 
                     <!-- Badges -->
-                    <div class="product-badges">
+                    <div class="position-absolute top-0 end-0 p-3">
                         <?php if ($product['is_free']): ?>
-                            <span class="badge bg-success fs-6">GRATIS</span>
+                            <span class="product-badge free">GRATIS</span>
                         <?php endif; ?>
                         <?php if ($product['is_featured']): ?>
-                            <span class="badge bg-warning fs-6">DESTACADO</span>
+                            <span class="product-badge d-block mt-2" style="background: #ffc107;">DESTACADO</span>
                         <?php endif; ?>
                     </div>
                 </div>
 
                 <!-- Información del Producto -->
-                <div class="product-info">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
+                <div class="category-card">
+                    <div class="category-content p-4">
+                        <div class="mb-3">
                             <?php if ($product['category_name']): ?>
-                                <span class="badge bg-primary mb-2"><?php echo htmlspecialchars($product['category_name']); ?></span>
+                                <div class="product-category"><?php echo htmlspecialchars($product['category_name']); ?></div>
                             <?php endif; ?>
                             <h1 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h1>
-                            <p class="lead text-muted"><?php echo htmlspecialchars($product['short_description']); ?></p>
+                            <p class="product-description"><?php echo htmlspecialchars($product['short_description']); ?></p>
                         </div>
-                    </div>
 
-                    <!-- Tabs de Información -->
-                    <ul class="nav nav-tabs mb-4" id="productTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button">
-                                <i class="fas fa-info-circle me-2"></i>Descripción
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="versions-tab" data-bs-toggle="tab" data-bs-target="#versions" type="button">
-                                <i class="fas fa-code-branch me-2"></i>Versiones (<?php echo count($versions); ?>)
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button">
-                                <i class="fas fa-star me-2"></i>Reseñas (<?php echo $totalReviews; ?>)
-                            </button>
-                        </li>
-                    </ul>
+                        <!-- Tabs de Información -->
+                        <ul class="nav nav-tabs mb-4" id="productTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button">
+                                    <i class="fas fa-info-circle me-2"></i>Descripción
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="versions-tab" data-bs-toggle="tab" data-bs-target="#versions" type="button">
+                                    <i class="fas fa-code-branch me-2"></i>Versiones (<?php echo count($versions); ?>)
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button">
+                                    <i class="fas fa-star me-2"></i>Reseñas (<?php echo $totalReviews; ?>)
+                                </button>
+                            </li>
+                        </ul>
 
-                    <div class="tab-content" id="productTabsContent">
-                        <!-- Descripción -->
-                        <div class="tab-pane fade show active" id="description" role="tabpanel">
-                            <div class="content-section">
-                                <?php if ($product['description']): ?>
-                                    <div class="product-description">
-                                        <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                        <div class="tab-content" id="productTabsContent">
+                            <!-- Descripción -->
+                            <div class="tab-pane fade show active" id="description" role="tabpanel">
+                                <div class="user-content">
+                                    <?php if ($product['description']): ?>
+                                        <div>
+                                            <?php echo nl2br(htmlspecialchars($product['description'])); ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <p class="text-muted">No hay descripción detallada disponible.</p>
+                                    <?php endif; ?>
+
+                                    <!-- Características Principales -->
+                                    <div class="mt-4">
+                                        <h5>Características Principales</h5>
+                                        <ul>
+                                            <li><i class="fas fa-check text-success me-2"></i> Código fuente completo incluido</li>
+                                            <li><i class="fas fa-check text-success me-2"></i> Documentación detallada</li>
+                                            <li><i class="fas fa-check text-success me-2"></i> Soporte técnico incluido</li>
+                                            <li><i class="fas fa-check text-success me-2"></i> Actualizaciones por <?php echo $product['update_months']; ?> meses</li>
+                                            <li><i class="fas fa-check text-success me-2"></i> Hasta <?php echo $product['download_limit']; ?> descargas</li>
+                                        </ul>
                                     </div>
-                                <?php else: ?>
-                                    <p class="text-muted">No hay descripción detallada disponible.</p>
-                                <?php endif; ?>
-
-                                <!-- Características Principales -->
-                                <div class="mt-4">
-                                    <h5>Características Principales</h5>
-                                    <ul class="feature-list">
-                                        <li><i class="fas fa-check"></i> Código fuente completo incluido</li>
-                                        <li><i class="fas fa-check"></i> Documentación detallada</li>
-                                        <li><i class="fas fa-check"></i> Soporte técnico incluido</li>
-                                        <li><i class="fas fa-check"></i> Actualizaciones por <?php echo $product['update_months']; ?> meses</li>
-                                        <li><i class="fas fa-check"></i> Hasta <?php echo $product['download_limit']; ?> descargas</li>
-                                    </ul>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Versiones -->
-                        <div class="tab-pane fade" id="versions" role="tabpanel">
-                            <div class="version-timeline">
-                                <?php if (empty($versions)): ?>
-                                    <p class="text-muted">No hay versiones disponibles aún.</p>
-                                <?php else: ?>
-                                    <?php foreach ($versions as $version): ?>
-                                        <div class="version-item <?php echo $version['is_current'] ? 'current' : ''; ?>">
-                                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                                <h6 class="mb-0">
-                                                    Versión <?php echo htmlspecialchars($version['version']); ?>
-                                                    <?php if ($version['is_current']): ?>
-                                                        <span class="badge bg-success ms-2">Actual</span>
-                                                    <?php endif; ?>
-                                                </h6>
-                                                <small class="text-muted">
-                                                    <?php echo date('d/m/Y', strtotime($version['created_at'])); ?>
-                                                </small>
+                            <!-- Versiones -->
+                            <div class="tab-pane fade" id="versions" role="tabpanel">
+                                <div style="max-height: 400px; overflow-y: auto;">
+                                    <?php if (empty($versions)): ?>
+                                        <p class="text-muted">No hay versiones disponibles aún.</p>
+                                    <?php else: ?>
+                                        <?php foreach ($versions as $version): ?>
+                                            <div class="border-start border-3 ps-3 mb-3 position-relative <?php echo $version['is_current'] ? 'border-success' : 'border-primary'; ?>">
+                                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                                    <h6 class="mb-0">
+                                                        Versión <?php echo htmlspecialchars($version['version']); ?>
+                                                        <?php if ($version['is_current']): ?>
+                                                            <span class="badge bg-success ms-2">Actual</span>
+                                                        <?php endif; ?>
+                                                    </h6>
+                                                    <small class="text-muted">
+                                                        <?php echo date('d/m/Y', strtotime($version['created_at'])); ?>
+                                                    </small>
+                                                </div>
+                                                <?php if ($version['changelog']): ?>
+                                                    <p class="mb-0 text-muted"><?php echo nl2br(htmlspecialchars($version['changelog'])); ?></p>
+                                                <?php endif; ?>
                                             </div>
-                                            <?php if ($version['changelog']): ?>
-                                                <p class="mb-0 text-muted"><?php echo nl2br(htmlspecialchars($version['changelog'])); ?></p>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Reseñas -->
-                        <div class="tab-pane fade" id="reviews" role="tabpanel">
-                            <div class="reviews-section">
-                                <p class="text-muted">Sistema de reseñas próximamente disponible.</p>
-                                <!-- Aquí implementaremos las reseñas en la Fase 5 -->
+                            <!-- Reseñas -->
+                            <div class="tab-pane fade" id="reviews" role="tabpanel">
+                                <div>
+                                    <p class="text-muted">Sistema de reseñas próximamente disponible.</p>
+                                    <!-- Aquí implementaremos las reseñas en la Fase 5 -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -405,96 +277,104 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
 
             <!-- Sidebar de Compra -->
             <div class="col-lg-4">
-                <div class="sticky-purchase">
+                <div class="position-sticky" style="top: 20px;">
                     <!-- Precio y Compra -->
-                    <div class="price-section text-center">
-                        <?php if ($product['is_free']): ?>
-                            <div class="price-free">GRATIS</div>
-                            <p class="text-muted mb-0">Descarga gratuita</p>
-                        <?php else: ?>
-                            <div class="price-original"><?php echo formatPrice($product['price']); ?></div>
-                            <p class="text-muted mb-0">Pago único - Sin suscripciones</p>
-                        <?php endif; ?>
-
-                        <div class="product-actions">
+                    <div class="category-card mb-3">
+                        <div class="category-content p-4 text-center">
                             <?php if ($product['is_free']): ?>
-                                <button class="btn btn-success btn-lg w-100 mb-2" onclick="downloadFree(<?php echo $product['id']; ?>)">
-                                    <i class="fas fa-download me-2"></i>Descargar Gratis
-                                </button>
+                                <div class="product-price">
+                                    <span class="price-free">GRATIS</span>
+                                </div>
+                                <p class="text-muted mb-3">Descarga gratuita</p>
                             <?php else: ?>
-                                <button class="btn btn-primary btn-lg w-100 mb-2" onclick="addToCart(<?php echo $product['id']; ?>)">
-                                    <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
-                                </button>
-                                <button class="btn btn-success btn-lg w-100 mb-2" onclick="buyNow(<?php echo $product['id']; ?>)">
-                                    <i class="fas fa-credit-card me-2"></i>Comprar Ahora
-                                </button>
+                                <div class="product-price">
+                                    <span class="price"><?php echo formatPrice($product['price']); ?></span>
+                                </div>
+                                <p class="text-muted mb-3">Pago único - Sin suscripciones</p>
                             <?php endif; ?>
 
-                            <button class="btn btn-outline-secondary w-100" onclick="addToWishlist(<?php echo $product['id']; ?>)">
-                                <i class="fas fa-heart me-2"></i>Agregar a Favoritos
-                            </button>
+                            <div class="product-actions">
+                                <?php if ($product['is_free']): ?>
+                                    <button class="btn-luxury w-100 mb-2" onclick="downloadFree(<?php echo $product['id']; ?>)">
+                                        <i class="fas fa-download me-2"></i>Descargar Gratis
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn btn-corporate w-100 mb-2" onclick="addToCart(<?php echo $product['id']; ?>)">
+                                        <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
+                                    </button>
+                                    <button class="btn-luxury w-100 mb-2" onclick="buyNow(<?php echo $product['id']; ?>)">
+                                        <i class="fas fa-credit-card me-2"></i>Comprar Ahora
+                                    </button>
+                                <?php endif; ?>
 
-                            <?php if ($product['demo_url']): ?>
-                                <div class="demo-button">
+                                <button class="btn btn-outline-secondary w-100 mb-2" onclick="addToWishlist(<?php echo $product['id']; ?>)">
+                                    <i class="fas fa-heart me-2"></i>Agregar a Favoritos
+                                </button>
+
+                                <?php if ($product['demo_url']): ?>
                                     <a href="<?php echo htmlspecialchars($product['demo_url']); ?>" target="_blank" class="btn btn-outline-primary w-100">
                                         <i class="fas fa-external-link-alt me-2"></i>Ver Demo
                                     </a>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Información del Producto -->
-                    <div class="product-meta">
-                        <h6 class="mb-3">Información del Producto</h6>
+                    <div class="category-card mb-3">
+                        <div class="category-content p-4">
+                            <h6 class="category-title mb-3">Información del Producto</h6>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Categoría:</span>
-                            <span><?php echo htmlspecialchars($product['category_name'] ?: 'Sin categoría'); ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Categoría:</span>
+                                <span><?php echo htmlspecialchars($product['category_name'] ?: 'Sin categoría'); ?></span>
+                            </div>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Versiones:</span>
-                            <span><?php echo count($versions); ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Versiones:</span>
+                                <span><?php echo count($versions); ?></span>
+                            </div>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Descargas:</span>
-                            <span><?php echo number_format($product['download_count']); ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Descargas:</span>
+                                <span><?php echo number_format($product['download_count']); ?></span>
+                            </div>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Vistas:</span>
-                            <span><?php echo number_format($product['view_count']); ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Vistas:</span>
+                                <span><?php echo number_format($product['view_count']); ?></span>
+                            </div>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Publicado:</span>
-                            <span><?php echo date('d/m/Y', strtotime($product['created_at'])); ?></span>
-                        </div>
+                            <div class="d-flex justify-content-between py-2 border-bottom">
+                                <span class="text-muted">Publicado:</span>
+                                <span><?php echo date('d/m/Y', strtotime($product['created_at'])); ?></span>
+                            </div>
 
-                        <div class="meta-item">
-                            <span class="text-muted">Actualizado:</span>
-                            <span><?php echo date('d/m/Y', strtotime($product['updated_at'])); ?></span>
+                            <div class="d-flex justify-content-between py-2">
+                                <span class="text-muted">Actualizado:</span>
+                                <span><?php echo date('d/m/Y', strtotime($product['updated_at'])); ?></span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Compartir -->
-                    <div class="share-section text-center">
-                        <h6>Compartir</h6>
-                        <div class="share-buttons">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL . '/producto/' . $product['slug']); ?>"
-                                target="_blank" class="btn btn-outline-primary btn-sm me-2">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL . '/producto/' . $product['slug']); ?>&text=<?php echo urlencode($product['name']); ?>"
-                                target="_blank" class="btn btn-outline-info btn-sm me-2">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="https://wa.me/?text=<?php echo urlencode($product['name'] . ' - ' . SITE_URL . '/producto/' . $product['slug']); ?>"
-                                target="_blank" class="btn btn-outline-success btn-sm">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
+                    <div class="category-card">
+                        <div class="category-content p-4 text-center">
+                            <h6 class="category-title mb-3">Compartir</h6>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode(SITE_URL . '/producto/' . $product['slug']); ?>"
+                                    target="_blank" class="btn btn-primary btn-sm">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode(SITE_URL . '/producto/' . $product['slug']); ?>&text=<?php echo urlencode($product['name']); ?>"
+                                    target="_blank" class="btn btn-info btn-sm">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="https://wa.me/?text=<?php echo urlencode($product['name'] . ' - ' . SITE_URL . '/producto/' . $product['slug']); ?>"
+                                    target="_blank" class="btn btn-success btn-sm">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -503,12 +383,12 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
 
         <!-- Productos Relacionados -->
         <?php if (!empty($relatedProducts)): ?>
-            <div class="related-products">
-                <h3 class="mb-4">Productos Relacionados</h3>
+            <div class="mt-5">
+                <h3 class="section-title text-center mb-4">Productos Relacionados</h3>
                 <div class="row g-4">
                     <?php foreach ($relatedProducts as $relatedProduct): ?>
                         <div class="col-md-6 col-lg-3">
-                            <div class="product-card compact h-100">
+                            <div class="product-card h-100">
                                 <div class="product-image">
                                     <?php if ($relatedProduct['image']): ?>
                                         <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $relatedProduct['image']; ?>"
@@ -523,17 +403,20 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
                                     </div>
                                 </div>
                                 <div class="product-info">
+                                    <div class="product-category"><?php echo htmlspecialchars($relatedProduct['category_name']); ?></div>
                                     <h6 class="product-title">
-                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $relatedProduct['slug']; ?>" class="text-decoration-none text-dark">
+                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $relatedProduct['slug']; ?>" class="text-decoration-none">
                                             <?php echo htmlspecialchars($relatedProduct['name']); ?>
                                         </a>
                                     </h6>
-                                    <div class="product-price">
-                                        <?php if ($relatedProduct['is_free']): ?>
-                                            <span class="price-free">GRATIS</span>
-                                        <?php else: ?>
-                                            <span class="price"><?php echo formatPrice($relatedProduct['price']); ?></span>
-                                        <?php endif; ?>
+                                    <div class="product-footer">
+                                        <div class="product-price">
+                                            <?php if ($relatedProduct['is_free']): ?>
+                                                <span class="price-free">GRATIS</span>
+                                            <?php else: ?>
+                                                <span class="price"><?php echo formatPrice($relatedProduct['price']); ?></span>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -562,7 +445,7 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
         });
 
         // Prevenir envío de formulario vacío
-        document.querySelector('form.search-box-large').addEventListener('submit', function(e) {
+        document.querySelector('form.search-box-large')?.addEventListener('submit', function(e) {
             const input = this.querySelector('input[name="q"]');
             if (input.value.trim().length < 2) {
                 e.preventDefault();
