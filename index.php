@@ -1,5 +1,5 @@
 <?php
-// index.php - Página principal CYBERPUNK
+// index.php - Página principal CORPORATIVO AZUL
 require_once 'config/database.php';
 require_once 'config/constants.php';
 require_once 'config/functions.php';
@@ -12,8 +12,8 @@ if (Settings::get('maintenance_mode', '0') == '1' && !isAdmin()) {
 }
 
 // Obtener configuraciones del sitio
-$siteName = Settings::get('site_name', 'MiSistema');
-$siteDescription = Settings::get('site_description', 'Plataforma de venta de software');
+$siteName = Settings::get('site_name', 'WebSystems Pro');
+$siteDescription = Settings::get('site_description', 'Sistemas Web Profesionales para su Empresa');
 $siteLogo = Settings::get('site_logo', '');
 $siteFavicon = Settings::get('site_favicon', '');
 
@@ -116,7 +116,7 @@ try {
 
     <!-- Meta Tags -->
     <meta name="description" content="<?php echo htmlspecialchars($siteDescription); ?>">
-    <meta name="keywords" content="<?php echo htmlspecialchars(Settings::get('site_keywords', 'software, sistemas, php')); ?>">
+    <meta name="keywords" content="<?php echo htmlspecialchars(Settings::get('site_keywords', 'sistemas web, desarrollo profesional, software empresarial')); ?>">
     <meta name="author" content="<?php echo htmlspecialchars($siteName); ?>">
 
     <!-- Open Graph -->
@@ -134,11 +134,11 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- 🚀 FUENTES CYBERPUNK -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@400;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- 🎨 FUENTES CORPORATIVAS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- 🎨 CSS FUTURISTA -->
-    <link href="<?php echo ASSETS_URL; ?>/css/modern.css" rel="stylesheet">
+    <!-- 🏢 CSS CORPORATIVO AZUL -->
+    <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -147,11 +147,11 @@ try {
 
     <!-- Main Content -->
     <main>
-        <!-- 🚀 HERO SECTION CYBERPUNK -->
+        <!-- 🏢 HERO SECTION CORPORATIVO -->
         <section class="hero-carousel-section">
             <?php if (!empty($sliderBanners)): ?>
                 <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
-                    <!-- Indicadores Cyberpunk -->
+                    <!-- Indicadores Corporativos -->
                     <div class="carousel-indicators">
                         <?php foreach ($sliderBanners as $index => $banner): ?>
                             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="<?php echo $index; ?>"
@@ -170,20 +170,20 @@ try {
                                         <div class="hero-background" style="background-image: url('<?php echo UPLOADS_URL; ?>/banners/<?php echo htmlspecialchars($banner['image']); ?>');"></div>
                                     <?php endif; ?>
 
-                                    <!-- Overlay cyberpunk -->
+                                    <!-- Overlay corporativo -->
                                     <div class="hero-overlay"></div>
 
                                     <!-- Contenido -->
                                     <div class="container">
-                                        <div class="row align-items-center" style="min-height: 100vh;">
+                                        <div class="row align-items-center" style="min-height: 500px;">
                                             <div class="col-lg-6">
                                                 <div class="hero-content">
-                                                    <h1 class="hero-title" data-text="<?php echo htmlspecialchars($banner['title']); ?>">
+                                                    <h1 class="hero-title">
                                                         <?php echo htmlspecialchars($banner['title']); ?>
                                                     </h1>
                                                     <?php if ($banner['subtitle']): ?>
                                                         <h2 class="hero-subtitle">
-                                                            > <?php echo htmlspecialchars($banner['subtitle']); ?>
+                                                            <?php echo htmlspecialchars($banner['subtitle']); ?>
                                                         </h2>
                                                     <?php endif; ?>
                                                     <?php if ($banner['description']): ?>
@@ -205,21 +205,21 @@ try {
                                             </div>
                                             <div class="col-lg-6">
                                                 <div class="hero-image">
-                                                    <!-- Cuadros holográficos flotantes -->
+                                                    <!-- Cuadros corporativos flotantes -->
                                                     <div class="floating-card">
-                                                        <i class="fas fa-code fa-3x mb-3"></i>
+                                                        <i class="fas fa-code fa-2x mb-3" style="color: #1E40AF;"></i>
                                                         <h5>DESARROLLO PROFESIONAL</h5>
-                                                        <p>Código limpio y optimizado</p>
+                                                        <p>Código limpio y escalable</p>
                                                     </div>
                                                     <div class="floating-card">
-                                                        <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                                                        <i class="fas fa-shield-alt fa-2x mb-3" style="color: #1E40AF;"></i>
                                                         <h5>100% SEGURO</h5>
                                                         <p>Sistemas probados y confiables</p>
                                                     </div>
                                                     <div class="floating-card">
-                                                        <i class="fas fa-support fa-3x mb-3"></i>
-                                                        <h5>SOPORTE 24/7</h5>
-                                                        <p>Ayuda cuando la necesites</p>
+                                                        <i class="fas fa-headset fa-2x mb-3" style="color: #1E40AF;"></i>
+                                                        <h5>SOPORTE ENTERPRISE</h5>
+                                                        <p>Ayuda profesional 24/7</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -230,7 +230,7 @@ try {
                         <?php endforeach; ?>
                     </div>
 
-                    <!-- Controles cyberpunk -->
+                    <!-- Controles corporativos -->
                     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
                         <div class="carousel-control-icon">
                             <i class="fas fa-chevron-left"></i>
@@ -245,22 +245,22 @@ try {
                     </button>
                 </div>
             <?php else: ?>
-                <!-- Fallback cyberpunk -->
+                <!-- Fallback corporativo -->
                 <div class="hero-slide">
                     <div class="hero-overlay"></div>
                     <div class="container">
-                        <div class="row align-items-center" style="min-height: 100vh;">
+                        <div class="row align-items-center" style="min-height: 500px;">
                             <div class="col-lg-6">
                                 <div class="hero-content">
-                                    <h1 class="hero-title" data-text="BIENVENIDO AL FUTURO">
-                                        BIENVENIDO AL <span style="color: #00ffff;">FUTURO</span>
+                                    <h1 class="hero-title">
+                                        Sistemas Web Profesionales para su Empresa
                                     </h1>
                                     <h2 class="hero-subtitle">
-                                        > SISTEMA TECNOLÓGICO AVANZADO
+                                        Desarrollador Certificado
                                     </h2>
                                     <p class="hero-description">
                                         <?php echo htmlspecialchars($siteDescription); ?>.
-                                        Tecnología de vanguardia para el mundo digital.
+                                        Soluciones tecnológicas empresariales de vanguardia.
                                     </p>
                                     <div class="hero-actions">
                                         <a href="#productos-destacados" class="btn btn-primary">
@@ -275,19 +275,19 @@ try {
                             <div class="col-lg-6">
                                 <div class="hero-image">
                                     <div class="floating-card">
-                                        <i class="fas fa-code fa-3x mb-3"></i>
+                                        <i class="fas fa-code fa-2x mb-3" style="color: #1E40AF;"></i>
                                         <h5>DESARROLLO PROFESIONAL</h5>
-                                        <p>Código limpio y optimizado</p>
+                                        <p>Código limpio y escalable</p>
                                     </div>
                                     <div class="floating-card">
-                                        <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                                        <i class="fas fa-shield-alt fa-2x mb-3" style="color: #1E40AF;"></i>
                                         <h5>100% SEGURO</h5>
                                         <p>Sistemas probados y confiables</p>
                                     </div>
                                     <div class="floating-card">
-                                        <i class="fas fa-support fa-3x mb-3"></i>
-                                        <h5>SOPORTE 24/7</h5>
-                                        <p>Ayuda cuando la necesites</p>
+                                        <i class="fas fa-headset fa-2x mb-3" style="color: #1E40AF;"></i>
+                                        <h5>SOPORTE ENTERPRISE</h5>
+                                        <p>Ayuda profesional 24/7</p>
                                     </div>
                                 </div>
                             </div>
@@ -297,47 +297,50 @@ try {
             <?php endif; ?>
         </section>
 
-        <!-- 🔥 PROMOCIONES CYBERPUNK -->
+        <!-- 💼 PROMOCIONES CORPORATIVAS -->
         <?php if (!empty($promotionBanners)): ?>
-            <section class="promotion-section py-5" style="background: #111111; border-top: 2px solid #00ffff; border-bottom: 2px solid #00ffff;">
+            <section class="promotion-section py-5">
                 <div class="container">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12 text-center mb-5">
-                            <h2 class="section-title fade-in-up">PROMOCIONES ESPECIALES</h2>
-                            <p class="section-subtitle fade-in-up">Ofertas exclusivas del sistema</p>
+                            <h2 class="section-title fade-in-up">OFERTAS EMPRESARIALES</h2>
+                            <p class="section-subtitle fade-in-up">Soluciones especiales para su negocio</p>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row g-4">
                         <?php
                         $colClass = count($promotionBanners) == 1 ? 'col-12' : (count($promotionBanners) == 2 ? 'col-lg-6' : (count($promotionBanners) == 3 ? 'col-lg-4' : 'col-lg-3'));
                         ?>
                         <?php foreach ($promotionBanners as $index => $banner): ?>
                             <div class="<?php echo $colClass; ?>">
-                                <div class="promo-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s; background: rgba(0,0,0,0.9); border: 2px solid #ff0080; padding: 2rem; text-align: center; clip-path: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%);">
+                                <div class="promo-card fade-in-up" style="animation-delay: <?php echo $index * 0.2; ?>s;">
                                     <?php if ($banner['image']): ?>
-                                        <div class="promo-image-container mb-3" style="height: 150px; overflow: hidden; border: 1px solid #00ffff;">
+                                        <div class="promo-image-container">
                                             <img src="<?php echo UPLOADS_URL; ?>/banners/<?php echo htmlspecialchars($banner['image']); ?>"
                                                 alt="<?php echo htmlspecialchars($banner['title']); ?>" 
-                                                style="width: 100%; height: 100%; object-fit: cover; filter: hue-rotate(180deg) contrast(1.2);">
+                                                class="promo-image">
+                                            <div class="promo-overlay"></div>
                                         </div>
                                     <?php endif; ?>
                                     <div class="promo-content">
-                                        <div class="promo-icon mb-3" style="width: 60px; height: 60px; background: linear-gradient(45deg, #00ffff, #ff0080); margin: 0 auto; display: flex; align-items: center; justify-content: center; clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);">
-                                            <i class="fas fa-gem" style="color: #000; font-size: 1.5rem;"></i>
+                                        <div class="promo-icon">
+                                            <i class="fas fa-award"></i>
                                         </div>
-                                        <h3 class="promo-title" style="color: #00ffff; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;"><?php echo htmlspecialchars($banner['title']); ?></h3>
+                                        <h3 class="promo-title"><?php echo htmlspecialchars($banner['title']); ?></h3>
                                         <?php if ($banner['subtitle']): ?>
-                                            <p class="promo-subtitle" style="color: #ff0080; font-family: 'Fira Code', monospace; margin-bottom: 1rem;"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
+                                            <p class="promo-subtitle"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
                                         <?php endif; ?>
                                         <?php if ($banner['description']): ?>
-                                            <p class="promo-description" style="color: #00ff41; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 1.5rem;"><?php echo htmlspecialchars($banner['description']); ?></p>
+                                            <p class="promo-description"><?php echo htmlspecialchars($banner['description']); ?></p>
                                         <?php endif; ?>
                                         <?php if ($banner['button_text'] && $banner['button_url']): ?>
-                                            <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="btn" style="background: transparent; border: 2px solid #00ffff; color: #00ffff; padding: 0.75rem 1.5rem; text-transform: uppercase; font-family: 'Fira Code', monospace; clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 75%, 85% 100%, 15% 100%, 0% 75%, 0% 25%); transition: all 0.3s ease;">
+                                            <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="btn-luxury">
                                                 <?php echo htmlspecialchars($banner['button_text']); ?>
+                                                <i class="fas fa-arrow-right ms-2"></i>
                                             </a>
                                         <?php endif; ?>
                                     </div>
+                                    <div class="promo-glow"></div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -346,39 +349,42 @@ try {
             </section>
         <?php endif; ?>
 
-        <!-- 🎮 HERO CARDS CYBERPUNK -->
+        <!-- 🎯 HERO CARDS CORPORATIVAS -->
         <?php if (!empty($heroBanners)): ?>
-            <section class="hero-cards-section py-5" style="background: linear-gradient(135deg, #000000 0%, #001122 50%, #000011 100%); position: relative;">
+            <section class="hero-cards-section py-5 bg-gradient-luxury">
                 <div class="container">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12 text-center mb-5">
-                            <h2 class="section-title fade-in-up">EXPERIENCIA PREMIUM</h2>
-                            <div style="width: 100px; height: 4px; background: linear-gradient(90deg, #00ffff, #ff0080, #00ffff); margin: 0 auto 3rem; animation: glow-line 2s ease-in-out infinite alternate;"></div>
+                            <h2 class="luxury-title text-white fade-in-up">EXPERIENCIA EMPRESARIAL</h2>
+                            <div class="luxury-divider"></div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row g-4">
                         <?php foreach ($heroBanners as $index => $banner): ?>
-                            <div class="col-lg-<?php echo count($heroBanners) <= 2 ? '6' : '4'; ?>">
-                                <div class="hero-luxury-card fade-in-up" style="animation-delay: <?php echo $index * 0.3; ?>s; height: 350px;">
-                                    <div class="hero-card-inner" style="background: rgba(0,0,0,0.8); border: 2px solid #8000ff; height: 100%; padding: 2rem; text-align: center; position: relative; clip-path: polygon(5% 0%, 95% 0%, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0% 95%, 0% 5%); overflow: hidden;">
-                                        <div class="hero-card-icon" style="width: 80px; height: 80px; background: linear-gradient(45deg, #8000ff, #ff0080); margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%);">
-                                            <i class="fas fa-crown" style="color: #000; font-size: 2rem;"></i>
+                            <div class="col-lg-<?php echo count($heroBanners) <= 2 ? '4' : '3'; ?>">
+                                <div class="hero-luxury-card fade-in-up" style="animation-delay: <?php echo $index * 0.3; ?>s;">
+                                    <div class="hero-card-inner">
+                                        <div class="hero-card-content">
+                                            <div class="hero-card-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <h4 class="hero-card-title"><?php echo htmlspecialchars($banner['title']); ?></h4>
+                                            <?php if ($banner['subtitle']): ?>
+                                                <p class="hero-card-subtitle"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($banner['description']): ?>
+                                                <p class="hero-card-description"><?php echo htmlspecialchars($banner['description']); ?></p>
+                                            <?php endif; ?>
+                                            <?php if ($banner['button_text'] && $banner['button_url']): ?>
+                                                <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="hero-card-btn">
+                                                    <?php echo htmlspecialchars($banner['button_text']); ?>
+                                                </a>
+                                            <?php endif; ?>
                                         </div>
-                                        <h4 class="hero-card-title" style="color: #8000ff; font-family: 'Orbitron', sans-serif; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem;"><?php echo htmlspecialchars($banner['title']); ?></h4>
-                                        <?php if ($banner['subtitle']): ?>
-                                            <p class="hero-card-subtitle" style="color: #ff0080; font-family: 'Fira Code', monospace; margin-bottom: 1rem;"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
-                                        <?php endif; ?>
-                                        <?php if ($banner['description']): ?>
-                                            <p class="hero-card-description" style="color: #00ff41; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 1.5rem;"><?php echo htmlspecialchars($banner['description']); ?></p>
-                                        <?php endif; ?>
-                                        <?php if ($banner['button_text'] && $banner['button_url']): ?>
-                                            <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="hero-card-btn" style="background: transparent; border: 1px solid #8000ff; color: #8000ff; padding: 0.75rem 1.5rem; text-decoration: none; text-transform: uppercase; font-family: 'Fira Code', monospace; clip-path: polygon(20% 0%, 80% 0%, 100% 50%, 80% 100%, 20% 100%, 0% 50%); transition: all 0.3s ease;">
-                                                <?php echo htmlspecialchars($banner['button_text']); ?>
-                                            </a>
-                                        <?php endif; ?>
                                         <?php if ($banner['image']): ?>
-                                            <div class="hero-card-bg" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('<?php echo UPLOADS_URL; ?>/banners/<?php echo htmlspecialchars($banner['image']); ?>'); background-size: cover; background-position: center; opacity: 0.1; z-index: -1; filter: hue-rotate(180deg);"></div>
+                                            <div class="hero-card-bg" style="background-image: url('<?php echo UPLOADS_URL; ?>/banners/<?php echo htmlspecialchars($banner['image']); ?>');"></div>
                                         <?php endif; ?>
+                                        <div class="hero-card-glow"></div>
                                     </div>
                                 </div>
                             </div>
@@ -388,13 +394,13 @@ try {
             </section>
         <?php endif; ?>
 
-        <!-- 🎯 CATEGORÍAS CYBERPUNK -->
-        <section id="categorias" class="py-5" style="background: #111111;">
+        <!-- 📊 CATEGORÍAS CORPORATIVAS -->
+        <section id="categorias" class="py-5">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center mb-5">
-                        <h2 class="section-title fade-in-up">EXPLORAR CATEGORÍAS</h2>
-                        <p class="section-subtitle fade-in-up">Sistemas clasificados por tipo</p>
+                        <h2 class="section-title fade-in-up">NUESTRAS CATEGORÍAS</h2>
+                        <p class="section-subtitle fade-in-up">Soluciones organizadas por especialidad</p>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -403,18 +409,18 @@ try {
                             <div class="category-card fade-in-up" style="animation-delay: <?php echo $index * 0.1; ?>s;">
                                 <div class="category-icon">
                                     <?php if ($category['image']): ?>
-                                        <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $category['image']; ?>" alt="<?php echo htmlspecialchars($category['name']); ?>" style="width: 50px; height: 50px; object-fit: cover; filter: hue-rotate(180deg);">
+                                        <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $category['image']; ?>" alt="<?php echo htmlspecialchars($category['name']); ?>">
                                     <?php else: ?>
-                                        <i class="fas fa-folder"></i>
+                                        <i class="fas fa-folder-open"></i>
                                     <?php endif; ?>
                                 </div>
-                                <h5 class="category-title"><?php echo strtoupper(htmlspecialchars($category['name'])); ?></h5>
+                                <h5 class="category-title"><?php echo htmlspecialchars($category['name']); ?></h5>
                                 <p class="category-description"><?php echo htmlspecialchars($category['description']); ?></p>
                                 <div class="category-stats mb-3">
-                                    <span class="product-count"><?php echo $category['product_count']; ?> PRODUCTOS</span>
+                                    <span class="product-count"><?php echo $category['product_count']; ?> Productos</span>
                                 </div>
-                                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-outline-primary" style="border: 1px solid #00ffff; color: #00ffff; background: transparent; text-transform: uppercase; font-family: 'Fira Code', monospace; clip-path: polygon(15% 0%, 85% 0%, 100% 25%, 100% 75%, 85% 100%, 15% 100%, 0% 75%, 0% 25%);">
-                                    ACCEDER <i class="fas fa-arrow-right ms-2"></i>
+                                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-outline-primary">
+                                    Explorar <i class="fas fa-arrow-right ms-2"></i>
                                 </a>
                             </div>
                         </div>
@@ -423,13 +429,13 @@ try {
             </div>
         </section>
 
-        <!-- 💎 PRODUCTOS DESTACADOS CYBERPUNK -->
-        <section id="productos-destacados" class="py-5" style="background: #0a0a0a;">
+        <!-- 💎 PRODUCTOS DESTACADOS CORPORATIVOS -->
+        <section id="productos-destacados" class="py-5 bg-light">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center mb-5">
                         <h2 class="section-title fade-in-up">PRODUCTOS DESTACADOS</h2>
-                        <p class="section-subtitle fade-in-up">Los más populares del sistema</p>
+                        <p class="section-subtitle fade-in-up">Los más solicitados por empresas</p>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -445,17 +451,19 @@ try {
                                         </div>
                                     <?php endif; ?>
                                     <div class="product-overlay">
-                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-primary" style="background: transparent; border: 2px solid #00ffff; color: #00ffff; clip-path: polygon(20% 0%, 80% 0%, 100% 25%, 100% 75%, 80% 100%, 20% 100%, 0% 75%, 0% 25%);">VER DETALLES</a>
+                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-primary">
+                                            <i class="fas fa-eye me-2"></i>Ver Detalles
+                                        </a>
                                     </div>
                                     <?php if ($product['is_free']): ?>
                                         <span class="product-badge free">GRATIS</span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="product-info">
-                                    <div class="product-category"><?php echo strtoupper(htmlspecialchars($product['category_name'])); ?></div>
+                                    <div class="product-category"><?php echo htmlspecialchars($product['category_name']); ?></div>
                                     <h5 class="product-title">
                                         <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none">
-                                            <?php echo strtoupper(htmlspecialchars($product['name'])); ?>
+                                            <?php echo htmlspecialchars($product['name']); ?>
                                         </a>
                                     </h5>
                                     <p class="product-description"><?php echo htmlspecialchars($product['short_description']); ?></p>
@@ -468,10 +476,10 @@ try {
                                             <?php endif; ?>
                                         </div>
                                         <div class="product-actions">
-                                            <button class="btn btn-sm" onclick="addToCart(<?php echo $product['id']; ?>)" style="border: 1px solid #00ffff; background: transparent; color: #00ffff; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);">
+                                            <button class="btn btn-outline-primary" onclick="addToCart(<?php echo $product['id']; ?>)" title="Agregar al carrito">
                                                 <i class="fas fa-cart-plus"></i>
                                             </button>
-                                            <button class="btn btn-sm" onclick="addToWishlist(<?php echo $product['id']; ?>)" style="border: 1px solid #ff0080; background: transparent; color: #ff0080; clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);">
+                                            <button class="btn btn-outline-secondary" onclick="addToWishlist(<?php echo $product['id']; ?>)" title="Agregar a favoritos">
                                                 <i class="fas fa-heart"></i>
                                             </button>
                                         </div>
@@ -482,14 +490,14 @@ try {
                     <?php endforeach; ?>
                 </div>
                 <div class="text-center mt-5">
-                    <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-primary btn-lg" style="background: transparent; border: 2px solid #00ffff; color: #00ffff; padding: 1rem 2rem; text-transform: uppercase; font-family: 'Orbitron', sans-serif; clip-path: polygon(10% 0%, 90% 0%, 100% 15%, 100% 85%, 90% 100%, 10% 100%, 0% 85%, 0% 15%);">
+                    <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-corporate btn-lg">
                         VER TODOS LOS PRODUCTOS <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- 📊 STATS CYBERPUNK -->
+        <!-- 📈 ESTADÍSTICAS CORPORATIVAS -->
         <section class="stats-section">
             <div class="container">
                 <div class="stats-container">
@@ -497,62 +505,80 @@ try {
                         <div class="col-md-3 col-6">
                             <div class="stat-card fade-in-up">
                                 <div class="stat-icon">
-                                    <i class="fas fa-download"></i>
+                                    <i class="fas fa-building"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h3 class="stat-number" data-counter="10000">0</h3>
-                                    <p class="stat-label">DESCARGAS</p>
+                                    <h3 class="stat-number" data-counter="100">0</h3>
+                                    <p class="stat-label">Empresas Confían</p>
+                                    <p class="stat-code">enterprise_clients.count()</p>
                                 </div>
+                                <div class="stat-glow"></div>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6">
                             <div class="stat-card fade-in-up" style="animation-delay: 0.1s;">
                                 <div class="stat-icon">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-calendar-alt"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h3 class="stat-number" data-counter="3000">0</h3>
-                                    <p class="stat-label">USUARIOS</p>
+                                    <h3 class="stat-number" data-counter="5">0</h3>
+                                    <p class="stat-label">Años Experiencia</p>
+                                    <p class="stat-code">professional_years.total()</p>
                                 </div>
+                                <div class="stat-glow"></div>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6">
                             <div class="stat-card fade-in-up" style="animation-delay: 0.2s;">
                                 <div class="stat-icon">
-                                    <i class="fas fa-code"></i>
+                                    <i class="fas fa-server"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h3 class="stat-number" data-counter="500">0</h3>
-                                    <p class="stat-label">PROYECTOS</p>
+                                    <h3 class="stat-number">99.9%</h3>
+                                    <p class="stat-label">Uptime</p>
+                                    <p class="stat-code">system_availability.get()</p>
                                 </div>
+                                <div class="stat-glow"></div>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-6">
                             <div class="stat-card fade-in-up" style="animation-delay: 0.3s;">
                                 <div class="stat-icon">
-                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-award"></i>
                                 </div>
                                 <div class="stat-content">
-                                    <h3 class="stat-number">4.9</h3>
-                                    <p class="stat-label">★★★★★</p>
+                                    <h3 class="stat-number">★★★★★</h3>
+                                    <p class="stat-label">Calificación</p>
+                                    <p class="stat-code">client_reviews.average()</p>
                                 </div>
+                                <div class="stat-glow"></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Partículas de código corporativo -->
+            <div class="code-particles-bg">
+                <div class="particle" style="color: #dc2626;">&bull;</div>
+                <div class="particle" style="color: #d97706;">&bull;</div>
+                <div class="particle" style="color: #1E40AF;">&bull;</div>
+                <div class="particle" style="color: #dc2626;">&bull;</div>
+                <div class="particle" style="color: #d97706;">&bull;</div>
+                <div class="particle" style="color: #1E40AF;">&bull;</div>
+            </div>
         </section>
 
-        <!-- 🔮 PRODUCTOS RECIENTES -->
-        <section class="py-5" style="background: #111111;">
+        <!-- 🔄 PRODUCTOS RECIENTES -->
+        <section class="py-5">
             <div class="container">
                 <div class="row">
                     <div class="col-12 text-center mb-5">
                         <h2 class="section-title fade-in-up">PRODUCTOS RECIENTES</h2>
-                        <p class="section-subtitle fade-in-up">Últimas adiciones al sistema</p>
+                        <p class="section-subtitle fade-in-up">Últimas adiciones al catálogo</p>
                     </div>
                 </div>
                 <div class="row g-4">
@@ -573,7 +599,7 @@ try {
                                 <div class="product-info">
                                     <h6 class="product-title">
                                         <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none">
-                                            <?php echo strtoupper(htmlspecialchars($product['name'])); ?>
+                                            <?php echo htmlspecialchars($product['name']); ?>
                                         </a>
                                     </h6>
                                     <div class="product-price">
@@ -591,43 +617,44 @@ try {
             </div>
         </section>
 
-        <!-- 🌟 SIDEBAR BANNERS CYBERPUNK -->
+        <!-- 🎨 BANNERS LATERALES CORPORATIVOS -->
         <?php if (!empty($sidebarBanners)): ?>
-            <section class="crystal-banners-section py-5" style="background: #0a0a0a;">
+            <section class="crystal-banners-section py-5">
                 <div class="container">
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12 text-center mb-5">
-                            <h2 class="section-title fade-in-up">COLECCIÓN EXCLUSIVA</h2>
-                            <div style="width: 80px; height: 3px; background: linear-gradient(90deg, #8000ff, #ff0080, #8000ff); margin: 0 auto 3rem;"></div>
+                            <h2 class="crystal-title fade-in-up">SOLUCIONES ESPECIALIZADAS</h2>
+                            <div class="crystal-divider"></div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row g-4">
                         <?php foreach ($sidebarBanners as $index => $banner): ?>
                             <div class="col-md-6 col-lg-<?php echo count($sidebarBanners) <= 2 ? '6' : (count($sidebarBanners) == 3 ? '4' : '3'); ?>">
-                                <div class="crystal-card fade-in-up" style="animation-delay: <?php echo $index * 0.15; ?>s; height: 400px;">
-                                    <div class="crystal-inner" style="background: rgba(0,0,0,0.9); border: 1px solid #8000ff; height: 100%; overflow: hidden; position: relative; clip-path: polygon(5% 0%, 95% 0%, 100% 5%, 100% 95%, 95% 100%, 5% 100%, 0% 95%, 0% 5%);">
+                                <div class="crystal-card fade-in-up" style="animation-delay: <?php echo $index * 0.15; ?>s;">
+                                    <div class="crystal-inner">
                                         <?php if ($banner['image']): ?>
-                                            <div class="crystal-image" style="height: 200px; overflow: hidden; position: relative;">
+                                            <div class="crystal-image">
                                                 <img src="<?php echo UPLOADS_URL; ?>/banners/<?php echo htmlspecialchars($banner['image']); ?>"
-                                                    alt="<?php echo htmlspecialchars($banner['title']); ?>" style="width: 100%; height: 100%; object-fit: cover; filter: hue-rotate(180deg) contrast(1.2);">
-                                                <div class="crystal-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(45deg, rgba(128, 0, 255, 0.3), rgba(255, 0, 128, 0.3)); opacity: 0; transition: opacity 0.3s ease;"></div>
+                                                    alt="<?php echo htmlspecialchars($banner['title']); ?>">
+                                                <div class="crystal-overlay"></div>
                                             </div>
                                         <?php endif; ?>
-                                        <div class="crystal-content" style="padding: 2rem; text-align: center;">
-                                            <h5 class="crystal-title-small" style="color: #8000ff; font-family: 'Orbitron', sans-serif; font-weight: 600; margin-bottom: 1rem; text-transform: uppercase;"><?php echo htmlspecialchars($banner['title']); ?></h5>
+                                        <div class="crystal-content">
+                                            <h5 class="crystal-title-small"><?php echo htmlspecialchars($banner['title']); ?></h5>
                                             <?php if ($banner['subtitle']): ?>
-                                                <p class="crystal-subtitle" style="color: #ff0080; font-family: 'Fira Code', monospace; font-weight: 500; margin-bottom: 1rem;"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
+                                                <p class="crystal-subtitle"><?php echo htmlspecialchars($banner['subtitle']); ?></p>
                                             <?php endif; ?>
                                             <?php if ($banner['description']): ?>
-                                                <p class="crystal-description" style="color: #00ff41; font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-bottom: 1.5rem;"><?php echo htmlspecialchars($banner['description']); ?></p>
+                                                <p class="crystal-description"><?php echo htmlspecialchars($banner['description']); ?></p>
                                             <?php endif; ?>
                                             <?php if ($banner['button_text'] && $banner['button_url']): ?>
-                                                <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="crystal-btn" style="background: transparent; border: 1px solid #8000ff; color: #8000ff; padding: 0.5rem 1rem; text-decoration: none; font-family: 'Fira Code', monospace; font-size: 0.9rem; text-transform: uppercase; clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%); transition: all 0.3s ease;">
+                                                <a href="<?php echo htmlspecialchars($banner['button_url']); ?>" class="crystal-btn">
                                                     <?php echo htmlspecialchars($banner['button_text']); ?>
                                                     <i class="fas fa-arrow-right ms-2"></i>
                                                 </a>
                                             <?php endif; ?>
                                         </div>
+                                        <div class="crystal-glow"></div>
                                     </div>
                                 </div>
                             </div>
@@ -641,8 +668,8 @@ try {
     <!-- Footer -->
     <?php include 'includes/footer.php'; ?>
 
-    <!-- 🚀 BACK TO TOP CYBERPUNK -->
-    <button class="back-to-top" style="display: none;">
+    <!-- 🔝 BACK TO TOP CORPORATIVO -->
+    <button class="back-to-top" onclick="scrollToTop()">
         <i class="fas fa-arrow-up"></i>
     </button>
 
@@ -652,6 +679,6 @@ try {
         window.SITE_URL = '<?php echo SITE_URL; ?>';
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo ASSETS_URL; ?>/js/modern.js"></script>
+    <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
 </body>
 </html>

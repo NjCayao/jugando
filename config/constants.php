@@ -3,7 +3,7 @@
 
 // URLs del sistema
 if (!defined('SITE_URL')) {
-    define('SITE_URL', 'http://localhost/misistema');
+    define('SITE_URL', 'http://localhost/jugando');
 }
 if (!defined('ADMIN_URL')) {
     define('ADMIN_URL', SITE_URL . '/admin');

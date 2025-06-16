@@ -1,6 +1,6 @@
 <?php
-// includes/header.php - CORREGIDO
-$siteName = getSetting('site_name', 'MiSistema');
+// includes/header.php - HEADER ELEGANTE Y ORDENADO
+$siteName = getSetting('site_name', 'WebSystems Pro');
 $siteLogo = getSetting('site_logo', '');
 
 // Obtener menú principal
@@ -31,17 +31,12 @@ try {
 
 // Función helper para procesar URLs
 function processMenuUrl($url) {
-    // Si la URL ya tiene http:// o https://, devolverla tal como está
     if (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0) {
         return $url;
     }
-    
-    // Si empieza con /, agregar SITE_URL
     if (strpos($url, '/') === 0) {
         return SITE_URL . $url;
     }
-    
-    // Si no empieza con /, agregar SITE_URL/
     return SITE_URL . '/' . $url;
 }
 
@@ -49,19 +44,32 @@ function processMenuUrl($url) {
 $currentUser = getCurrentUser();
 ?>
 
+<!-- Favicon de Desarrollador -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFFNDBBRiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHN0eWxlPi5jbHMtMXtmaWxsOiMxRTQwQUY7fS5jbHMtMntmaWxsOiMzQjgyRjY7fTwvc3R5bGU+CjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTkuNDEgMTYuNThMNC44MyAxMmw0LjU4LTQuNThMMTIgNmwtNiA2IDYgNi0yLjU5LTEuNDJ6bTUuMTcgMEwxOS4xNyAxMmwtNC41OS00LjU4TDE3IDZsNiA2LTYgNi0yLjU5LTEuNDJ6Ii8+CjxjaXJjbGUgY2xhc3M9ImNscy0yIiBjeD0iMTIiIGN5PSIyMCIgcj0iMiIvPgo8L3N2Zz4K">
+
 <header class="main-header">
-    <!-- Top Bar -->
+    <!-- Quote Bar Simple -->
+    <div class="quote-bar">
+        <div class="container">
+            <div class="quote-content-simple">
+                <i class="fas fa-code quote-icon-simple"></i>
+                <span class="quote-text-simple">"El mundo cambia... yo solo sigo programando."</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Bar Elegante -->
     <div class="top-bar d-none d-lg-block">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <div class="top-bar-left">
-                        <span class="top-bar-text">
+                    <div class="contact-info-simple">
+                        <span class="contact-item-simple">
                             <i class="fas fa-envelope me-2"></i>
-                            <?php echo getSetting('site_email', 'info@misistema.com'); ?>
+                            <?php echo getSetting('site_email', 'admin@websystemspro.com'); ?>
                         </span>
                         <?php if (getSetting('contact_phone')): ?>
-                            <span class="top-bar-text ms-3">
+                            <span class="contact-item-simple">
                                 <i class="fas fa-phone me-2"></i>
                                 <?php echo getSetting('contact_phone'); ?>
                             </span>
@@ -70,38 +78,40 @@ $currentUser = getCurrentUser();
                 </div>
                 <div class="col-md-6">
                     <div class="top-bar-right text-end">
-                        <!-- Redes Sociales -->
-                        <?php if (getSetting('facebook_url')): ?>
-                            <a href="<?php echo getSetting('facebook_url'); ?>" target="_blank" class="social-link">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                        <?php endif; ?>
-                        <?php if (getSetting('twitter_url')): ?>
-                            <a href="<?php echo getSetting('twitter_url'); ?>" target="_blank" class="social-link">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                        <?php endif; ?>
-                        <?php if (getSetting('instagram_url')): ?>
-                            <a href="<?php echo getSetting('instagram_url'); ?>" target="_blank" class="social-link">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                        <?php endif; ?>
-                        <?php if (getSetting('linkedin_url')): ?>
-                            <a href="<?php echo getSetting('linkedin_url'); ?>" target="_blank" class="social-link">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
-                        <?php endif; ?>
+                        <!-- Social Links Simple -->
+                        <div class="social-links-simple">
+                            <?php if (getSetting('facebook_url')): ?>
+                                <a href="<?php echo getSetting('facebook_url'); ?>" target="_blank" class="social-link">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (getSetting('twitter_url')): ?>
+                                <a href="<?php echo getSetting('twitter_url'); ?>" target="_blank" class="social-link">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (getSetting('linkedin_url')): ?>
+                                <a href="<?php echo getSetting('linkedin_url'); ?>" target="_blank" class="social-link">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            <?php endif; ?>
+                            <?php if (getSetting('github_url')): ?>
+                                <a href="<?php echo getSetting('github_url'); ?>" target="_blank" class="social-link">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
                         
-                        <!-- User Menu -->
-                        <div class="user-menu ms-3">
+                        <!-- User Menu Simple -->
+                        <div class="user-menu-simple">
                             <?php if (isLoggedIn() && $currentUser): ?>
                                 <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle user-link" data-bs-toggle="dropdown">
-                                        <i class="fas fa-user me-1"></i>
+                                    <a href="#" class="user-link dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class="fas fa-user-circle me-2"></i>
                                         <?php echo htmlspecialchars($currentUser['first_name']); ?>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Mi Dashboard</a></li>
+                                        <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/dashboard"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a></li>
                                         <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/mis-compras"><i class="fas fa-shopping-bag me-2"></i>Mis Compras</a></li>
                                         <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/perfil"><i class="fas fa-user me-2"></i>Mi Perfil</a></li>
                                         <li><a class="dropdown-item" href="<?php echo SITE_URL; ?>/configuracion"><i class="fas fa-cog me-2"></i>Configuración</a></li>
@@ -111,10 +121,10 @@ $currentUser = getCurrentUser();
                                 </div>
                             <?php else: ?>
                                 <a href="<?php echo SITE_URL; ?>/login" class="user-link">
-                                    <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                                    <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                                 </a>
-                                <a href="<?php echo SITE_URL; ?>/register" class="user-link ms-2">
-                                    <i class="fas fa-user-plus me-1"></i>Registrarse
+                                <a href="<?php echo SITE_URL; ?>/register" class="user-link">
+                                    <i class="fas fa-user-plus me-2"></i>Registrarse
                                 </a>
                             <?php endif; ?>
                         </div>
@@ -124,10 +134,10 @@ $currentUser = getCurrentUser();
         </div>
     </div>
     
-    <!-- Main Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <!-- Main Navigation Simple -->
+    <nav class="navbar navbar-expand-lg navbar-light">
         <div class="container">
-            <!-- Logo -->
+            <!-- Logo Simple -->
             <a class="navbar-brand" href="<?php echo SITE_URL; ?>">
                 <?php if ($siteLogo): ?>
                     <img src="<?php echo UPLOADS_URL; ?>/logos/<?php echo $siteLogo; ?>" alt="<?php echo htmlspecialchars($siteName); ?>" class="logo">
@@ -177,7 +187,7 @@ $currentUser = getCurrentUser();
                     <?php endforeach; ?>
                 </ul>
                 
-                <!-- Search & Cart -->
+                <!-- Search & Cart Simple -->
                 <div class="navbar-actions d-flex align-items-center">
                     <!-- Search -->
                     <div class="search-box me-3">
