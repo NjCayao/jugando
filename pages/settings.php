@@ -154,182 +154,43 @@ $siteName = getSetting('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem 0 2rem;
-        }
-        
-        .settings-section {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        
-        .section-header {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .section-body {
-            padding: 2rem;
-        }
-        
-        .setting-item {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .setting-item:last-child {
-            border-bottom: none;
-        }
-        
-        .setting-label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-        
-        .setting-description {
-            color: #6c757d;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .custom-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-        
-        .custom-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #007bff;
-        }
-        
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
-        
-        .breadcrumb-custom {
-            background: transparent;
-            padding: 1rem 0;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
-            color: rgba(255,255,255,0.7);
-        }
-        
-        .breadcrumb-custom .breadcrumb-item a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item.active {
-            color: white;
-        }
-        
-        .danger-zone {
-            background: #fff5f5;
-            border: 1px solid #fed7d7;
-            border-radius: 10px;
-            padding: 2rem;
-        }
-        
-        .danger-zone .section-header {
-            background: #fed7d7;
-            margin: -2rem -2rem 1.5rem -2rem;
-            color: #742a2a;
-        }
-        
-        .modal-danger .modal-header {
-            background: #dc3545;
-            color: white;
-        }
-        
-        .nav-tabs-custom {
-            border-bottom: 2px solid #e9ecef;
-        }
-        
-        .nav-tabs-custom .nav-link {
-            border: none;
-            color: #6c757d;
-            font-weight: 500;
-            padding: 1rem 1.5rem;
-        }
-        
-        .nav-tabs-custom .nav-link.active {
-            color: #007bff;
-            border-bottom: 2px solid #007bff;
-            background: none;
-        }
-        
-        .tab-content {
-            padding-top: 2rem;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Page Header -->
-    <div class="page-header">
+    <div class="dashboard-header-compact">
         <div class="container">
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="breadcrumb-custom">
+            <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Configuración</li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>" class="text-white-50">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard" class="text-white-50">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white">Configuración</li>
                 </ol>
             </nav>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 mb-2">Configuración</h1>
-                    <p class="lead mb-0">
-                        Personaliza tu experiencia y gestiona tus preferencias
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="<?php echo SITE_URL; ?>/dashboard" class="btn btn-light btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
-                    </a>
+            <div class="dashboard-welcome">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center">
+                            <div class="dashboard-avatar me-3">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div>
+                                <h1 class="h3 mb-2 text-white">Configuración</h1>
+                                <p class="mb-0 text-white-50">
+                                    Personaliza tu experiencia y gestiona tus preferencias
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a href="<?php echo SITE_URL; ?>/dashboard" class="btn btn-light">
+                            <i class="fas fa-arrow-left me-2"></i>Volver
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -358,7 +219,7 @@ $siteName = getSetting('site_name', 'MiSistema');
         <?php endif; ?>
         
         <!-- Tabs de Configuración -->
-        <ul class="nav nav-tabs nav-tabs-custom" id="settingsTabs" role="tablist">
+        <ul class="nav nav-tabs mb-4" id="settingsTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab">
                     <i class="fas fa-bell me-2"></i>Notificaciones
@@ -387,60 +248,58 @@ $siteName = getSetting('site_name', 'MiSistema');
                 <form method="POST" id="settingsForm">
                     <input type="hidden" name="save_settings" value="1">
                     
-                    <div class="settings-section">
-                        <div class="section-header">
-                            <h5 class="mb-0">Notificaciones por Email</h5>
+                    <div class="dashboard-section">
+                        <div class="section-header-compact">
+                            <h5 class="section-title-compact mb-0">
+                                <i class="fas fa-envelope me-2"></i>Notificaciones por Email
+                            </h5>
                         </div>
-                        <div class="section-body">
-                            <div class="setting-item">
+                        <div class="section-body-compact">
+                            <div class="user-product-item mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="setting-label">Notificaciones Generales</div>
-                                        <div class="setting-description">Recibir emails sobre actualizaciones de cuenta y sistema</div>
+                                        <h6 class="product-title-compact mb-1">Notificaciones Generales</h6>
+                                        <p class="product-meta-compact mb-0">Recibir emails sobre actualizaciones de cuenta y sistema</p>
                                     </div>
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="email_notifications" <?php echo getUserSetting($user['id'], 'email_notifications', '1') === '1' ? 'checked' : ''; ?>>
-                                        <span class="slider"></span>
-                                    </label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="email_notifications" id="email_notifications" <?php echo getUserSetting($user['id'], 'email_notifications', '1') === '1' ? 'checked' : ''; ?>>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="setting-item">
+                            <div class="user-product-item mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="setting-label">Notificaciones de Órdenes</div>
-                                        <div class="setting-description">Recibir confirmaciones de compras y cambios de estado</div>
+                                        <h6 class="product-title-compact mb-1">Notificaciones de Órdenes</h6>
+                                        <p class="product-meta-compact mb-0">Recibir confirmaciones de compras y cambios de estado</p>
                                     </div>
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="order_notifications" <?php echo getUserSetting($user['id'], 'order_notifications', '1') === '1' ? 'checked' : ''; ?>>
-                                        <span class="slider"></span>
-                                    </label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="order_notifications" id="order_notifications" <?php echo getUserSetting($user['id'], 'order_notifications', '1') === '1' ? 'checked' : ''; ?>>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="setting-item">
+                            <div class="user-product-item mb-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="setting-label">Newsletter</div>
-                                        <div class="setting-description">Recibir noticias, ofertas y productos nuevos</div>
+                                        <h6 class="product-title-compact mb-1">Newsletter</h6>
+                                        <p class="product-meta-compact mb-0">Recibir noticias, ofertas y productos nuevos</p>
                                     </div>
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="newsletter_subscribe" <?php echo getUserSetting($user['id'], 'newsletter_subscribe', '0') === '1' ? 'checked' : ''; ?>>
-                                        <span class="slider"></span>
-                                    </label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="newsletter_subscribe" id="newsletter_subscribe" <?php echo getUserSetting($user['id'], 'newsletter_subscribe', '0') === '1' ? 'checked' : ''; ?>>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="setting-item">
+                            <div class="user-product-item">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <div class="setting-label">Promociones</div>
-                                        <div class="setting-description">Recibir ofertas especiales y descuentos</div>
+                                        <h6 class="product-title-compact mb-1">Promociones</h6>
+                                        <p class="product-meta-compact mb-0">Recibir ofertas especiales y descuentos</p>
                                     </div>
-                                    <label class="custom-switch">
-                                        <input type="checkbox" name="promo_notifications" <?php echo getUserSetting($user['id'], 'promo_notifications', '1') === '1' ? 'checked' : ''; ?>>
-                                        <span class="slider"></span>
-                                    </label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="promo_notifications" id="promo_notifications" <?php echo getUserSetting($user['id'], 'promo_notifications', '1') === '1' ? 'checked' : ''; ?>>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -450,97 +309,99 @@ $siteName = getSetting('site_name', 'MiSistema');
             
             <!-- Tab Preferencias -->
             <div class="tab-pane fade" id="preferences" role="tabpanel">
-                <div class="settings-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">Preferencias de Visualización</h5>
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
+                        <h5 class="section-title-compact mb-0">
+                            <i class="fas fa-palette me-2"></i>Preferencias de Visualización
+                        </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="section-body-compact">
                         <div class="row g-4">
                             <div class="col-md-6">
-                                <label class="form-label">Idioma</label>
+                                <label class="form-label fw-bold">Idioma</label>
                                 <select class="form-select" name="language" form="settingsForm">
-                                    <option value="es" <?php echo getUserSetting($user['id'], 'language', 'es') === 'es' ? 'selected' : ''; ?>>Español</option>
-                                    <option value="en" <?php echo getUserSetting($user['id'], 'language', 'es') === 'en' ? 'selected' : ''; ?>>English</option>
+                                    <option value="es" <?php echo getUserSetting($user['id'], 'language', 'es') === 'es' ? 'selected' : ''; ?>>🇪🇸 Español</option>
+                                    <option value="en" <?php echo getUserSetting($user['id'], 'language', 'es') === 'en' ? 'selected' : ''; ?>>🇺🇸 English</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Zona Horaria</label>
+                                <label class="form-label fw-bold">Zona Horaria</label>
                                 <select class="form-select" name="timezone" form="settingsForm">
-                                    <option value="America/Lima" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Lima' ? 'selected' : ''; ?>>Lima (UTC-5)</option>
-                                    <option value="America/Mexico_City" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Mexico_City' ? 'selected' : ''; ?>>Ciudad de México (UTC-6)</option>
-                                    <option value="America/Buenos_Aires" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Buenos_Aires' ? 'selected' : ''; ?>>Buenos Aires (UTC-3)</option>
-                                    <option value="Europe/Madrid" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'Europe/Madrid' ? 'selected' : ''; ?>>Madrid (UTC+1)</option>
+                                    <option value="America/Lima" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Lima' ? 'selected' : ''; ?>>🇵🇪 Lima (UTC-5)</option>
+                                    <option value="America/Mexico_City" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Mexico_City' ? 'selected' : ''; ?>>🇲🇽 Ciudad de México (UTC-6)</option>
+                                    <option value="America/Buenos_Aires" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'America/Buenos_Aires' ? 'selected' : ''; ?>>🇦🇷 Buenos Aires (UTC-3)</option>
+                                    <option value="Europe/Madrid" <?php echo getUserSetting($user['id'], 'timezone', 'America/Lima') === 'Europe/Madrid' ? 'selected' : ''; ?>>🇪🇸 Madrid (UTC+1)</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Moneda</label>
+                                <label class="form-label fw-bold">Moneda</label>
                                 <select class="form-select" name="currency" form="settingsForm">
-                                    <option value="USD" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'USD' ? 'selected' : ''; ?>>USD ($)</option>
-                                    <option value="EUR" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'EUR' ? 'selected' : ''; ?>>EUR (€)</option>
-                                    <option value="PEN" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'PEN' ? 'selected' : ''; ?>>PEN (S/)</option>
+                                    <option value="USD" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'USD' ? 'selected' : ''; ?>>💵 USD ($)</option>
+                                    <option value="EUR" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'EUR' ? 'selected' : ''; ?>>💶 EUR (€)</option>
+                                    <option value="PEN" <?php echo getUserSetting($user['id'], 'currency', 'USD') === 'PEN' ? 'selected' : ''; ?>>💰 PEN (S/)</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Productos por página</label>
+                                <label class="form-label fw-bold">Productos por página</label>
                                 <select class="form-select" name="items_per_page" form="settingsForm">
-                                    <option value="8" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '8' ? 'selected' : ''; ?>>8</option>
-                                    <option value="12" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '12' ? 'selected' : ''; ?>>12</option>
-                                    <option value="24" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '24' ? 'selected' : ''; ?>>24</option>
-                                    <option value="48" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '48' ? 'selected' : ''; ?>>48</option>
+                                    <option value="8" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '8' ? 'selected' : ''; ?>>8 productos</option>
+                                    <option value="12" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '12' ? 'selected' : ''; ?>>12 productos</option>
+                                    <option value="24" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '24' ? 'selected' : ''; ?>>24 productos</option>
+                                    <option value="48" <?php echo getUserSetting($user['id'], 'items_per_page', '12') === '48' ? 'selected' : ''; ?>>48 productos</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Vista predeterminada</label>
+                                <label class="form-label fw-bold">Vista predeterminada</label>
                                 <select class="form-select" name="default_view" form="settingsForm">
-                                    <option value="grid" <?php echo getUserSetting($user['id'], 'default_view', 'grid') === 'grid' ? 'selected' : ''; ?>>Cuadrícula</option>
-                                    <option value="list" <?php echo getUserSetting($user['id'], 'default_view', 'grid') === 'list' ? 'selected' : ''; ?>>Lista</option>
+                                    <option value="grid" <?php echo getUserSetting($user['id'], 'default_view', 'grid') === 'grid' ? 'selected' : ''; ?>>🔲 Cuadrícula</option>
+                                    <option value="list" <?php echo getUserSetting($user['id'], 'default_view', 'grid') === 'list' ? 'selected' : ''; ?>>📋 Lista</option>
                                 </select>
                             </div>
                             
                             <div class="col-md-6">
-                                <label class="form-label">Tema</label>
+                                <label class="form-label fw-bold">Tema</label>
                                 <select class="form-select" name="theme" form="settingsForm">
-                                    <option value="light" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'light' ? 'selected' : ''; ?>>Claro</option>
-                                    <option value="dark" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'dark' ? 'selected' : ''; ?>>Oscuro</option>
-                                    <option value="auto" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'auto' ? 'selected' : ''; ?>>Automático</option>
+                                    <option value="light" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'light' ? 'selected' : ''; ?>>☀️ Claro</option>
+                                    <option value="dark" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'dark' ? 'selected' : ''; ?>>🌙 Oscuro</option>
+                                    <option value="auto" <?php echo getUserSetting($user['id'], 'theme', 'light') === 'auto' ? 'selected' : ''; ?>>🔄 Automático</option>
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="settings-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">Preferencias de Descarga</h5>
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
+                        <h5 class="section-title-compact mb-0">
+                            <i class="fas fa-download me-2"></i>Preferencias de Descarga
+                        </h5>
                     </div>
-                    <div class="section-body">
-                        <div class="setting-item">
+                    <div class="section-body-compact">
+                        <div class="user-product-item mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="setting-label">Descarga Automática</div>
-                                    <div class="setting-description">Descargar automáticamente después de la compra</div>
+                                    <h6 class="product-title-compact mb-1">Descarga Automática</h6>
+                                    <p class="product-meta-compact mb-0">Descargar automáticamente después de la compra</p>
                                 </div>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="auto_download" form="settingsForm" <?php echo getUserSetting($user['id'], 'auto_download', '0') === '1' ? 'checked' : ''; ?>>
-                                    <span class="slider"></span>
-                                </label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="auto_download" id="auto_download" form="settingsForm" <?php echo getUserSetting($user['id'], 'auto_download', '0') === '1' ? 'checked' : ''; ?>>
+                                </div>
                             </div>
                         </div>
                         
-                        <div class="setting-item">
+                        <div class="user-product-item">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <div class="setting-label">Notificaciones de Descarga</div>
-                                    <div class="setting-description">Notificar cuando estén disponibles nuevas versiones</div>
+                                    <h6 class="product-title-compact mb-1">Notificaciones de Descarga</h6>
+                                    <p class="product-meta-compact mb-0">Notificar cuando estén disponibles nuevas versiones</p>
                                 </div>
-                                <label class="custom-switch">
-                                    <input type="checkbox" name="download_notifications" form="settingsForm" <?php echo getUserSetting($user['id'], 'download_notifications', '1') === '1' ? 'checked' : ''; ?>>
-                                    <span class="slider"></span>
-                                </label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="download_notifications" id="download_notifications" form="settingsForm" <?php echo getUserSetting($user['id'], 'download_notifications', '1') === '1' ? 'checked' : ''; ?>>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -549,33 +410,48 @@ $siteName = getSetting('site_name', 'MiSistema');
             
             <!-- Tab Privacidad -->
             <div class="tab-pane fade" id="privacy" role="tabpanel">
-                <div class="settings-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">Configuraciones de Privacidad</h5>
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
+                        <h5 class="section-title-compact mb-0">
+                            <i class="fas fa-user-shield me-2"></i>Configuraciones de Privacidad
+                        </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="section-body-compact">
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle me-2"></i>
                             <strong>Información:</strong> Respetamos tu privacidad. Tus datos nunca serán compartidos con terceros sin tu consentimiento.
                         </div>
                         
-                        <h6>Datos que recopilamos:</h6>
-                        <ul>
-                            <li>Información de perfil (nombre, email, país)</li>
-                            <li>Historial de compras y descargas</li>
-                            <li>Preferencias de configuración</li>
-                            <li>Logs de actividad (para seguridad)</li>
-                        </ul>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="crystal-inner h-100">
+                                    <div class="crystal-content p-4">
+                                        <h6 class="crystal-title-small">📊 Datos que recopilamos:</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Información de perfil</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Historial de compras</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Preferencias de configuración</li>
+                                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Logs de actividad</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="crystal-inner h-100">
+                                    <div class="crystal-content p-4">
+                                        <h6 class="crystal-title-small">🛡️ Tus derechos:</h6>
+                                        <ul class="list-unstyled">
+                                            <li class="mb-2"><i class="fas fa-eye text-primary me-2"></i>Acceder a tu información</li>
+                                            <li class="mb-2"><i class="fas fa-edit text-primary me-2"></i>Corregir datos incorrectos</li>
+                                            <li class="mb-2"><i class="fas fa-trash text-primary me-2"></i>Solicitar eliminación</li>
+                                            <li class="mb-2"><i class="fas fa-download text-primary me-2"></i>Exportar tus datos</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         
-                        <h6 class="mt-4">Tus derechos:</h6>
-                        <ul>
-                            <li>Acceder a tu información personal</li>
-                            <li>Corregir datos incorrectos</li>
-                            <li>Solicitar eliminación de cuenta</li>
-                            <li>Exportar tus datos</li>
-                        </ul>
-                        
-                        <div class="mt-4">
+                        <div class="mt-4 text-center">
                             <a href="<?php echo SITE_URL; ?>/poltica-de-privacidad" class="btn btn-outline-primary me-2">
                                 <i class="fas fa-file-alt me-2"></i>Política de Privacidad
                             </a>
@@ -589,15 +465,16 @@ $siteName = getSetting('site_name', 'MiSistema');
             
             <!-- Tab Cuenta -->
             <div class="tab-pane fade" id="account" role="tabpanel">
-                <div class="settings-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">Gestión de Cuenta</h5>
-                    </div>
-                    <div class="section-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Acciones de Cuenta</h6>
-                                <div class="d-grid gap-2">
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="dashboard-section h-100">
+                            <div class="section-header-compact">
+                                <h5 class="section-title-compact mb-0">
+                                    <i class="fas fa-tools me-2"></i>Acciones de Cuenta
+                                </h5>
+                            </div>
+                            <div class="section-body-compact">
+                                <div class="d-grid gap-3">
                                     <a href="<?php echo SITE_URL; ?>/perfil" class="btn btn-outline-primary">
                                         <i class="fas fa-user-edit me-2"></i>Editar Perfil
                                     </a>
@@ -609,35 +486,52 @@ $siteName = getSetting('site_name', 'MiSistema');
                                     </a>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <h6>Información de Cuenta</h6>
-                                <ul class="list-unstyled">
-                                    <li><strong>ID de Usuario:</strong> #<?php echo $user['id']; ?></li>
-                                    <li><strong>Registro:</strong> <?php echo formatDate($user['created_at']); ?></li>
-                                    <li><strong>Último acceso:</strong> <?php echo $user['last_login'] ? timeAgo($user['last_login']) : 'Primer acceso'; ?></li>
-                                    <li><strong>Estado:</strong> 
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="sidebar-card-compact h-100">
+                            <div class="sidebar-header-compact">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>Información de Cuenta
+                                </h5>
+                            </div>
+                            <div class="sidebar-body-compact">
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <span class="text-muted">ID de Usuario:</span>
+                                    <span class="fw-bold">#<?php echo $user['id']; ?></span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <span class="text-muted">Registro:</span>
+                                    <span class="fw-bold"><?php echo formatDate($user['created_at']); ?></span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <span class="text-muted">Último acceso:</span>
+                                    <span class="fw-bold"><?php echo $user['last_login'] ? timeAgo($user['last_login']) : 'Primer acceso'; ?></span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-muted">Estado:</span>
+                                    <span>
                                         <?php if ($user['is_verified']): ?>
                                             <span class="badge bg-success">Verificada</span>
                                         <?php else: ?>
                                             <span class="badge bg-warning">Sin verificar</span>
                                         <?php endif; ?>
-                                    </li>
-                                </ul>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Zona de Peligro -->
-                <div class="danger-zone">
-                    <div class="section-header">
-                        <h5 class="mb-0">
+                <div class="alert alert-danger mt-4">
+                    <div class="text-center">
+                        <h5 class="alert-heading">
                             <i class="fas fa-exclamation-triangle me-2"></i>Zona de Peligro
                         </h5>
-                    </div>
-                    <div class="text-center">
+                        <hr>
                         <h6 class="text-danger">Eliminar Cuenta</h6>
-                        <p class="text-muted mb-3">
+                        <p class="mb-3">
                             Esta acción desactivará permanentemente tu cuenta. No podrás acceder a tus compras ni descargas.
                         </p>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
@@ -649,7 +543,7 @@ $siteName = getSetting('site_name', 'MiSistema');
         </div>
         
         <!-- Botón Guardar -->
-        <div class="text-center mt-4">
+        <div class="text-center mt-5">
             <button type="submit" form="settingsForm" class="btn btn-primary btn-lg px-5">
                 <i class="fas fa-save me-2"></i>Guardar Configuraciones
             </button>
@@ -660,7 +554,7 @@ $siteName = getSetting('site_name', 'MiSistema');
     <div class="modal fade" id="deleteAccountModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header modal-danger">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title">
                         <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Eliminación de Cuenta
                     </h5>

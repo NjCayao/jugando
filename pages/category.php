@@ -1,5 +1,5 @@
 <?php
-// pages/category.php - Página de categoría específica
+// pages/category.php - Página de categoría específica (MEJORADA)
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/functions.php';
@@ -170,168 +170,299 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
-    <!-- Category Header -->
-    <div class="category-header bg-gradient-luxury">
+    <!-- Hero Header de Categoría -->
+    <div class="hero-cards-section py-5 mb-4">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-8">
-                    <div class="category-icon">
-                        <?php if ($category['image']): ?>
-                            <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $category['image']; ?>" 
-                                 alt="<?php echo htmlspecialchars($category['name']); ?>">
-                        <?php else: ?>
-                            <i class="fas fa-folder"></i>
+                    <div class="hero-card-content">
+                        <!-- Breadcrumb Elegante -->
+                        <nav aria-label="breadcrumb" class="mb-3">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item">
+                                    <a href="<?php echo SITE_URL; ?>" class="text-white-50 text-decoration-none">
+                                        <i class="fas fa-home me-1"></i>Inicio
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="<?php echo SITE_URL; ?>/productos" class="text-white-50 text-decoration-none">
+                                        <i class="fas fa-th-large me-1"></i>Productos
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item active text-white">
+                                    <i class="fas fa-folder me-1"></i><?php echo htmlspecialchars($category['name']); ?>
+                                </li>
+                            </ol>
+                        </nav>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="hero-card-icon me-3">
+                                <?php if ($category['image']): ?>
+                                    <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $category['image']; ?>" 
+                                         alt="<?php echo htmlspecialchars($category['name']); ?>"
+                                         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                <?php else: ?>
+                                    <i class="fas fa-folder"></i>
+                                <?php endif; ?>
+                            </div>
+                            <div>
+                                <h1 class="luxury-title mb-2"><?php echo htmlspecialchars($category['name']); ?></h1>
+                                <div class="luxury-divider mb-0" style="margin: 0;"></div>
+                            </div>
+                        </div>
+                        
+                        <?php if ($category['description']): ?>
+                            <p class="hero-description mb-4"><?php echo htmlspecialchars($category['description']); ?></p>
                         <?php endif; ?>
+                        
+                        <div class="hero-actions">
+                            <span class="btn btn-outline-light btn-sm me-2">
+                                <i class="fas fa-cube me-1"></i><?php echo $stats['total_products']; ?> Productos
+                            </span>
+                            <span class="btn btn-outline-light btn-sm me-2">
+                                <i class="fas fa-gift me-1"></i><?php echo $stats['free_products']; ?> Gratuitos
+                            </span>
+                            <?php if ($stats['paid_products'] > 0): ?>
+                                <span class="btn btn-outline-light btn-sm">
+                                    <i class="fas fa-tag me-1"></i>Desde <?php echo formatPrice($stats['min_price']); ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    <h1 class="luxury-title mb-3"><?php echo htmlspecialchars($category['name']); ?></h1>
-                    <?php if ($category['description']): ?>
-                        <p class="hero-description mb-4"><?php echo htmlspecialchars($category['description']); ?></p>
-                    <?php endif; ?>
-                    
-                    <!-- Breadcrumb -->
-                    <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>" class="text-white-50">Inicio</a></li>
-                            <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/productos" class="text-white-50">Productos</a></li>
-                            <li class="breadcrumb-item active text-white"><?php echo htmlspecialchars($category['name']); ?></li>
-                        </ol>
-                    </nav>
                 </div>
-                <div class="col-lg-4">
+                <!-- <div class="col-lg-4">
                     <div class="row g-3">
                         <div class="col-6">
-                            <div class="stats-card">
-                                <span class="stat-number"><?php echo $stats['total_products']; ?></span>
-                                <span class="stat-label">Productos</span>
+                            <div class="hero-luxury-card">
+                                <div class="hero-card-inner">
+                                    <div class="hero-card-glow"></div>
+                                    <div class="hero-card-content">
+                                        <div class="hero-card-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <h4 class="hero-card-title">Total</h4>
+                                        <h3 class="hero-card-subtitle"><?php echo $stats['total_products']; ?></h3>
+                                        <p class="hero-card-description mb-0">Productos</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="stats-card">
-                                <span class="stat-number"><?php echo $stats['free_products']; ?></span>
-                                <span class="stat-label">Gratuitos</span>
+                            <div class="hero-luxury-card">
+                                <div class="hero-card-inner">
+                                    <div class="hero-card-glow"></div>
+                                    <div class="hero-card-content">
+                                        <div class="hero-card-icon">
+                                            <i class="fas fa-gift"></i>
+                                        </div>
+                                        <h4 class="hero-card-title">Gratis</h4>
+                                        <h3 class="hero-card-subtitle"><?php echo $stats['free_products']; ?></h3>
+                                        <p class="hero-card-description mb-0">Disponibles</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <?php if ($stats['paid_products'] > 0): ?>
                             <div class="col-6">
-                                <div class="stats-card">
-                                    <span class="stat-number"><?php echo formatPrice($stats['min_price']); ?></span>
-                                    <span class="stat-label">Desde</span>
+                                <div class="hero-luxury-card">
+                                    <div class="hero-card-inner">
+                                        <div class="hero-card-glow"></div>
+                                        <div class="hero-card-content">
+                                            <div class="hero-card-icon">
+                                                <i class="fas fa-coins"></i>
+                                            </div>
+                                            <h4 class="hero-card-title">Desde</h4>
+                                            <h3 class="hero-card-subtitle"><?php echo formatPrice($stats['min_price']); ?></h3>
+                                            <p class="hero-card-description mb-0">Precio mínimo</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="stats-card">
-                                    <span class="stat-number"><?php echo formatPrice($stats['avg_price']); ?></span>
-                                    <span class="stat-label">Promedio</span>
+                                <div class="hero-luxury-card">
+                                    <div class="hero-card-inner">
+                                        <div class="hero-card-glow"></div>
+                                        <div class="hero-card-content">
+                                            <div class="hero-card-icon">
+                                                <i class="fas fa-balance-scale"></i>
+                                            </div>
+                                            <h4 class="hero-card-title">Promedio</h4>
+                                            <h3 class="hero-card-subtitle"><?php echo formatPrice($stats['avg_price']); ?></h3>
+                                            <p class="hero-card-description mb-0">Precio medio</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         <?php endif; ?>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
     
     <!-- Main Content -->
     <div class="container mb-5">
-        <!-- Filtros -->
-        <div class="filter-section">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <form method="GET" class="row g-3" id="filterForm">
-                        <input type="hidden" name="slug" value="<?php echo $category['slug']; ?>">
-                        
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" name="buscar" 
-                                   value="<?php echo htmlspecialchars($search); ?>" 
-                                   placeholder="Buscar en <?php echo htmlspecialchars($category['name']); ?>...">
-                        </div>
-                        
-                        <div class="col-md-3">
-                            <select name="tipo" class="form-select">
-                                <option value="" <?php echo $type === '' ? 'selected' : ''; ?>>Todos los tipos</option>
-                                <option value="free" <?php echo $type === 'free' ? 'selected' : ''; ?>>Solo gratuitos</option>
-                                <option value="paid" <?php echo $type === 'paid' ? 'selected' : ''; ?>>Solo de pago</option>
-                            </select>
-                        </div>
-                        
-                        <div class="col-md-2">
-                            <input type="number" class="form-control" name="precio_min" 
-                                   value="<?php echo $priceMin > 0 ? $priceMin : ''; ?>" 
-                                   placeholder="Precio mín" min="0" step="0.01">
-                        </div>
-                        
-                        <div class="col-md-2">
-                            <input type="number" class="form-control" name="precio_max" 
-                                   value="<?php echo $priceMax < 1000 ? $priceMax : ''; ?>" 
-                                   placeholder="Precio máx" min="0" step="0.01">
-                        </div>
-                        
-                        <div class="col-md-1">
-                            <button type="submit" class="btn btn-corporate w-100">
-                                <i class="fas fa-search"></i>
+        <!-- Panel de Filtros Mejorado -->
+        <div class="dashboard-section mb-4">
+            <div class="section-header-compact">
+                <h3 class="section-title-compact mb-0">
+                    <div class="section-icon-compact">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    Filtros de Búsqueda
+                    <?php if ($search || $type || $priceMin > 0 || $priceMax < 1000): ?>
+                        <span class="badge bg-warning ms-2">Filtros activos</span>
+                    <?php endif; ?>
+                </h3>
+            </div>
+            <div class="section-body-compact">
+                <form method="GET" class="row g-3" id="filterForm">
+                    <input type="hidden" name="slug" value="<?php echo $category['slug']; ?>">
+                    
+                    <div class="col-lg-4 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-search me-1"></i>Buscar productos
+                        </label>
+                        <input type="text" class="form-control" name="buscar" 
+                               value="<?php echo htmlspecialchars($search); ?>" 
+                               placeholder="Nombre, descripción...">
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-tag me-1"></i>Tipo
+                        </label>
+                        <select name="tipo" class="form-select">
+                            <option value="" <?php echo $type === '' ? 'selected' : ''; ?>>Todos</option>
+                            <option value="free" <?php echo $type === 'free' ? 'selected' : ''; ?>>Solo gratuitos</option>
+                            <option value="paid" <?php echo $type === 'paid' ? 'selected' : ''; ?>>Solo de pago</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-dollar-sign me-1"></i>Precio mín
+                        </label>
+                        <input type="number" class="form-control" name="precio_min" 
+                               value="<?php echo $priceMin > 0 ? $priceMin : ''; ?>" 
+                               placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-6">
+                        <label class="form-label">
+                            <i class="fas fa-dollar-sign me-1"></i>Precio máx
+                        </label>
+                        <input type="number" class="form-control" name="precio_max" 
+                               value="<?php echo $priceMax < 1000 ? $priceMax : ''; ?>" 
+                               placeholder="1000.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div class="col-lg-2 col-md-12">
+                        <label class="form-label d-block">&nbsp;</label>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-corporate">
+                                <i class="fas fa-search me-1"></i>Filtrar
                             </button>
                         </div>
-                    </form>
-                </div>
-                <div class="col-lg-4 text-lg-end">
-                    <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-outline-secondary">
-                        <i class="fas fa-times"></i> Limpiar Filtros
-                    </a>
-                </div>
+                    </div>
+                </form>
+                
+                <?php if ($search || $type || $priceMin > 0 || $priceMax < 1000): ?>
+                    <div class="mt-3 text-center">
+                        <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-times me-1"></i>Limpiar Filtros
+                        </a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
         
-        <!-- Ordenamiento y Resultados -->
-        <div class="sort-section">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h4 class="mb-0">
-                        <?php if ($search): ?>
-                            Resultados para "<?php echo htmlspecialchars($search); ?>"
-                        <?php else: ?>
-                            Productos en <?php echo htmlspecialchars($category['name']); ?>
-                        <?php endif; ?>
-                    </h4>
-                    <p class="text-muted mb-0">
-                        Mostrando <?php echo min($perPage, $totalProducts - $offset); ?> de <?php echo $totalProducts; ?> productos
-                    </p>
-                </div>
-                <div class="col-md-6">
-                    <form method="GET" class="d-flex align-items-center justify-content-md-end">
-                        <!-- Mantener parámetros actuales -->
-                        <input type="hidden" name="slug" value="<?php echo $category['slug']; ?>">
-                        <?php foreach ($_GET as $key => $value): ?>
-                            <?php if ($key !== 'orden' && $key !== 'slug'): ?>
-                                <input type="hidden" name="<?php echo htmlspecialchars($key); ?>" value="<?php echo htmlspecialchars($value); ?>">
+        <!-- Barra de Resultados y Ordenamiento -->
+        <div class="dashboard-section mb-4">
+            <div class="section-body-compact">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h4 class="mb-1">
+                            <?php if ($search): ?>
+                                <i class="fas fa-search text-primary me-2"></i>
+                                Resultados para "<strong><?php echo htmlspecialchars($search); ?></strong>"
+                            <?php else: ?>
+                                <i class="fas fa-cube text-primary me-2"></i>
+                                Productos en <strong><?php echo htmlspecialchars($category['name']); ?></strong>
                             <?php endif; ?>
-                        <?php endforeach; ?>
-                        
-                        <label class="me-2">Ordenar por:</label>
-                        <select name="orden" class="form-select" onchange="this.form.submit()">
-                            <option value="recientes" <?php echo $sort === 'recientes' ? 'selected' : ''; ?>>Más Recientes</option>
-                            <option value="nombre" <?php echo $sort === 'nombre' ? 'selected' : ''; ?>>Nombre A-Z</option>
-                            <option value="precio_asc" <?php echo $sort === 'precio_asc' ? 'selected' : ''; ?>>Precio: Menor a Mayor</option>
-                            <option value="precio_desc" <?php echo $sort === 'precio_desc' ? 'selected' : ''; ?>>Precio: Mayor a Menor</option>
-                            <option value="populares" <?php echo $sort === 'populares' ? 'selected' : ''; ?>>Más Populares</option>
-                        </select>
-                    </form>
+                        </h4>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Mostrando <strong><?php echo min($perPage, $totalProducts - $offset); ?></strong> de <strong><?php echo $totalProducts; ?></strong> productos
+                            <?php if ($totalPages > 1): ?>
+                                | Página <strong><?php echo $page; ?></strong> de <strong><?php echo $totalPages; ?></strong>
+                            <?php endif; ?>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <form method="GET" class="d-flex align-items-center justify-content-md-end">
+                            <!-- Mantener parámetros actuales -->
+                            <input type="hidden" name="slug" value="<?php echo $category['slug']; ?>">
+                            <?php foreach ($_GET as $key => $value): ?>
+                                <?php if ($key !== 'orden' && $key !== 'slug'): ?>
+                                    <input type="hidden" name="<?php echo htmlspecialchars($key); ?>" value="<?php echo htmlspecialchars($value); ?>">
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                            
+                            <label class="form-label me-2 mb-0">
+                                <i class="fas fa-sort me-1"></i>Ordenar:
+                            </label>
+                            <select name="orden" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="recientes" <?php echo $sort === 'recientes' ? 'selected' : ''; ?>>Más Recientes</option>
+                                <option value="nombre" <?php echo $sort === 'nombre' ? 'selected' : ''; ?>>Nombre A-Z</option>
+                                <option value="precio_asc" <?php echo $sort === 'precio_asc' ? 'selected' : ''; ?>>Precio ↑</option>
+                                <option value="precio_desc" <?php echo $sort === 'precio_desc' ? 'selected' : ''; ?>>Precio ↓</option>
+                                <option value="populares" <?php echo $sort === 'populares' ? 'selected' : ''; ?>>Más Populares</option>
+                            </select>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
         
         <!-- Grid de Productos -->
         <?php if (empty($products)): ?>
-            <div class="empty-cart text-center py-5">
-                <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                <h4 class="text-muted">No se encontraron productos</h4>
-                <p class="text-muted">No hay productos que coincidan con los filtros aplicados</p>
-                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="btn btn-corporate">Ver Todos los Productos</a>
+            <!-- Estado Vacío Elegante -->
+            <div class="crystal-banners-section py-5">
+                <div class="crystal-card">
+                    <div class="crystal-inner text-center">
+                        <div class="crystal-glow"></div>
+                        <div class="crystal-content">
+                            <div class="empty-icon-compact mb-4">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3 class="crystal-title-small mb-3">No se encontraron productos</h3>
+                            <p class="crystal-description mb-4">
+                                No hay productos que coincidan con los filtros aplicados en la categoría 
+                                <strong><?php echo htmlspecialchars($category['name']); ?></strong>
+                            </p>
+                            <div class="row g-3 justify-content-center">
+                                <div class="col-auto">
+                                    <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $category['slug']; ?>" class="crystal-btn">
+                                        <i class="fas fa-refresh me-2"></i>Ver Todos
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a href="<?php echo SITE_URL; ?>/productos" class="btn btn-outline-primary">
+                                        <i class="fas fa-th-large me-2"></i>Explorar Categorías
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php else: ?>
-            <div class="row g-4">
-                <?php foreach ($products as $product): ?>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="product-card h-100">
+            <!-- Grid de Productos Mejorado -->
+            <div class="row g-4 mb-5">
+                <?php foreach ($products as $index => $product): ?>
+                    <div class="col-xl-3 col-lg-4 col-md-6">
+                        <div class="product-card h-100" style="animation-delay: <?php echo ($index * 0.1); ?>s;">
                             <div class="product-image">
                                 <?php if ($product['image']): ?>
                                     <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $product['image']; ?>" 
@@ -343,17 +474,25 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                                     </div>
                                 <?php endif; ?>
                                 <div class="product-overlay">
-                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-corporate">Ver Detalles</a>
+                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="btn btn-corporate">
+                                        <i class="fas fa-eye me-2"></i>Ver Detalles
+                                    </a>
                                 </div>
                                 <?php if ($product['is_free']): ?>
-                                    <span class="product-badge free">GRATIS</span>
+                                    <span class="product-badge free">
+                                        <i class="fas fa-gift me-1"></i>GRATIS
+                                    </span>
                                 <?php endif; ?>
                                 <?php if ($product['is_featured']): ?>
-                                    <span class="product-badge featured">DESTACADO</span>
+                                    <span class="product-badge featured" style="top: 55px;">
+                                        <i class="fas fa-star me-1"></i>DESTACADO
+                                    </span>
                                 <?php endif; ?>
                             </div>
                             <div class="product-info">
-                                <div class="product-category"><?php echo htmlspecialchars($category['name']); ?></div>
+                                <div class="product-category">
+                                    <i class="fas fa-folder me-1"></i><?php echo htmlspecialchars($category['name']); ?>
+                                </div>
                                 <h5 class="product-title">
                                     <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['slug']; ?>" class="text-decoration-none">
                                         <?php echo htmlspecialchars($product['name']); ?>
@@ -362,20 +501,32 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                                 <p class="product-description"><?php echo htmlspecialchars($product['short_description']); ?></p>
                                 
                                 <div class="product-meta mb-3">
-                                    <small class="text-muted">
-                                        <i class="fas fa-code-branch"></i> <?php echo $product['version_count']; ?> versiones
-                                        <span class="ms-2">
-                                            <i class="fas fa-download"></i> <?php echo number_format($product['download_count']); ?>
-                                        </span>
-                                    </small>
+                                    <div class="row g-2 text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">
+                                                <i class="fas fa-code-branch text-primary"></i><br>
+                                                <strong><?php echo $product['version_count']; ?></strong> versiones
+                                            </small>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">
+                                                <i class="fas fa-download text-success"></i><br>
+                                                <strong><?php echo number_format($product['download_count']); ?></strong> descargas
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
                                 
                                 <div class="product-footer">
                                     <div class="product-price">
                                         <?php if ($product['is_free']): ?>
-                                            <span class="price-free">GRATIS</span>
+                                            <span class="price-free">
+                                                <i class="fas fa-gift me-1"></i>GRATIS
+                                            </span>
                                         <?php else: ?>
-                                            <span class="price"><?php echo formatPrice($product['price']); ?></span>
+                                            <span class="price">
+                                                <i class="fas fa-tag me-1"></i><?php echo formatPrice($product['price']); ?>
+                                            </span>
                                         <?php endif; ?>
                                     </div>
                                     <div class="product-actions">
@@ -393,68 +544,102 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
                 <?php endforeach; ?>
             </div>
             
-            <!-- Paginación -->
+            <!-- Paginación Mejorada -->
             <?php if ($totalPages > 1): ?>
-                <div class="pagination-container mt-5">
-                    <nav aria-label="Paginación de productos">
-                        <ul class="pagination justify-content-center">
-                            <?php if ($page > 1): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $page - 1])); ?>">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                            
-                            <?php
-                            $startPage = max(1, $page - 2);
-                            $endPage = min($totalPages, $page + 2);
-                            
-                            for ($i = $startPage; $i <= $endPage; $i++):
-                            ?>
-                                <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
-                                    <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
-                                        <?php echo $i; ?>
-                                    </a>
-                                </li>
-                            <?php endfor; ?>
-                            
-                            <?php if ($page < $totalPages): ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $page + 1])); ?>">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
-                                </li>
-                            <?php endif; ?>
-                        </ul>
-                    </nav>
+                <div class="dashboard-section">
+                    <div class="section-body-compact">
+                        <nav aria-label="Paginación de productos">
+                            <ul class="pagination justify-content-center mb-0">
+                                <?php if ($page > 1): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => 1])); ?>" title="Primera página">
+                                            <i class="fas fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $page - 1])); ?>" title="Página anterior">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                                
+                                <?php
+                                $startPage = max(1, $page - 2);
+                                $endPage = min($totalPages, $page + 2);
+                                
+                                for ($i = $startPage; $i <= $endPage; $i++):
+                                ?>
+                                    <li class="page-item <?php echo $i === $page ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $i])); ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+                                
+                                <?php if ($page < $totalPages): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $page + 1])); ?>" title="Página siguiente">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['pagina' => $totalPages])); ?>" title="Última página">
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </nav>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Página <?php echo $page; ?> de <?php echo $totalPages; ?> | 
+                                Total: <?php echo $totalProducts; ?> productos
+                            </small>
+                        </div>
+                    </div>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
         
-        <!-- Otras Categorías -->
+        <!-- Otras Categorías Mejoradas -->
         <?php if (!empty($otherCategories)): ?>
-            <div class="other-categories mt-5">
-                <h3 class="section-title mb-4">Explorar Otras Categorías</h3>
-                <div class="row g-4">
-                    <?php foreach ($otherCategories as $otherCategory): ?>
-                        <div class="col-md-6 col-lg-3">
-                            <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $otherCategory['slug']; ?>" class="text-decoration-none">
-                                <div class="category-card-small">
-                                    <div class="category-icon">
-                                        <?php if ($otherCategory['image']): ?>
-                                            <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $otherCategory['image']; ?>" 
-                                                 alt="<?php echo htmlspecialchars($otherCategory['name']); ?>">
-                                        <?php else: ?>
-                                            <i class="fas fa-folder"></i>
-                                        <?php endif; ?>
+            <div class="promotion-section py-5 mt-5">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h3 class="section-title">Explorar Otras Categorías</h3>
+                        <div class="luxury-divider mx-auto mb-4"></div>
+                        <p class="section-subtitle">Descubre más productos en nuestras diferentes categorías</p>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <?php foreach ($otherCategories as $otherCategory): ?>
+                            <div class="col-xl-3 col-lg-4 col-md-6">
+                                <a href="<?php echo SITE_URL; ?>/categoria/<?php echo $otherCategory['slug']; ?>" class="text-decoration-none">
+                                    <div class="promo-card h-100">
+                                        <div class="promo-glow"></div>
+                                        <div class="promo-icon">
+                                            <?php if ($otherCategory['image']): ?>
+                                                <img src="<?php echo UPLOADS_URL; ?>/categories/<?php echo $otherCategory['image']; ?>" 
+                                                     alt="<?php echo htmlspecialchars($otherCategory['name']); ?>"
+                                                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                                            <?php else: ?>
+                                                <i class="fas fa-folder"></i>
+                                            <?php endif; ?>
+                                        </div>
+                                        <h6 class="promo-title"><?php echo htmlspecialchars($otherCategory['name']); ?></h6>
+                                        <p class="promo-description">
+                                            <?php echo $otherCategory['product_count']; ?> productos disponibles
+                                        </p>
+                                        <div class="btn-luxury">
+                                            <i class="fas fa-arrow-right me-2"></i>Explorar
+                                        </div>
                                     </div>
-                                    <h6 class="category-title mb-2"><?php echo htmlspecialchars($otherCategory['name']); ?></h6>
-                                    <p class="product-count mb-0"><?php echo $otherCategory['product_count']; ?> productos</p>
-                                </div>
-                            </a>
-                        </div>
-                    <?php endforeach; ?>
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
         <?php endif; ?>
@@ -462,26 +647,43 @@ $pageDescription = $category['description'] ?: "Explora todos los productos de l
     
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
+     <script>
+        window.SITE_URL = '<?php echo SITE_URL; ?>';
+    </script>
     
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
+    <script src="<?php echo ASSETS_URL; ?>/js/modules/cart.js"></script>
     
     <script>
-        function addToCart(productId) {
-            console.log('Agregar al carrito:', productId);
-            // Implementar más adelante
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Añadir efectos de animación escalonada a las tarjetas
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                card.classList.add('fade-in-up');
+            });
+            
+            // Auto-submit filtros cuando cambien ciertos campos
+            const typeSelect = document.querySelector('select[name="tipo"]');
+            if (typeSelect) {
+                typeSelect.addEventListener('change', function() {
+                    document.getElementById('filterForm').submit();
+                });
+            }
+            
+            // Efecto hover mejorado en las tarjetas
+            productCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+        });          
         
-        function addToWishlist(productId) {
-            console.log('Agregar a favoritos:', productId);
-            // Implementar más adelante
-        }
-        
-        // Auto-submit filtros cuando cambien ciertos campos
-        document.querySelector('select[name="tipo"]').addEventListener('change', function() {
-            document.getElementById('filterForm').submit();
-        });
     </script>
 </body>
 </html>

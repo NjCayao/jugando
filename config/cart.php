@@ -1,50 +1,45 @@
 <?php
 // config/cart.php - Sistema de carrito de compras
+class Cart
+{
+    private static $sessionKey = 'cart';
 
-/**
- * Clase para manejar el carrito de compras
- */
-class Cart {
-    
-    /**
-     * Inicializar carrito en sesión
-     */
-    public static function init() {
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-        if (!isset($_SESSION['cart_totals'])) {
-            $_SESSION['cart_totals'] = [
-                'subtotal' => 0,
-                'tax' => 0,
-                'total' => 0,
-                'items_count' => 0
-            ];
-        }
-    }
-    
     /**
      * Agregar producto al carrito
      */
-    public static function addItem($productId, $quantity = 1) {
+    public static function add($productId, $quantity = 1)
+    {
         try {
-            self::init();
-            
-            // Obtener información del producto
-            $product = self::getProductInfo($productId);
+            // Validar producto
+            $product = self::getProductDetails($productId);
             if (!$product) {
-                return ['success' => false, 'message' => 'Producto no encontrado'];
+                throw new Exception('Producto no encontrado');
             }
-            
-            // Verificar si ya existe en el carrito
-            if (isset($_SESSION['cart'][$productId])) {
-                $_SESSION['cart'][$productId]['quantity'] += $quantity;
+
+            if (!$product['is_active']) {
+                throw new Exception('Producto no disponible');
+            }
+
+            // Validar cantidad
+            $quantity = max(1, min(10, intval($quantity)));
+
+            // Inicializar carrito si no existe
+            if (!isset($_SESSION[self::$sessionKey])) {
+                $_SESSION[self::$sessionKey] = [];
+            }
+
+            // Agregar o actualizar producto
+            if (isset($_SESSION[self::$sessionKey][$productId])) {
+                $_SESSION[self::$sessionKey][$productId]['quantity'] = min(
+                    10,
+                    $_SESSION[self::$sessionKey][$productId]['quantity'] + $quantity
+                );
             } else {
-                $_SESSION['cart'][$productId] = [
-                    'id' => $product['id'],
+                $_SESSION[self::$sessionKey][$productId] = [
+                    'id' => $productId,
                     'name' => $product['name'],
                     'slug' => $product['slug'],
-                    'price' => $product['price'],
+                    'price' => floatval($product['price']),
                     'is_free' => $product['is_free'],
                     'image' => $product['image'],
                     'category_name' => $product['category_name'],
@@ -52,332 +47,292 @@ class Cart {
                     'added_at' => time()
                 ];
             }
-            
-            // Actualizar totales
-            self::updateTotals();
-            
+
             return [
-                'success' => true, 
+                'success' => true,
                 'message' => 'Producto agregado al carrito',
-                'cart_count' => self::getItemsCount(),
-                'cart_total' => self::getTotal()
+                'cart_count' => self::getItemsCount()
             ];
-            
         } catch (Exception $e) {
-            logError("Error agregando al carrito: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Error interno del sistema'];
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
-    
+
     /**
      * Actualizar cantidad de un producto
      */
-    public static function updateItem($productId, $quantity) {
+    public static function update($productId, $quantity)
+    {
         try {
-            self::init();
-            
-            if (!isset($_SESSION['cart'][$productId])) {
-                return ['success' => false, 'message' => 'Producto no encontrado en el carrito'];
+            if (!isset($_SESSION[self::$sessionKey][$productId])) {
+                throw new Exception('Producto no encontrado en el carrito');
             }
-            
+
+            $quantity = intval($quantity);
+
             if ($quantity <= 0) {
-                return self::removeItem($productId);
+                return self::remove($productId);
             }
-            
-            $_SESSION['cart'][$productId]['quantity'] = $quantity;
-            self::updateTotals();
-            
+
+            // Limitar cantidad máxima
+            $quantity = min(10, $quantity);
+
+            $_SESSION[self::$sessionKey][$productId]['quantity'] = $quantity;
+
+            $totals = self::getTotals();
+
             return [
                 'success' => true,
                 'message' => 'Cantidad actualizada',
                 'cart_count' => self::getItemsCount(),
-                'cart_total' => self::getTotal()
+                'totals' => $totals,
+                'item_subtotal' => formatPrice($_SESSION[self::$sessionKey][$productId]['price'] * $quantity)
             ];
-            
         } catch (Exception $e) {
-            logError("Error actualizando carrito: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Error interno del sistema'];
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
-    
+
     /**
-     * Eliminar producto del carrito
+     * Remover producto del carrito
      */
-    public static function removeItem($productId) {
+    public static function remove($productId)
+    {
         try {
-            self::init();
-            
-            if (isset($_SESSION['cart'][$productId])) {
-                unset($_SESSION['cart'][$productId]);
-                self::updateTotals();
-                
-                return [
-                    'success' => true,
-                    'message' => 'Producto eliminado del carrito',
-                    'cart_count' => self::getItemsCount(),
-                    'cart_total' => self::getTotal()
-                ];
+            if (!isset($_SESSION[self::$sessionKey][$productId])) {
+                throw new Exception('Producto no encontrado en el carrito');
             }
-            
-            return ['success' => false, 'message' => 'Producto no encontrado'];
-            
+
+            $productName = $_SESSION[self::$sessionKey][$productId]['name'];
+            unset($_SESSION[self::$sessionKey][$productId]);
+
+            $totals = self::getTotals();
+
+            return [
+                'success' => true,
+                'message' => "\"$productName\" eliminado del carrito",
+                'cart_count' => self::getItemsCount(),
+                'cart_empty' => self::isEmpty(),
+                'totals' => $totals
+            ];
         } catch (Exception $e) {
-            logError("Error eliminando del carrito: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Error interno del sistema'];
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
     }
-    
+
     /**
-     * Limpiar todo el carrito
+     * Vaciar carrito
      */
-    public static function clear() {
-        $_SESSION['cart'] = [];
-        self::updateTotals();
-        
+    public static function clear()
+    {
+        $_SESSION[self::$sessionKey] = [];
         return [
             'success' => true,
             'message' => 'Carrito vaciado',
-            'cart_count' => 0,
-            'cart_total' => 0
+            'cart_count' => 0
         ];
     }
-    
+
     /**
-     * Obtener contenido del carrito
+     * Obtener items del carrito
      */
-    public static function getItems() {
-        self::init();
-        return $_SESSION['cart'] ?? [];
+    public static function getItems()
+    {
+        if (!isset($_SESSION[self::$sessionKey])) {
+            return [];
+        }
+
+        // Verificar que los productos aún existan y estén activos
+        $validItems = [];
+        foreach ($_SESSION[self::$sessionKey] as $productId => $item) {
+            $product = self::getProductDetails($productId);
+            if ($product && $product['is_active']) {
+                // Actualizar datos del producto por si cambiaron
+                $item['name'] = $product['name'];
+                $item['price'] = floatval($product['price']);
+                $item['is_free'] = $product['is_free'];
+                $item['image'] = $product['image'];
+
+                $validItems[$productId] = $item;
+            }
+        }
+
+        // Actualizar carrito con items válidos
+        $_SESSION[self::$sessionKey] = $validItems;
+
+        return $validItems;
     }
-    
-    /**
-     * Obtener número total de items
-     */
-    public static function getItemsCount() {
-        self::init();
-        return $_SESSION['cart_totals']['items_count'];
-    }
-    
-    /**
-     * Obtener subtotal
-     */
-    public static function getSubtotal() {
-        self::init();
-        return $_SESSION['cart_totals']['subtotal'];
-    }
-    
-    /**
-     * Obtener impuestos
-     */
-    public static function getTax() {
-        self::init();
-        return $_SESSION['cart_totals']['tax'];
-    }
-    
-    /**
-     * Obtener total final
-     */
-    public static function getTotal() {
-        self::init();
-        return $_SESSION['cart_totals']['total'];
-    }
-    
-    /**
-     * Obtener todos los totales
-     */
-    public static function getTotals() {
-        self::init();
-        return $_SESSION['cart_totals'];
-    }
-    
+
     /**
      * Verificar si el carrito está vacío
      */
-    public static function isEmpty() {
-        self::init();
-        return empty($_SESSION['cart']);
+    public static function isEmpty()
+    {
+        return empty(self::getItems());
     }
-    
+
     /**
-     * Verificar si un producto está en el carrito
+     * Obtener número de productos en el carrito
      */
-    public static function hasItem($productId) {
-        self::init();
-        return isset($_SESSION['cart'][$productId]);
+    public static function getItemsCount()
+    {
+        $items = self::getItems();
+        return array_sum(array_column($items, 'quantity'));
     }
-    
+
     /**
-     * Obtener cantidad de un producto específico
+     * Calcular totales del carrito
      */
-    public static function getItemQuantity($productId) {
-        self::init();
-        return $_SESSION['cart'][$productId]['quantity'] ?? 0;
-    }
-    
-    /**
-     * Actualizar totales del carrito
-     */
-    private static function updateTotals() {
-        self::init();
-        
+    public static function getTotals()
+    {
+        $items = self::getItems();
+
         $subtotal = 0;
         $itemsCount = 0;
-        
-        foreach ($_SESSION['cart'] as $item) {
-            if (!$item['is_free']) {
-                $subtotal += ($item['price'] * $item['quantity']);
-            }
+        $freeItems = [];
+        $paidItems = [];
+
+        foreach ($items as $item) {
             $itemsCount += $item['quantity'];
+
+            if ($item['is_free']) {
+                $freeItems[] = $item;
+            } else {
+                $itemSubtotal = $item['price'] * $item['quantity'];
+                $subtotal += $itemSubtotal;
+                $paidItems[] = $item;
+            }
         }
-        
-        // Calcular impuestos (configurable)
-        $taxRate = floatval(Settings::get('tax_rate', '0')) / 100;
-        $tax = $subtotal * $taxRate;
+
+        // Calcular impuestos (si están configurados)
+        $taxRate = floatval(Settings::get('tax_rate', '0'));
+        $tax = $subtotal * ($taxRate / 100);
+
         $total = $subtotal + $tax;
-        
-        $_SESSION['cart_totals'] = [
-            'subtotal' => $subtotal,
-            'tax' => $tax,
-            'total' => $total,
+
+        return [
             'items_count' => $itemsCount,
-            'tax_rate' => $taxRate * 100
+            'subtotal' => $subtotal,
+            'subtotal_raw' => $subtotal,
+            'tax' => $tax,
+            'tax_raw' => $tax,
+            'tax_rate' => $taxRate,
+            'total' => $total,
+            'total_raw' => $total,
+            'free_items_count' => count($freeItems),
+            'paid_items_count' => count($paidItems),
+            'has_free_items' => !empty($freeItems),
+            'has_paid_items' => !empty($paidItems)
         ];
     }
-    
+
     /**
-     * Obtener información del producto desde la BD
+     * Validar carrito
      */
-    private static function getProductInfo($productId) {
+    public static function validate()
+    {
+        $items = self::getItems();
+        $errors = [];
+
+        if (empty($items)) {
+            $errors[] = 'El carrito está vacío';
+            return ['valid' => false, 'errors' => $errors];
+        }
+
+        foreach ($items as $productId => $item) {
+            $product = self::getProductDetails($productId);
+
+            if (!$product) {
+                $errors[] = "Producto \"{$item['name']}\" no encontrado";
+                continue;
+            }
+
+            if (!$product['is_active']) {
+                $errors[] = "Producto \"{$item['name']}\" no está disponible";
+                continue;
+            }
+
+            if ($item['quantity'] > 10) {
+                $errors[] = "Cantidad máxima para \"{$item['name']}\" es 10";
+            }
+        }
+
+        return [
+            'valid' => empty($errors),
+            'errors' => $errors
+        ];
+    }
+
+    /**
+     * Preparar datos para checkout
+     */
+    public static function prepareCheckoutData()
+    {
+        $validation = self::validate();
+        if (!$validation['valid']) {
+            return ['valid' => false, 'errors' => $validation['errors']];
+        }
+
+        $items = self::getItems();
+        $totals = self::getTotals();
+
+        $freeItems = array_filter($items, fn($item) => $item['is_free']);
+        $paidItems = array_filter($items, fn($item) => !$item['is_free']);
+
+        $requiresPayment = !empty($paidItems) && $totals['total'] > 0;
+
+        return [
+            'valid' => true,
+            'items' => $items,
+            'totals' => $totals,
+            'free_items' => $freeItems,
+            'paid_items' => $paidItems,
+            'requires_payment' => $requiresPayment,
+            'items_count' => count($items),
+            'products_count' => $totals['items_count']
+        ];
+    }
+
+    /**
+     * Obtener detalles del producto
+     */
+    private static function getProductDetails($productId)
+    {
         try {
             $db = Database::getInstance()->getConnection();
             $stmt = $db->prepare("
                 SELECT p.*, c.name as category_name 
                 FROM products p 
                 LEFT JOIN categories c ON p.category_id = c.id 
-                WHERE p.id = ? AND p.is_active = 1
+                WHERE p.id = ?
             ");
             $stmt->execute([$productId]);
             return $stmt->fetch();
         } catch (Exception $e) {
-            logError("Error obteniendo producto para carrito: " . $e->getMessage());
             return false;
         }
     }
-    
-    /**
-     * Validar carrito antes del checkout
-     */
-    public static function validate() {
-        self::init();
-        $errors = [];
-        
-        if (self::isEmpty()) {
-            $errors[] = 'El carrito está vacío';
-            return ['valid' => false, 'errors' => $errors];
-        }
-        
-        // Verificar que todos los productos sigan activos
-        foreach ($_SESSION['cart'] as $productId => $item) {
-            $product = self::getProductInfo($productId);
-            if (!$product) {
-                $errors[] = "El producto '{$item['name']}' ya no está disponible";
-                unset($_SESSION['cart'][$productId]);
-            } elseif ($product['price'] != $item['price']) {
-                // Actualizar precio si cambió
-                $_SESSION['cart'][$productId]['price'] = $product['price'];
-                $errors[] = "El precio del producto '{$item['name']}' ha cambiado";
-            }
-        }
-        
-        if (!empty($errors)) {
-            self::updateTotals();
-        }
-        
-        return [
-            'valid' => empty($errors),
-            'errors' => $errors,
-            'updated_totals' => self::getTotals()
-        ];
+
+    function addToCart($productId, $quantity = 1)
+    {
+        return Cart::addItem($productId, $quantity);
     }
-    
+
     /**
-     * Preparar datos para el checkout
+     * Agregar producto al carrito (método requerido por el módulo JS)
      */
-    public static function prepareCheckoutData() {
-        $validation = self::validate();
-        if (!$validation['valid']) {
-            return $validation;
-        }
-        
-        $items = self::getItems();
-        $totals = self::getTotals();
-        
-        // Separar items gratuitos de los pagados
-        $freeItems = [];
-        $paidItems = [];
-        
-        foreach ($items as $item) {
-            if ($item['is_free']) {
-                $freeItems[] = $item;
-            } else {
-                $paidItems[] = $item;
-            }
-        }
-        
-        return [
-            'valid' => true,
-            'items' => $items,
-            'free_items' => $freeItems,
-            'paid_items' => $paidItems,
-            'totals' => $totals,
-            'has_paid_items' => !empty($paidItems),
-            'has_free_items' => !empty($freeItems),
-            'requires_payment' => !empty($paidItems) && $totals['total'] > 0
-        ];
-    }
-    
-    /**
-     * Convertir carrito en items de orden
-     */
-    public static function convertToOrderItems() {
-        $items = self::getItems();
-        $orderItems = [];
-        
-        foreach ($items as $item) {
-            $orderItems[] = [
-                'product_id' => $item['id'],
-                'product_name' => $item['name'],
-                'price' => $item['is_free'] ? 0 : $item['price'],
-                'quantity' => $item['quantity']
-            ];
-        }
-        
-        return $orderItems;
+    public static function addItem($productId, $quantity = 1)
+    {
+        // Usar el método existente 'add' que ya funciona
+        return self::add($productId, $quantity);
     }
 }
-
-// Funciones helper para mantener compatibilidad
-function addToCart($productId, $quantity = 1) {
-    return Cart::addItem($productId, $quantity);
-}
-
-function updateCartItem($productId, $quantity) {
-    return Cart::updateItem($productId, $quantity);
-}
-
-function removeFromCart($productId) {
-    return Cart::removeItem($productId);
-}
-
-function getCartCount() {
-    return Cart::getItemsCount();
-}
-
-function getCartTotal() {
-    return Cart::getTotal();
-}
-
-function clearCart() {
-    return Cart::clear();
-}
-?>

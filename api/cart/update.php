@@ -1,6 +1,8 @@
 <?php
 // api/cart/update.php - Actualizar cantidad en el carrito
 header('Content-Type: application/json');
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // Solo permitir POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -82,4 +84,5 @@ try {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
 }
+exit;
 ?>

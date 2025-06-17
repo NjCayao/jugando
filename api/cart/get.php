@@ -1,6 +1,8 @@
 <?php
 // api/cart/get.php - Obtener contenido del carrito
 header('Content-Type: application/json');
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // Solo permitir GET
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -80,3 +82,5 @@ try {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Error interno del servidor']);
 }
+exit;
+?>

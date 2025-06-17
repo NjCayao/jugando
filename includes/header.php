@@ -203,12 +203,12 @@ $currentUser = getCurrentUser();
                     
                     <!-- Cart -->
                     <div class="cart-icon">
-                        <a href="<?php echo SITE_URL; ?>/carrito" class="btn btn-outline-primary position-relative">
+                        <button type="button" class="btn btn-outline-primary position-relative" onclick="openCartModal(event)">
                             <i class="fas fa-shopping-cart"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cart-count" style="display: none;">
                                 0
                             </span>
-                        </a>
+                        </button>
                     </div>
                     
                     <!-- Mobile User Menu -->

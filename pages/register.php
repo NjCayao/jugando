@@ -151,150 +151,36 @@ $siteName = Settings::get('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-
-    <style>
-        .auth-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-
-        .auth-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
-            animation: float 20s infinite linear;
-        }
-
-        .auth-card {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-        }
-
-        .auth-header {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .auth-body {
-            padding: 2rem;
-        }
-
-        .form-floating label {
-            color: #6c757d;
-        }
-
-        .form-floating>.form-control:focus~label {
-            color: #007bff;
-        }
-
-        .password-strength {
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-        }
-
-        .strength-weak {
-            background: #dc3545;
-            width: 25%;
-        }
-
-        .strength-fair {
-            background: #ffc107;
-            width: 50%;
-        }
-
-        .strength-good {
-            background: #28a745;
-            width: 75%;
-        }
-
-        .strength-strong {
-            background: #007bff;
-            width: 100%;
-        }
-
-        .social-login {
-            border-top: 1px solid #dee2e6;
-            padding-top: 2rem;
-            margin-top: 2rem;
-        }
-
-        .btn-social {
-            width: 100%;
-            margin-bottom: 0.5rem;
-            padding: 0.75rem;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-
-        .btn-google {
-            background: #dd4b39;
-            border-color: #dd4b39;
-            color: white;
-        }
-
-        .btn-facebook {
-            background: #3b5998;
-            border-color: #3b5998;
-            color: white;
-        }
-
-        .auth-footer {
-            background: #f8f9fa;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            border-top: 1px solid #dee2e6;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-100px);
-            }
-        }
-    </style>
 </head>
 
 <body>
-    <div class="auth-section">
+    <!-- Header con breadcrumb -->
+    <div class="dashboard-header-compact">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-xl-6">
-                    <div class="auth-card">
-                        <!-- Header -->
-                        <div class="auth-header">
-                            <h2 class="mb-2">
-                                <i class="fas fa-user-plus me-2"></i>Crear Cuenta
-                            </h2>
-                            <p class="mb-0 opacity-75">Únete a nuestra comunidad de desarrolladores</p>
-                        </div>
+            <nav aria-label="breadcrumb" class="mb-3">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>" class="text-white-50">Inicio</a></li>
+                    <li class="breadcrumb-item active text-white">Registro</li>
+                </ol>
+            </nav>
+            
+            <div class="dashboard-welcome text-center">
+                <div class="dashboard-avatar mx-auto mb-3">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1 class="h3 mb-2 text-white">Crear Cuenta</h1>
+                <p class="mb-0 text-white-50">
+                    Únete a nuestra comunidad de desarrolladores
+                </p>
+            </div>
+        </div>
+    </div>
 
-                        <!-- Body -->
-                        <div class="auth-body">
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-xl-6">
+                <div class="dashboard-section">
+                    <div class="section-body-compact">
                             <!-- Mostrar errores -->
                             <?php if (!empty($errors)): ?>
                                 <div class="alert alert-danger">
@@ -388,8 +274,8 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                                 <i class="fas fa-lock me-2"></i>Contraseña
                                             </label>
                                         </div>
-                                        <div class="password-strength">
-                                            <div class="password-strength-bar" id="strengthBar"></div>
+                                        <div class="mt-2" style="height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
+                                            <div id="strengthBar" style="height: 100%; width: 0%; transition: all 0.3s ease;"></div>
                                         </div>
                                         <small id="passwordHelp" class="form-text text-muted">
                                             Mínimo <?php echo PASSWORD_MIN_LENGTH; ?> caracteres
@@ -436,10 +322,12 @@ $siteName = Settings::get('site_name', 'MiSistema');
                         </div>
 
                         <!-- Footer -->
-                        <div class="auth-footer">
-                            <p class="mb-0">
-                                ¿Ya tienes cuenta? <a href="<?php echo SITE_URL; ?>/pages/login.php" class="text-decoration-none">Iniciar Sesión</a>
-                            </p>
+                        <div class="sidebar-card-compact mt-4">
+                            <div class="sidebar-body-compact text-center">
+                                <p class="mb-0">
+                                    ¿Ya tienes cuenta? <a href="<?php echo SITE_URL; ?>/pages/login.php" class="text-decoration-none">Iniciar Sesión</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -464,14 +352,12 @@ $siteName = Settings::get('site_name', 'MiSistema');
                 const strength = calculatePasswordStrength(password);
 
                 // Actualizar barra de fuerza
-                strengthBar.className = 'password-strength-bar';
-                if (strength.score > 0) {
-                    strengthBar.classList.add(`strength-${strength.level}`);
-                }
+                strengthBar.style.width = (strength.score * 25) + '%';
+                strengthBar.style.background = strength.color;
 
                 // Actualizar texto de ayuda
                 passwordHelp.textContent = strength.message;
-                passwordHelp.className = `form-text text-${strength.color}`;
+                passwordHelp.className = `form-text text-${strength.textColor}`;
             });
 
             // Validar confirmación de contraseña
@@ -521,9 +407,9 @@ $siteName = Settings::get('site_name', 'MiSistema');
 
         function calculatePasswordStrength(password) {
             let score = 0;
-            let level = 'weak';
             let message = 'Muy débil';
-            let color = 'danger';
+            let color = '#dc3545';
+            let textColor = 'danger';
 
             if (password.length >= <?php echo PASSWORD_MIN_LENGTH; ?>) score++;
             if (password.match(/[a-z]/)) score++;
@@ -534,33 +420,33 @@ $siteName = Settings::get('site_name', 'MiSistema');
             switch (score) {
                 case 0:
                 case 1:
-                    level = 'weak';
                     message = 'Muy débil';
-                    color = 'danger';
+                    color = '#dc3545';
+                    textColor = 'danger';
                     break;
                 case 2:
-                    level = 'fair';
                     message = 'Débil';
-                    color = 'warning';
+                    color = '#ffc107';
+                    textColor = 'warning';
                     break;
                 case 3:
-                    level = 'good';
                     message = 'Buena';
-                    color = 'success';
+                    color = '#28a745';
+                    textColor = 'success';
                     break;
                 case 4:
                 case 5:
-                    level = 'strong';
                     message = 'Muy fuerte';
-                    color = 'primary';
+                    color = '#007bff';
+                    textColor = 'primary';
                     break;
             }
 
             return {
                 score,
-                level,
                 message,
-                color
+                color,
+                textColor
             };
         }
     </script>

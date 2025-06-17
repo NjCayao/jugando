@@ -136,190 +136,43 @@ $siteName = getSetting('site_name', 'MiSistema');
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
-    
-    <style>
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem 0 2rem;
-        }
-        
-        .profile-section {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        
-        .section-header {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .section-body {
-            padding: 2rem;
-        }
-        
-        .avatar-section {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        .avatar-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 1rem;
-        }
-        
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: white;
-            border: 4px solid white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .avatar-upload {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 35px;
-            height: 35px;
-            background: #007bff;
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .avatar-upload:hover {
-            background: #0056b3;
-            transform: scale(1.1);
-        }
-        
-        .info-card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-        
-        .info-item:last-child {
-            border-bottom: none;
-        }
-        
-        .info-label {
-            font-weight: 500;
-            color: #495057;
-        }
-        
-        .info-value {
-            color: #6c757d;
-        }
-        
-        .breadcrumb-custom {
-            background: transparent;
-            padding: 1rem 0;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
-            color: rgba(255,255,255,0.7);
-        }
-        
-        .breadcrumb-custom .breadcrumb-item a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-        }
-        
-        .breadcrumb-custom .breadcrumb-item.active {
-            color: white;
-        }
-        
-        .form-floating label {
-            color: #6c757d;
-        }
-        
-        .password-strength {
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 2px;
-            margin-top: 0.5rem;
-            overflow: hidden;
-        }
-        
-        .password-strength-bar {
-            height: 100%;
-            width: 0%;
-            transition: all 0.3s ease;
-        }
-        
-        .strength-weak { background: #dc3545; width: 25%; }
-        .strength-fair { background: #ffc107; width: 50%; }
-        .strength-good { background: #28a745; width: 75%; }
-        .strength-strong { background: #007bff; width: 100%; }
-        
-        .activity-item {
-            padding: 1rem;
-            border-left: 3px solid #007bff;
-            margin-bottom: 1rem;
-            background: #f8f9fa;
-            border-radius: 0 8px 8px 0;
-        }
-        
-        .activity-time {
-            color: #6c757d;
-            font-size: 0.875rem;
-        }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
     
     <!-- Page Header -->
-    <div class="page-header">
+    <div class="dashboard-header-compact">
         <div class="container">
             <!-- Breadcrumb -->
-            <nav aria-label="breadcrumb" class="breadcrumb-custom">
+            <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active">Mi Perfil</li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>" class="text-white-50">Inicio</a></li>
+                    <li class="breadcrumb-item"><a href="<?php echo SITE_URL; ?>/dashboard" class="text-white-50">Dashboard</a></li>
+                    <li class="breadcrumb-item active text-white">Mi Perfil</li>
                 </ol>
             </nav>
             
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="display-5 mb-2">Mi Perfil</h1>
-                    <p class="lead mb-0">
-                        Gestiona tu información personal y configuraciones de cuenta
-                    </p>
-                </div>
-                <div class="col-md-4 text-md-end">
-                    <a href="<?php echo SITE_URL; ?>/dashboard" class="btn btn-light btn-lg">
-                        <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
-                    </a>
+            <div class="dashboard-welcome">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center">
+                            <div class="dashboard-avatar me-3">
+                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                            </div>
+                            <div>
+                                <h1 class="h3 mb-2 text-white">Mi Perfil</h1>
+                                <p class="mb-0 text-white-50">
+                                    Gestiona tu información personal y configuraciones de cuenta
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a href="<?php echo SITE_URL; ?>/dashboard" class="btn btn-light">
+                            <i class="fas fa-arrow-left me-2"></i>Volver al Dashboard
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -351,13 +204,13 @@ $siteName = getSetting('site_name', 'MiSistema');
             <!-- Columna Principal -->
             <div class="col-lg-8">
                 <!-- Información Personal -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
+                        <h5 class="section-title-compact mb-0">
                             <i class="fas fa-user me-2"></i>Información Personal
                         </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="section-body-compact">
                         <form method="POST" id="profileForm">
                             <input type="hidden" name="update_profile" value="1">
                             
@@ -427,13 +280,13 @@ $siteName = getSetting('site_name', 'MiSistema');
                 </div>
                 
                 <!-- Cambiar Contraseña -->
-                <div class="profile-section">
-                    <div class="section-header">
-                        <h5 class="mb-0">
+                <div class="dashboard-section">
+                    <div class="section-header-compact">
+                        <h5 class="section-title-compact mb-0">
                             <i class="fas fa-lock me-2"></i>Cambiar Contraseña
                         </h5>
                     </div>
-                    <div class="section-body">
+                    <div class="section-body-compact">
                         <form method="POST" id="passwordForm">
                             <input type="hidden" name="change_password" value="1">
                             
@@ -452,8 +305,8 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                placeholder="Nueva contraseña" required>
                                         <label for="new_password">Nueva Contraseña</label>
                                     </div>
-                                    <div class="password-strength">
-                                        <div class="password-strength-bar" id="strengthBar"></div>
+                                    <div class="mt-2" style="height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
+                                        <div id="strengthBar" style="height: 100%; width: 0%; transition: all 0.3s ease;"></div>
                                     </div>
                                     <small id="passwordHelp" class="form-text text-muted">
                                         Mínimo <?php echo PASSWORD_MIN_LENGTH; ?> caracteres
@@ -482,89 +335,87 @@ $siteName = getSetting('site_name', 'MiSistema');
             <!-- Sidebar -->
             <div class="col-lg-4">
                 <!-- Avatar -->
-                <div class="profile-section">
-                    <div class="section-header">
+                <div class="sidebar-card-compact">
+                    <div class="sidebar-header-compact">
                         <h5 class="mb-0">
                             <i class="fas fa-camera me-2"></i>Foto de Perfil
                         </h5>
                     </div>
-                    <div class="section-body">
-                        <div class="avatar-section">
-                            <div class="avatar-container">
-                                <div class="avatar">
-                                    <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
-                                </div>
-                                <div class="avatar-upload" onclick="document.getElementById('avatar-upload').click()">
+                    <div class="sidebar-body-compact text-center">
+                        <div class="position-relative d-inline-block mb-3">
+                            <div class="dashboard-avatar" style="width: 100px; height: 100px; font-size: 2.5rem; margin: 0 auto;">
+                                <?php echo strtoupper(substr($user['first_name'], 0, 1) . substr($user['last_name'], 0, 1)); ?>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0" style="cursor: pointer;" onclick="document.getElementById('avatar-upload').click()">
+                                <div class="btn btn-primary btn-sm rounded-circle" style="width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">
                                     <i class="fas fa-camera"></i>
                                 </div>
                             </div>
-                            <h6><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h6>
-                            <small class="text-muted"><?php echo htmlspecialchars($user['email']); ?></small>
-                            
-                            <form method="POST" enctype="multipart/form-data" style="display: none;">
-                                <input type="hidden" name="upload_avatar" value="1">
-                                <input type="file" id="avatar-upload" name="avatar" accept="image/*" onchange="this.form.submit()">
-                            </form>
                         </div>
+                        <h6><?php echo htmlspecialchars($user['first_name'] . ' ' . $user['last_name']); ?></h6>
+                        <small class="text-muted"><?php echo htmlspecialchars($user['email']); ?></small>
+                        
+                        <form method="POST" enctype="multipart/form-data" style="display: none;">
+                            <input type="hidden" name="upload_avatar" value="1">
+                            <input type="file" id="avatar-upload" name="avatar" accept="image/*" onchange="this.form.submit()">
+                        </form>
                     </div>
                 </div>
                 
                 <!-- Información de Cuenta -->
-                <div class="profile-section">
-                    <div class="section-header">
+                <div class="sidebar-card-compact">
+                    <div class="sidebar-header-compact">
                         <h5 class="mb-0">
                             <i class="fas fa-info-circle me-2"></i>Información de Cuenta
                         </h5>
                     </div>
-                    <div class="section-body">
-                        <div class="info-card">
-                            <div class="info-item">
-                                <span class="info-label">Estado de Cuenta:</span>
-                                <span class="info-value">
-                                    <?php if ($user['is_verified']): ?>
-                                        <span class="badge bg-success">Verificada</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-warning">Sin Verificar</span>
-                                    <?php endif; ?>
-                                </span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Miembro desde:</span>
-                                <span class="info-value"><?php echo formatDate($user['created_at'], 'F Y'); ?></span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-label">Último acceso:</span>
-                                <span class="info-value">
-                                    <?php if ($user['last_login']): ?>
-                                        <?php echo timeAgo($user['last_login']); ?>
-                                    <?php else: ?>
-                                        Primer acceso
-                                    <?php endif; ?>
-                                </span>
-                            </div>
+                    <div class="sidebar-body-compact">
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Estado de Cuenta:</span>
+                            <span>
+                                <?php if ($user['is_verified']): ?>
+                                    <span class="badge bg-success">Verificada</span>
+                                <?php else: ?>
+                                    <span class="badge bg-warning">Sin Verificar</span>
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <span class="text-muted">Miembro desde:</span>
+                            <span class="fw-bold"><?php echo formatDate($user['created_at'], 'F Y'); ?></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Último acceso:</span>
+                            <span class="fw-bold">
+                                <?php if ($user['last_login']): ?>
+                                    <?php echo timeAgo($user['last_login']); ?>
+                                <?php else: ?>
+                                    Primer acceso
+                                <?php endif; ?>
+                            </span>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Actividad Reciente -->
-                <div class="profile-section">
-                    <div class="section-header">
+                <div class="sidebar-card-compact">
+                    <div class="sidebar-header-compact">
                         <h5 class="mb-0">
                             <i class="fas fa-history me-2"></i>Actividad Reciente
                         </h5>
                     </div>
-                    <div class="section-body">
-                        <div class="activity-item">
-                            <div><strong>Perfil actualizado</strong></div>
-                            <div class="activity-time">Hace 2 horas</div>
+                    <div class="sidebar-body-compact">
+                        <div class="user-product-item mb-3">
+                            <div class="fw-bold">Perfil actualizado</div>
+                            <div class="text-muted small">Hace 2 horas</div>
                         </div>
-                        <div class="activity-item">
-                            <div><strong>Inicio de sesión</strong></div>
-                            <div class="activity-time">Hoy</div>
+                        <div class="user-product-item mb-3">
+                            <div class="fw-bold">Inicio de sesión</div>
+                            <div class="text-muted small">Hoy</div>
                         </div>
-                        <div class="activity-item">
-                            <div><strong>Cuenta creada</strong></div>
-                            <div class="activity-time"><?php echo formatDate($user['created_at']); ?></div>
+                        <div class="user-product-item">
+                            <div class="fw-bold">Cuenta creada</div>
+                            <div class="text-muted small"><?php echo formatDate($user['created_at']); ?></div>
                         </div>
                     </div>
                 </div>
@@ -592,14 +443,12 @@ $siteName = getSetting('site_name', 'MiSistema');
                 const strength = calculatePasswordStrength(password);
                 
                 // Actualizar barra de fuerza
-                strengthBar.className = 'password-strength-bar';
-                if (strength.score > 0) {
-                    strengthBar.classList.add(`strength-${strength.level}`);
-                }
+                strengthBar.style.width = (strength.score * 25) + '%';
+                strengthBar.style.background = strength.color;
                 
                 // Actualizar texto de ayuda
                 passwordHelp.textContent = strength.message;
-                passwordHelp.className = `form-text text-${strength.color}`;
+                passwordHelp.className = `form-text text-${strength.textColor}`;
             });
             
             // Validar confirmación de contraseña
@@ -629,9 +478,9 @@ $siteName = getSetting('site_name', 'MiSistema');
         
         function calculatePasswordStrength(password) {
             let score = 0;
-            let level = 'weak';
             let message = 'Muy débil';
-            let color = 'danger';
+            let color = '#dc3545';
+            let textColor = 'danger';
             
             if (password.length >= <?php echo PASSWORD_MIN_LENGTH; ?>) score++;
             if (password.match(/[a-z]/)) score++;
@@ -642,29 +491,29 @@ $siteName = getSetting('site_name', 'MiSistema');
             switch (score) {
                 case 0:
                 case 1:
-                    level = 'weak';
                     message = 'Muy débil';
-                    color = 'danger';
+                    color = '#dc3545';
+                    textColor = 'danger';
                     break;
                 case 2:
-                    level = 'fair';
                     message = 'Débil';
-                    color = 'warning';
+                    color = '#ffc107';
+                    textColor = 'warning';
                     break;
                 case 3:
-                    level = 'good';
                     message = 'Buena';
-                    color = 'success';
+                    color = '#28a745';
+                    textColor = 'success';
                     break;
                 case 4:
                 case 5:
-                    level = 'strong';
                     message = 'Muy fuerte';
-                    color = 'primary';
+                    color = '#007bff';
+                    textColor = 'primary';
                     break;
             }
             
-            return { score, level, message, color };
+            return { score, message, color, textColor };
         }
     </script>
 </body>

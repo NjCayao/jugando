@@ -56,10 +56,16 @@ function generateOrderNumber() {
 }
 
 // Función para formatear precio - CORREGIDA
-function formatPrice($price) {
-    // Usar getSetting en lugar de Settings::get
-    $currencySymbol = getSetting('currency_symbol', '$');
-    return $currencySymbol . number_format($price, 2);
+function formatPrice($amount, $currency = null) {
+    if ($currency === null) {
+        $currency = Settings::get('currency_symbol', '$');
+    }
+    
+    if ($amount == 0) {
+        return 'GRATIS';
+    }
+    
+    return $currency . number_format($amount, 2);
 }
 
 // Función para verificar si es admin
@@ -69,7 +75,7 @@ function isAdmin() {
 
 // Función para verificar si usuario está logueado
 function isLoggedIn() {
-    return isset($_SESSION[SESSION_NAME]) && !empty($_SESSION[SESSION_NAME]);
+    return isset($_SESSION[SESSION_NAME]) && !empty($_SESSION[SESSION_NAME]['user_id']);
 }
 
 // Función para obtener datos del usuario logueado
@@ -78,11 +84,14 @@ function getCurrentUser() {
         return null;
     }
     
-    $userId = $_SESSION[SESSION_NAME]['user_id'];
-    $db = Database::getInstance()->getConnection();
-    $stmt = $db->prepare("SELECT * FROM users WHERE id = ? AND is_active = 1");
-    $stmt->execute([$userId]);
-    return $stmt->fetch();
+    try {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION[SESSION_NAME]['user_id']]);
+        return $stmt->fetch();
+    } catch (Exception $e) {
+        return null;
+    }
 }
 
 // Función para login de usuario
@@ -331,12 +340,11 @@ function formatDateTime($datetime, $format = 'd/m/Y H:i') {
 function timeAgo($datetime) {
     $time = time() - strtotime($datetime);
     
-    if ($time < 60) return 'hace unos segundos';
+    if ($time < 60) return 'hace ' . $time . ' segundos';
     if ($time < 3600) return 'hace ' . floor($time/60) . ' minutos';
     if ($time < 86400) return 'hace ' . floor($time/3600) . ' horas';
     if ($time < 2592000) return 'hace ' . floor($time/86400) . ' días';
     if ($time < 31536000) return 'hace ' . floor($time/2592000) . ' meses';
-    return 'hace ' . floor($time/31536000) . ' años';
+    return date('d/m/Y', strtotime($datetime));
 }
 
-?>

@@ -92,20 +92,9 @@ misistema/
 13/06/25 correcion de banner slider 
 13/06/25 correcion para traer las imagenes del modulo contenido al index principal
 
-# queriendo reestructurar
-assets/
-├── css/
-│   ├── modern.css          (Archivo principal de estilos)
-│   ├── components.css      (Componentes específicos)
-│   └── utilities.css       (Clases utilitarias)
-├── js/
-│   ├── modern.js          (JavaScript principal modularizado)
-│   ├── modules/
-│   │   ├── cart.js        (Módulo del carrito)
-│   │   ├── animations.js  (Módulo de animaciones)
-│   │   └── forms.js       (Módulo de formularios)
-│   └── utils.js           (Utilidades generales)
-└── images/
-    ├── hero/              (Imágenes del hero)
-    ├── icons/             (Iconos personalizados)
-    └── patterns/          (Patrones de fondo)
+# falta rediseñar - mover los css
+reset-password
+searh.php
+sucess.php
+cerify-email.php
+
