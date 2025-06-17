@@ -25,14 +25,61 @@ class CartModule {
      */
     initEventListeners() {
         // Event listener para abrir modal del carrito
+        // document.addEventListener('click', (e) => {
+        //     if (e.target.closest('.cart-icon a')) {
+        //         e.preventDefault();
+        //         this.loadCartContent();
+        //         const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+        //         cartModal.show();
+        //     }
+        // });
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.cart-icon a')) {
-                e.preventDefault();
-                this.loadCartContent();
-                const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-                cartModal.show();
+        if (e.target.closest('.quantity-btn')) {
+            const button = e.target.closest('.quantity-btn');
+            const action = button.dataset.action;
+            const productId = button.dataset.productId;
+            const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
+            
+            let currentQuantity = parseInt(input.value);
+            
+            if (action === 'increase' && currentQuantity < 10) {
+                currentQuantity++;
+            } else if (action === 'decrease' && currentQuantity > 1) {
+                currentQuantity--;
             }
-        });
+            
+            input.value = currentQuantity;
+            this.updateQuantity(productId, currentQuantity);
+        }
+        if (e.target.closest('.quantity-btn-modal')) {
+            const button = e.target.closest('.quantity-btn-modal');
+            const action = button.dataset.action;
+            const productId = button.dataset.productId;
+            const input = document.querySelector(`.quantity-input-modal[data-product-id="${productId}"]`);
+            
+            let currentQuantity = parseInt(input.value);
+            
+            if (action === 'increase' && currentQuantity < 10) {
+                currentQuantity++;
+            } else if (action === 'decrease' && currentQuantity > 1) {
+                currentQuantity--;
+            }
+            
+            input.value = currentQuantity;
+            // Usar función del modal en lugar de la del módulo
+            updateModalItemPrice(productId, currentQuantity);
+        }
+
+        // AGREGAR: Event listener para eliminar del modal
+        if (e.target.closest('.remove-item-modal')) {
+            const button = e.target.closest('.remove-item-modal');
+            const productId = button.dataset.productId;
+            
+            if (confirm('¿Eliminar este producto del carrito?')) {
+                removeItemFromModal(productId);
+            }
+        }
+    });
 
         // Event listeners para controles de cantidad
         document.addEventListener('click', (e) => {
@@ -56,18 +103,42 @@ class CartModule {
         });
 
         // Event listener para inputs de cantidad
+        // document.addEventListener('change', (e) => {
+        //     if (e.target.classList.contains('quantity-input')) {
+        //         const productId = e.target.dataset.productId;
+        //         let quantity = parseInt(e.target.value);
+                
+        //         if (quantity < 1) quantity = 1;
+        //         if (quantity > 10) quantity = 10;
+                
+        //         e.target.value = quantity;
+        //         this.updateQuantity(productId, quantity);
+        //     }
+        // });
         document.addEventListener('change', (e) => {
-            if (e.target.classList.contains('quantity-input')) {
-                const productId = e.target.dataset.productId;
-                let quantity = parseInt(e.target.value);
-                
-                if (quantity < 1) quantity = 1;
-                if (quantity > 10) quantity = 10;
-                
-                e.target.value = quantity;
-                this.updateQuantity(productId, quantity);
-            }
-        });
+        if (e.target.classList.contains('quantity-input')) {
+            const productId = e.target.dataset.productId;
+            let quantity = parseInt(e.target.value);
+            
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            
+            e.target.value = quantity;
+            this.updateQuantity(productId, quantity);
+        }
+
+        // AGREGAR: Para inputs del modal
+        if (e.target.classList.contains('quantity-input-modal')) {
+            const productId = e.target.dataset.productId;
+            let quantity = parseInt(e.target.value);
+            
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            
+            e.target.value = quantity;
+            updateModalItemPrice(productId, quantity);
+        }
+    });
 
         // Event listener para eliminar items
         document.addEventListener('click', (e) => {
@@ -614,4 +685,125 @@ function buyNow(productId) {
 function downloadFree(productId) {
     // Procesar descarga gratuita
     window.location.href = `/download/${productId}`;
+}
+
+
+// Funciones auxiliares para el modal (para compatibilidad con cart_modal.php)
+window.updateModalItemPrice = function(productId, quantity) {
+    const item = document.querySelector(`[data-product-id="${productId}"]`);
+    if (!item) return;
+    
+    const priceElement = item.querySelector('.item-subtotal-modal');
+    if (!priceElement) return;
+    
+    const unitPrice = parseFloat(priceElement.dataset.unitPrice);
+    
+    if (unitPrice > 0) {
+        const newSubtotal = unitPrice * quantity;
+        priceElement.textContent = formatPrice(newSubtotal);
+        
+        // Actualizar texto de precio por unidad
+        const perUnit = item.querySelector('.per-unit-price');
+        if (perUnit) {
+            if (quantity > 1) {
+                perUnit.style.display = 'block';
+                perUnit.innerHTML = `<small class="text-muted">${formatPrice(unitPrice)} c/u</small>`;
+            } else {
+                perUnit.style.display = 'none';
+            }
+        }
+    }
+    
+    updateModalTotal();
+};
+
+window.updateModalTotal = function() {
+    let total = 0;
+    let itemCount = 0;
+    
+    document.querySelectorAll('.item-subtotal-modal').forEach(element => {
+        const unitPrice = parseFloat(element.dataset.unitPrice) || 0;
+        const item = element.closest('[data-product-id]');
+        const quantity = parseInt(item.querySelector('.quantity-input-modal').value);
+        
+        total += unitPrice * quantity;
+        itemCount += quantity;
+    });
+    
+    // Actualizar elementos del modal
+    const totalElement = document.querySelector('.cart-total-modal');
+    const countElement = document.getElementById('modal-cart-count');
+    
+    if (totalElement) totalElement.textContent = formatPrice(total);
+    if (countElement) countElement.textContent = itemCount;
+    
+    // También actualizar el contador del header usando el módulo
+    if (cart) {
+        cart.updateCartCount(itemCount);
+    }
+};
+
+window.removeItemFromModal = function(productId) {
+    const item = document.querySelector(`[data-product-id="${productId}"]`);
+    if (item) {
+        item.remove();
+        updateModalTotal();
+        
+        // Si no quedan items, mostrar estado vacío
+        const remainingItems = document.querySelectorAll('[data-product-id]');
+        if (remainingItems.length === 0) {
+            const content = document.getElementById('cart-modal-content');
+            if (content) {
+                content.innerHTML = `
+                    <div class="empty-state-compact text-center py-4">
+                        <div class="empty-icon-compact mb-3">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h6 class="mb-2">Tu carrito está vacío</h6>
+                        <small class="text-muted">Agrega productos para comenzar</small>
+                        <div class="mt-3">
+                            <a href="/productos" class="crystal-btn" onclick="closeCartModal()">
+                                <i class="fas fa-search me-2"></i>Explorar
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    }
+};
+
+window.clearCartModal = function() {
+    if (confirm('¿Vaciar todo el carrito?')) {
+        const content = document.getElementById('cart-modal-content');
+        if (content) {
+            content.innerHTML = `
+                <div class="empty-state-compact text-center py-4">
+                    <div class="empty-icon-compact mb-3">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h6 class="mb-2">Tu carrito está vacío</h6>
+                    <small class="text-muted">Agrega productos para comenzar</small>
+                    <div class="mt-3">
+                        <a href="/productos" class="crystal-btn" onclick="closeCartModal()">
+                            <i class="fas fa-search me-2"></i>Explorar
+                        </a>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Actualizar contador
+        if (cart) {
+            cart.updateCartCount(0);
+        }
+    }
+};
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('es-PE', {
+        style: 'currency',
+        currency: 'PEN',
+        minimumFractionDigits: 2
+    }).format(price);
 }
