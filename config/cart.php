@@ -1,5 +1,5 @@
 <?php
-// config/cart.php - Sistema de carrito de compras
+// config/cart.php - Sistema de carrito de compras - VERSIÓN LIMPIA
 class Cart
 {
     private static $sessionKey = 'cart';
@@ -7,7 +7,7 @@ class Cart
     /**
      * Agregar producto al carrito
      */
-    public static function add($productId, $quantity = 1)
+    public static function addItem($productId, $quantity = 1)
     {
         try {
             // Validar producto
@@ -48,12 +48,16 @@ class Cart
                 ];
             }
 
+            $totals = self::getTotals();
+
             return [
                 'success' => true,
                 'message' => 'Producto agregado al carrito',
-                'cart_count' => self::getItemsCount()
+                'cart_count' => self::getItemsCount(),
+                'cart_total' => $totals['total']
             ];
         } catch (Exception $e) {
+            logError("Error en Cart::addItem: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -64,7 +68,7 @@ class Cart
     /**
      * Actualizar cantidad de un producto
      */
-    public static function update($productId, $quantity)
+    public static function updateItem($productId, $quantity)
     {
         try {
             if (!isset($_SESSION[self::$sessionKey][$productId])) {
@@ -74,7 +78,7 @@ class Cart
             $quantity = intval($quantity);
 
             if ($quantity <= 0) {
-                return self::remove($productId);
+                return self::removeItem($productId);
             }
 
             // Limitar cantidad máxima
@@ -88,10 +92,12 @@ class Cart
                 'success' => true,
                 'message' => 'Cantidad actualizada',
                 'cart_count' => self::getItemsCount(),
+                'cart_total' => $totals['total'],
                 'totals' => $totals,
                 'item_subtotal' => formatPrice($_SESSION[self::$sessionKey][$productId]['price'] * $quantity)
             ];
         } catch (Exception $e) {
+            logError("Error en Cart::updateItem: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -102,7 +108,7 @@ class Cart
     /**
      * Remover producto del carrito
      */
-    public static function remove($productId)
+    public static function removeItem($productId)
     {
         try {
             if (!isset($_SESSION[self::$sessionKey][$productId])) {
@@ -118,10 +124,12 @@ class Cart
                 'success' => true,
                 'message' => "\"$productName\" eliminado del carrito",
                 'cart_count' => self::getItemsCount(),
+                'cart_total' => $totals['total'],
                 'cart_empty' => self::isEmpty(),
                 'totals' => $totals
             ];
         } catch (Exception $e) {
+            logError("Error en Cart::removeItem: " . $e->getMessage());
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -138,7 +146,8 @@ class Cart
         return [
             'success' => true,
             'message' => 'Carrito vaciado',
-            'cart_count' => 0
+            'cart_count' => 0,
+            'cart_total' => 0
         ];
     }
 
@@ -178,6 +187,24 @@ class Cart
     public static function isEmpty()
     {
         return empty(self::getItems());
+    }
+
+    /**
+     * Verificar si un producto está en el carrito
+     */
+    public static function hasItem($productId)
+    {
+        $items = self::getItems();
+        return isset($items[$productId]);
+    }
+
+    /**
+     * Obtener cantidad de un producto específico
+     */
+    public static function getItemQuantity($productId)
+    {
+        $items = self::getItems();
+        return $items[$productId]['quantity'] ?? 0;
     }
 
     /**
@@ -253,16 +280,19 @@ class Cart
 
             if (!$product) {
                 $errors[] = "Producto \"{$item['name']}\" no encontrado";
+                unset($_SESSION[self::$sessionKey][$productId]);
                 continue;
             }
 
             if (!$product['is_active']) {
                 $errors[] = "Producto \"{$item['name']}\" no está disponible";
+                unset($_SESSION[self::$sessionKey][$productId]);
                 continue;
             }
 
             if ($item['quantity'] > 10) {
-                $errors[] = "Cantidad máxima para \"{$item['name']}\" es 10";
+                $_SESSION[self::$sessionKey][$productId]['quantity'] = 10;
+                $errors[] = "Cantidad de \"{$item['name']}\" ajustada al máximo (10)";
             }
         }
 
@@ -303,6 +333,26 @@ class Cart
     }
 
     /**
+     * Convertir carrito a items de orden
+     */
+    public static function convertToOrderItems()
+    {
+        $items = self::getItems();
+        $orderItems = [];
+
+        foreach ($items as $item) {
+            $orderItems[] = [
+                'product_id' => $item['id'],
+                'product_name' => $item['name'],
+                'price' => $item['is_free'] ? 0 : $item['price'],
+                'quantity' => $item['quantity']
+            ];
+        }
+
+        return $orderItems;
+    }
+
+    /**
      * Obtener detalles del producto
      */
     private static function getProductDetails($productId)
@@ -318,21 +368,35 @@ class Cart
             $stmt->execute([$productId]);
             return $stmt->fetch();
         } catch (Exception $e) {
+            logError("Error obteniendo producto $productId: " . $e->getMessage());
             return false;
         }
     }
-
-    function addToCart($productId, $quantity = 1)
-    {
-        return Cart::addItem($productId, $quantity);
-    }
-
-    /**
-     * Agregar producto al carrito (método requerido por el módulo JS)
-     */
-    public static function addItem($productId, $quantity = 1)
-    {
-        // Usar el método existente 'add' que ya funciona
-        return self::add($productId, $quantity);
-    }
 }
+
+// Funciones helper para compatibilidad con el código existente
+function addToCart($productId, $quantity = 1) {
+    return Cart::addItem($productId, $quantity);
+}
+
+function updateCartItem($productId, $quantity) {
+    return Cart::updateItem($productId, $quantity);
+}
+
+function removeFromCart($productId) {
+    return Cart::removeItem($productId);
+}
+
+function getCartCount() {
+    return Cart::getItemsCount();
+}
+
+function getCartTotal() {
+    $totals = Cart::getTotals();
+    return $totals['total'];
+}
+
+function clearCart() {
+    return Cart::clear();
+}
+?>

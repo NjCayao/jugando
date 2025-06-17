@@ -368,10 +368,13 @@ $siteName = Settings::get('site_name', 'MiSistema');
     
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-    
+    <script>
+        window.SITE_URL = '<?php echo SITE_URL; ?>';
+    </script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
+    <script src="<?php echo ASSETS_URL; ?>/js/modules/cart.js"></script>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {

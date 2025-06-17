@@ -1,4 +1,4 @@
-// assets/js/modules/cart.js - MÓDULO DEL CARRITO INDEPENDIENTE
+// assets/js/modules/cart.js - MÓDULO DEL CARRITO CORREGIDO
 
 /**
  * Módulo del Carrito de Compras
@@ -6,9 +6,13 @@
 class CartModule {
     constructor() {
         this.updating = false;
-        // POR ESTA:
-    this.apiBase = window.SITE_URL + '/api/cart/';
-    this.init();
+        
+        // ✅ Usar la configuración global definida en el header
+        this.apiBase = window.CART_CONFIG?.apiBase || window.SITE_URL + '/api/cart/' || '/api/cart/';
+        this.maxQuantity = window.CART_CONFIG?.maxQuantity || 10;
+        this.currency = window.CART_CONFIG?.currency || 'S/';
+        
+        this.init();
     }
 
     /**
@@ -17,70 +21,13 @@ class CartModule {
     init() {
         this.updateCartDisplay();
         this.initEventListeners();
-        console.log('🛒 Cart Module initialized');
+        console.log('🛒 Cart Module initialized with API:', this.apiBase);
     }
 
     /**
      * Inicializar event listeners
      */
     initEventListeners() {
-        // Event listener para abrir modal del carrito
-        // document.addEventListener('click', (e) => {
-        //     if (e.target.closest('.cart-icon a')) {
-        //         e.preventDefault();
-        //         this.loadCartContent();
-        //         const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-        //         cartModal.show();
-        //     }
-        // });
-        document.addEventListener('click', (e) => {
-        if (e.target.closest('.quantity-btn')) {
-            const button = e.target.closest('.quantity-btn');
-            const action = button.dataset.action;
-            const productId = button.dataset.productId;
-            const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
-            
-            let currentQuantity = parseInt(input.value);
-            
-            if (action === 'increase' && currentQuantity < 10) {
-                currentQuantity++;
-            } else if (action === 'decrease' && currentQuantity > 1) {
-                currentQuantity--;
-            }
-            
-            input.value = currentQuantity;
-            this.updateQuantity(productId, currentQuantity);
-        }
-        if (e.target.closest('.quantity-btn-modal')) {
-            const button = e.target.closest('.quantity-btn-modal');
-            const action = button.dataset.action;
-            const productId = button.dataset.productId;
-            const input = document.querySelector(`.quantity-input-modal[data-product-id="${productId}"]`);
-            
-            let currentQuantity = parseInt(input.value);
-            
-            if (action === 'increase' && currentQuantity < 10) {
-                currentQuantity++;
-            } else if (action === 'decrease' && currentQuantity > 1) {
-                currentQuantity--;
-            }
-            
-            input.value = currentQuantity;
-            // Usar función del modal en lugar de la del módulo
-            updateModalItemPrice(productId, currentQuantity);
-        }
-
-        // AGREGAR: Event listener para eliminar del modal
-        if (e.target.closest('.remove-item-modal')) {
-            const button = e.target.closest('.remove-item-modal');
-            const productId = button.dataset.productId;
-            
-            if (confirm('¿Eliminar este producto del carrito?')) {
-                removeItemFromModal(productId);
-            }
-        }
-    });
-
         // Event listeners para controles de cantidad
         document.addEventListener('click', (e) => {
             if (e.target.closest('.quantity-btn')) {
@@ -89,9 +36,11 @@ class CartModule {
                 const productId = button.dataset.productId;
                 const input = document.querySelector(`.quantity-input[data-product-id="${productId}"]`);
                 
+                if (!input) return;
+                
                 let currentQuantity = parseInt(input.value);
                 
-                if (action === 'increase' && currentQuantity < 10) {
+                if (action === 'increase' && currentQuantity < this.maxQuantity) {
                     currentQuantity++;
                 } else if (action === 'decrease' && currentQuantity > 1) {
                     currentQuantity--;
@@ -103,42 +52,18 @@ class CartModule {
         });
 
         // Event listener para inputs de cantidad
-        // document.addEventListener('change', (e) => {
-        //     if (e.target.classList.contains('quantity-input')) {
-        //         const productId = e.target.dataset.productId;
-        //         let quantity = parseInt(e.target.value);
-                
-        //         if (quantity < 1) quantity = 1;
-        //         if (quantity > 10) quantity = 10;
-                
-        //         e.target.value = quantity;
-        //         this.updateQuantity(productId, quantity);
-        //     }
-        // });
         document.addEventListener('change', (e) => {
-        if (e.target.classList.contains('quantity-input')) {
-            const productId = e.target.dataset.productId;
-            let quantity = parseInt(e.target.value);
-            
-            if (quantity < 1) quantity = 1;
-            if (quantity > 10) quantity = 10;
-            
-            e.target.value = quantity;
-            this.updateQuantity(productId, quantity);
-        }
-
-        // AGREGAR: Para inputs del modal
-        if (e.target.classList.contains('quantity-input-modal')) {
-            const productId = e.target.dataset.productId;
-            let quantity = parseInt(e.target.value);
-            
-            if (quantity < 1) quantity = 1;
-            if (quantity > 10) quantity = 10;
-            
-            e.target.value = quantity;
-            updateModalItemPrice(productId, quantity);
-        }
-    });
+            if (e.target.classList.contains('quantity-input')) {
+                const productId = e.target.dataset.productId;
+                let quantity = parseInt(e.target.value);
+                
+                if (quantity < 1) quantity = 1;
+                if (quantity > this.maxQuantity) quantity = this.maxQuantity;
+                
+                e.target.value = quantity;
+                this.updateQuantity(productId, quantity);
+            }
+        });
 
         // Event listener para eliminar items
         document.addEventListener('click', (e) => {
@@ -229,7 +154,9 @@ class CartModule {
                     this.updateCartItemDOM(productId, data);
                 }
                 
-                this.updateCartTotals(data.totals);
+                if (data.totals) {
+                    this.updateCartTotals(data.totals);
+                }
                 
                 if (data.cart_count === 0) {
                     this.showEmptyCart();
@@ -269,7 +196,11 @@ class CartModule {
             if (data.success) {
                 this.updateCartCount(data.cart_count);
                 this.removeCartItemFromDOM(productId);
-                this.updateCartTotals(data.totals);
+                
+                if (data.totals) {
+                    this.updateCartTotals(data.totals);
+                }
+                
                 this.showNotification(data.message, 'info');
                 
                 if (data.cart_empty) {
@@ -387,6 +318,11 @@ class CartModule {
     updateCartModal(data) {
         const modalBody = document.getElementById('cart-modal-body');
         
+        if (!modalBody) {
+            console.warn('Modal del carrito no encontrado');
+            return;
+        }
+        
         if (data.cart_empty) {
             this.showEmptyCart();
             return;
@@ -396,66 +332,82 @@ class CartModule {
         let itemsHTML = '<div class="cart-items">';
         
         data.items.forEach(item => {
-            itemsHTML += `
-                <div class="cart-item" data-product-id="${item.id}">
-                    <div class="row align-items-center">
-                        <div class="col-3">
-                            <div class="product-image">
-                                ${item.image_url ? 
-                                    `<img src="${item.image_url}" alt="${item.name}" class="img-fluid rounded" style="max-height: 60px; object-fit: cover;">` :
-                                    `<div class="no-image bg-light rounded d-flex align-items-center justify-content-center" style="height: 60px;">
-                                        <i class="fas fa-image text-muted"></i>
-                                    </div>`
-                                }
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <h6 class="mb-1">
-                                <a href="${item.product_url}" class="text-decoration-none text-dark" data-bs-dismiss="modal">
-                                    ${item.name}
-                                </a>
-                            </h6>
-                            ${item.category_name ? `<small class="text-muted">${item.category_name}</small>` : ''}
-                            <div class="price-info mt-1">
-                                ${item.is_free ? 
-                                    '<span class="text-success fw-bold">GRATIS</span>' :
-                                    `<span class="text-primary fw-bold">${item.price}</span>
-                                    ${item.quantity > 1 ? `<small class="text-muted">x${item.quantity} = <span class="item-subtotal">${item.subtotal}</span></small>` : ''}`
-                                }
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="quantity-controls d-flex align-items-center justify-content-between">
-                                <div class="input-group input-group-sm" style="max-width: 120px;">
-                                    <button class="btn btn-outline-secondary quantity-btn" type="button" 
-                                            data-action="decrease" data-product-id="${item.id}">
-                                        <i class="fas fa-minus"></i>
-                                    </button>
-                                    <input type="number" class="form-control text-center quantity-input" 
-                                           value="${item.quantity}" min="1" max="10" 
-                                           data-product-id="${item.id}">
-                                    <button class="btn btn-outline-secondary quantity-btn" type="button" 
-                                            data-action="increase" data-product-id="${item.id}">
-                                        <i class="fas fa-plus"></i>
-                                    </button>
-                                </div>
-                                <button class="btn btn-sm btn-outline-danger ms-2 remove-item" 
-                                        data-product-id="${item.id}" title="Eliminar del carrito">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-            `;
+            itemsHTML += this.generateCartItemHTML(item);
         });
         
         itemsHTML += '</div>';
         
         // Agregar totales
-        const totals = data.totals;
-        itemsHTML += `
+        itemsHTML += this.generateTotalsHTML(data.totals);
+        
+        modalBody.innerHTML = itemsHTML;
+        this.updateCartModalFooter(true);
+    }
+
+    /**
+     * Generar HTML de un item del carrito
+     */
+    generateCartItemHTML(item) {
+        return `
+            <div class="cart-item" data-product-id="${item.id}">
+                <div class="row align-items-center">
+                    <div class="col-3">
+                        <div class="product-image">
+                            ${item.image_url ? 
+                                `<img src="${item.image_url}" alt="${item.name}" class="img-fluid rounded" style="max-height: 60px; object-fit: cover;">` :
+                                `<div class="no-image bg-light rounded d-flex align-items-center justify-content-center" style="height: 60px;">
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>`
+                            }
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="mb-1">
+                            <a href="${item.product_url}" class="text-decoration-none text-dark" data-bs-dismiss="modal">
+                                ${item.name}
+                            </a>
+                        </h6>
+                        ${item.category_name ? `<small class="text-muted">${item.category_name}</small>` : ''}
+                        <div class="price-info mt-1">
+                            ${item.is_free ? 
+                                '<span class="text-success fw-bold">GRATIS</span>' :
+                                `<span class="text-primary fw-bold">${item.price}</span>
+                                ${item.quantity > 1 ? `<small class="text-muted">x${item.quantity} = <span class="item-subtotal">${item.subtotal}</span></small>` : ''}`
+                            }
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="quantity-controls d-flex align-items-center justify-content-between">
+                            <div class="input-group input-group-sm" style="max-width: 120px;">
+                                <button class="btn btn-outline-secondary quantity-btn" type="button" 
+                                        data-action="decrease" data-product-id="${item.id}">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="form-control text-center quantity-input" 
+                                       value="${item.quantity}" min="1" max="${this.maxQuantity}" 
+                                       data-product-id="${item.id}">
+                                <button class="btn btn-outline-secondary quantity-btn" type="button" 
+                                        data-action="increase" data-product-id="${item.id}">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <button class="btn btn-sm btn-outline-danger ms-2 remove-item" 
+                                    data-product-id="${item.id}" title="Eliminar del carrito">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        `;
+    }
+
+    /**
+     * Generar HTML de totales
+     */
+    generateTotalsHTML(totals) {
+        return `
             <div class="cart-totals bg-light p-3 rounded">
                 ${totals.subtotal_raw > 0 ? `
                     <div class="row mb-2">
@@ -476,9 +428,6 @@ class CartModule {
                 </div>
             </div>
         `;
-        
-        modalBody.innerHTML = itemsHTML;
-        this.updateCartModalFooter(true);
     }
 
     /**
@@ -486,12 +435,14 @@ class CartModule {
      */
     showEmptyCart() {
         const modalBody = document.getElementById('cart-modal-body');
+        if (!modalBody) return;
+        
         modalBody.innerHTML = `
             <div class="empty-cart text-center py-5">
                 <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
                 <h5 class="text-muted">Tu carrito está vacío</h5>
                 <p class="text-muted mb-4">Explora nuestros productos y agrega algunos al carrito</p>
-                <a href="/productos" class="btn btn-primary" data-bs-dismiss="modal">
+                <a href="${window.SITE_URL}/productos" class="btn btn-primary" data-bs-dismiss="modal">
                     <i class="fas fa-search me-2"></i>Explorar Productos
                 </a>
             </div>
@@ -524,12 +475,12 @@ class CartModule {
             <div class="w-100">
                 <div class="row g-2">
                     <div class="col-6">
-                        <a href="/pages/cart.php" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
+                        <a href="${window.SITE_URL}/pages/cart.php" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
                             <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="/pages/checkout.php" class="btn btn-success w-100" data-bs-dismiss="modal">
+                        <a href="${window.SITE_URL}/pages/checkout.php" class="btn btn-success w-100" data-bs-dismiss="modal">
                             <i class="fas fa-credit-card me-2"></i>Proceder al Pago
                         </a>
                     </div>
@@ -677,133 +628,12 @@ function buyNow(productId) {
     // Agregar al carrito y redirigir al checkout
     if (cart) {
         cart.addItem(productId, 1).then(() => {
-            window.location.href = '/pages/checkout.php';
+            window.location.href = window.SITE_URL + '/pages/checkout.php';
         });
     }
 }
 
 function downloadFree(productId) {
     // Procesar descarga gratuita
-    window.location.href = `/download/${productId}`;
-}
-
-
-// Funciones auxiliares para el modal (para compatibilidad con cart_modal.php)
-window.updateModalItemPrice = function(productId, quantity) {
-    const item = document.querySelector(`[data-product-id="${productId}"]`);
-    if (!item) return;
-    
-    const priceElement = item.querySelector('.item-subtotal-modal');
-    if (!priceElement) return;
-    
-    const unitPrice = parseFloat(priceElement.dataset.unitPrice);
-    
-    if (unitPrice > 0) {
-        const newSubtotal = unitPrice * quantity;
-        priceElement.textContent = formatPrice(newSubtotal);
-        
-        // Actualizar texto de precio por unidad
-        const perUnit = item.querySelector('.per-unit-price');
-        if (perUnit) {
-            if (quantity > 1) {
-                perUnit.style.display = 'block';
-                perUnit.innerHTML = `<small class="text-muted">${formatPrice(unitPrice)} c/u</small>`;
-            } else {
-                perUnit.style.display = 'none';
-            }
-        }
-    }
-    
-    updateModalTotal();
-};
-
-window.updateModalTotal = function() {
-    let total = 0;
-    let itemCount = 0;
-    
-    document.querySelectorAll('.item-subtotal-modal').forEach(element => {
-        const unitPrice = parseFloat(element.dataset.unitPrice) || 0;
-        const item = element.closest('[data-product-id]');
-        const quantity = parseInt(item.querySelector('.quantity-input-modal').value);
-        
-        total += unitPrice * quantity;
-        itemCount += quantity;
-    });
-    
-    // Actualizar elementos del modal
-    const totalElement = document.querySelector('.cart-total-modal');
-    const countElement = document.getElementById('modal-cart-count');
-    
-    if (totalElement) totalElement.textContent = formatPrice(total);
-    if (countElement) countElement.textContent = itemCount;
-    
-    // También actualizar el contador del header usando el módulo
-    if (cart) {
-        cart.updateCartCount(itemCount);
-    }
-};
-
-window.removeItemFromModal = function(productId) {
-    const item = document.querySelector(`[data-product-id="${productId}"]`);
-    if (item) {
-        item.remove();
-        updateModalTotal();
-        
-        // Si no quedan items, mostrar estado vacío
-        const remainingItems = document.querySelectorAll('[data-product-id]');
-        if (remainingItems.length === 0) {
-            const content = document.getElementById('cart-modal-content');
-            if (content) {
-                content.innerHTML = `
-                    <div class="empty-state-compact text-center py-4">
-                        <div class="empty-icon-compact mb-3">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <h6 class="mb-2">Tu carrito está vacío</h6>
-                        <small class="text-muted">Agrega productos para comenzar</small>
-                        <div class="mt-3">
-                            <a href="/productos" class="crystal-btn" onclick="closeCartModal()">
-                                <i class="fas fa-search me-2"></i>Explorar
-                            </a>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-    }
-};
-
-window.clearCartModal = function() {
-    if (confirm('¿Vaciar todo el carrito?')) {
-        const content = document.getElementById('cart-modal-content');
-        if (content) {
-            content.innerHTML = `
-                <div class="empty-state-compact text-center py-4">
-                    <div class="empty-icon-compact mb-3">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h6 class="mb-2">Tu carrito está vacío</h6>
-                    <small class="text-muted">Agrega productos para comenzar</small>
-                    <div class="mt-3">
-                        <a href="/productos" class="crystal-btn" onclick="closeCartModal()">
-                            <i class="fas fa-search me-2"></i>Explorar
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-        
-        // Actualizar contador
-        if (cart) {
-            cart.updateCartCount(0);
-        }
-    }
-};
-
-function formatPrice(price) {
-    return new Intl.NumberFormat('es-PE', {
-        style: 'currency',
-        currency: 'PEN',
-        minimumFractionDigits: 2
-    }).format(price);
+    window.location.href = `${window.SITE_URL}/download/${productId}`;
 }

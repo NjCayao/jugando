@@ -1,214 +1,418 @@
 <?php
-// includes/cart_modal.php - Modal del carrito usando CSS existente
+// includes/cart_modal.php - Modal simple y funcional
 require_once __DIR__ . '/../config/cart.php';
-
-// Obtener datos del carrito
-$cartItems = Cart::getItems();
-$cartTotals = Cart::getTotals();
-$cartEmpty = Cart::isEmpty();
 ?>
 
-<!-- Modal del Carrito con clases CSS existentes -->
-<div class="cart-modal-overlay" id="cartModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); z-index: 999999; backdrop-filter: blur(5px);">
-    <div class="cart-modal-container" style="position: absolute; top: 80px; right: 20px; width: 400px; max-width: 90vw; max-height: 80vh; z-index: 1000000;">
-        <div class="sidebar-card-compact">
-            <!-- Header del Modal -->
-            <div class="sidebar-header-compact">
-                <div class="d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">
-                        <i class="fas fa-shopping-cart me-2"></i>
-                        Tu Carrito
-                        <span class="badge bg-primary ms-2" id="modal-cart-count"><?php echo $cartTotals['items_count']; ?></span>
-                    </h5>
-                    <button type="button" class="btn btn-sm btn-outline-danger" onclick="closeCartModal()" style="border-radius: 50%; width: 35px; height: 35px; padding: 0;">
-                        <i class="fas fa-times"></i>
-                    </button>
+<!-- Modal del Carrito - Diseño Simple y Elegante -->
+<div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Header -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="cartModalLabel">
+                    <i class="fas fa-shopping-cart me-2"></i>
+                    Mi Carrito
+                    <span class="badge bg-light text-primary ms-2" id="modal-cart-count">0</span>
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            
+            <!-- Body -->
+            <div class="modal-body p-0" id="cart-modal-body">
+                <!-- Contenido dinámico se carga aquí -->
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Cargando carrito...</p>
                 </div>
             </div>
             
-            <!-- Contenido del Modal -->
-            <div class="sidebar-body-compact" style="max-height: 400px; overflow-y: auto;" id="cart-modal-content">
-                <?php if ($cartEmpty): ?>
-                    <!-- Carrito Vacío usando clases existentes -->
-                    <div class="empty-state-compact text-center py-4">
-                        <div class="empty-icon-compact mb-3">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <h6 class="mb-2">Tu carrito está vacío</h6>
-                        <small class="text-muted">Agrega productos para comenzar</small>
-                        <div class="mt-3">
-                            <a href="<?php echo SITE_URL; ?>/productos" class="crystal-btn" onclick="closeCartModal()">
-                                <i class="fas fa-search me-2"></i>Explorar
-                            </a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <!-- Items del carrito usando user-product-item -->
-                    <?php foreach ($cartItems as $productId => $item): ?>
-                        <div class="user-product-item mb-2" data-product-id="<?php echo $productId; ?>">
-                            <div class="d-flex align-items-start">
-                                <!-- Imagen usando product-image-compact -->
-                                <div class="product-image-compact me-3">
-                                    <?php if ($item['image']): ?>
-                                        <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
-                                             alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;">
-                                    <?php else: ?>
-                                        <i class="fas fa-image text-muted"></i>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <!-- Información usando product-info-compact -->
-                                <div class="product-info-compact flex-grow-1">
-                                    <h6 class="product-title-compact mb-1" style="font-size: 0.9rem;">
-                                        <a href="<?php echo SITE_URL; ?>/producto/<?php echo $item['slug']; ?>" 
-                                           class="text-decoration-none" onclick="closeCartModal()">
-                                            <?php echo htmlspecialchars($item['name']); ?>
-                                        </a>
-                                    </h6>
-                                    
-                                    <?php if ($item['category_name']): ?>
-                                        <div class="product-meta-compact mb-2">
-                                            <small class="text-muted">
-                                                <i class="fas fa-tag me-1"></i><?php echo htmlspecialchars($item['category_name']); ?>
-                                            </small>
-                                        </div>
-                                    <?php endif; ?>
-                                    
-                                    <!-- Controles usando license-info-compact -->
-                                    <div class="license-info-compact">
-                                        <div class="row g-2 align-items-center">
-                                            <!-- Precio -->
-                                            <div class="col-12 mb-2">
-                                                <?php if ($item['is_free']): ?>
-                                                    <span class="badge bg-success">GRATIS</span>
-                                                <?php else: ?>
-                                                    <strong class="text-primary item-subtotal-modal" data-unit-price="<?php echo $item['price']; ?>">
-                                                        <?php echo formatPrice($item['price'] * $item['quantity']); ?>
-                                                    </strong>
-                                                    <?php if ($item['quantity'] > 1): ?>
-                                                        <br><small class="text-muted"><?php echo formatPrice($item['price']); ?> c/u</small>
-                                                    <?php endif; ?>
-                                                <?php endif; ?>
-                                            </div>
-                                            
-                                            <!-- Controles de cantidad -->
-                                            <div class="col-8">
-                                                <div class="input-group input-group-sm">
-                                                    <button class="btn btn-outline-primary btn-sm quantity-btn-modal" type="button" 
-                                                            data-action="decrease" data-product-id="<?php echo $productId; ?>"
-                                                            style="width: 30px; height: 30px; padding: 0;">
-                                                        <i class="fas fa-minus" style="font-size: 0.7rem;"></i>
-                                                    </button>
-                                                    <input type="number" class="form-control text-center quantity-input-modal" 
-                                                           value="<?php echo $item['quantity']; ?>" min="1" max="10" 
-                                                           data-product-id="<?php echo $productId; ?>"
-                                                           style="width: 50px; height: 30px; font-size: 0.8rem;">
-                                                    <button class="btn btn-outline-primary btn-sm quantity-btn-modal" type="button" 
-                                                            data-action="increase" data-product-id="<?php echo $productId; ?>"
-                                                            style="width: 30px; height: 30px; padding: 0;">
-                                                        <i class="fas fa-plus" style="font-size: 0.7rem;"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Botón eliminar -->
-                                            <div class="col-4 text-end">
-                                                <button class="btn btn-outline-danger btn-sm remove-item-modal" 
-                                                        data-product-id="<?php echo $productId; ?>" 
-                                                        title="Eliminar"
-                                                        style="width: 30px; height: 30px; padding: 0;">
-                                                    <i class="fas fa-trash" style="font-size: 0.7rem;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-            
-            <?php if (!$cartEmpty): ?>
-                <!-- Footer usando order-item-compact -->
-                <div class="sidebar-header-compact" style="border-top: 1px solid rgba(30, 64, 175, 0.1); border-bottom: none;">
-                    <div class="order-item-compact">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <span>Total:</span>
-                            <strong class="text-primary cart-total-modal"><?php echo formatPrice($cartTotals['total']); ?></strong>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <a href="<?php echo SITE_URL; ?>/pages/cart.php" class="btn btn-corporate" onclick="closeCartModal()">
-                                <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
-                            </a>
-                            <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-outline-primary" onclick="closeCartModal()">
-                                <i class="fas fa-credit-card me-2"></i>Checkout
-                            </a>
-                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearCartModal()">
-                                <i class="fas fa-trash me-1"></i>Vaciar Carrito
+            <!-- Footer -->
+            <div class="modal-footer d-none" id="cart-modal-footer">
+                <div class="w-100">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <button type="button" class="btn btn-outline-danger w-100" onclick="clearCartModal()">
+                                <i class="fas fa-trash me-2"></i>Vaciar
                             </button>
                         </div>
+                        <div class="col-md-4">
+                            <a href="<?php echo SITE_URL; ?>/pages/cart.php" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
+                                <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-success w-100" data-bs-dismiss="modal">
+                                <i class="fas fa-credit-card me-2"></i>Checkout
+                            </a>
+                        </div>
                     </div>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
 </div>
 
+<style>
+/* Estilos para el modal del carrito */
+.cart-item-card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
 
+.cart-item-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.cart-item-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.cart-item-no-image {
+    width: 80px;
+    height: 80px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+}
+
+.quantity-control {
+    max-width: 120px;
+}
+
+.quantity-control .btn {
+    width: 35px;
+    height: 35px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-control input {
+    text-align: center;
+    height: 35px;
+    border-left: 0;
+    border-right: 0;
+}
+
+.cart-totals {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+.empty-cart-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.empty-cart-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+</style>
 
 <script>
-// JavaScript simple para el modal del carrito
-let cartModalOpen = false;
+// JavaScript para el modal del carrito - Versión simplificada y funcional
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Función global para abrir el modal
+    window.openCartModal = function(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        // Mostrar modal
+        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+        cartModal.show();
+        
+        // Cargar contenido
+        loadCartModalContent();
+    };
+    
+    // Event listener cuando se abre el modal
+    document.getElementById('cartModal').addEventListener('shown.bs.modal', function() {
+        console.log('🛒 Modal del carrito abierto');
+        loadCartModalContent();
+    });
+    
+});
 
-// Función para abrir el modal
-function openCartModal(event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
+// Función para cargar contenido del modal
+async function loadCartModalContent() {
+    const modalBody = document.getElementById('cart-modal-body');
+    const modalFooter = document.getElementById('cart-modal-footer');
+    const modalCount = document.getElementById('modal-cart-count');
+    
+    try {
+        // Mostrar loading
+        modalBody.innerHTML = `
+            <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <p class="mt-3 text-muted">Cargando carrito...</p>
+            </div>
+        `;
+        
+        // Obtener datos del carrito
+        const response = await fetch(window.SITE_URL + '/api/cart/get.php');
+        
+        if (!response.ok) {
+            throw new Error('Error en la respuesta del servidor');
+        }
+        
+        const text = await response.text();
+        console.log('Respuesta del servidor:', text); // Para debug
+        
+        const data = JSON.parse(text);
+        
+        if (data.success) {
+            // Actualizar contador
+            modalCount.textContent = data.items_count;
+            
+            // Actualizar contenido
+            if (data.cart_empty) {
+                showEmptyCartModal();
+                modalFooter.classList.add('d-none');
+            } else {
+                showCartItemsModal(data);
+                modalFooter.classList.remove('d-none');
+            }
+        } else {
+            throw new Error(data.message || 'Error cargando carrito');
+        }
+        
+    } catch (error) {
+        console.error('Error cargando carrito:', error);
+        modalBody.innerHTML = `
+            <div class="alert alert-danger m-3">
+                <h6><i class="fas fa-exclamation-triangle me-2"></i>Error</h6>
+                <p class="mb-0">No se pudo cargar el carrito. Por favor, recarga la página.</p>
+                <button class="btn btn-sm btn-outline-danger mt-2" onclick="location.reload()">
+                    <i class="fas fa-sync me-1"></i>Recargar Página
+                </button>
+            </div>
+        `;
+        modalFooter.classList.add('d-none');
     }
-    
-    if (cartModalOpen) return;
-    
-    cartModalOpen = true;
-    const modal = document.getElementById('cartModal');
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'flex-start';
-    modal.style.justifyContent = 'flex-end';
-    modal.style.padding = '20px';
-    
-    // Efecto de entrada simple
-    setTimeout(() => {
-        modal.style.opacity = '1';
-        const container = modal.querySelector('.cart-modal-container');
-        container.style.transform = 'translateX(0)';
-    }, 10);
-    
-    // Prevenir scroll del body
-    document.body.style.overflow = 'hidden';
 }
 
-// Función para cerrar el modal
-function closeCartModal() {
-    cartModalOpen = false;
-    const modal = document.getElementById('cartModal');
-    const container = modal.querySelector('.cart-modal-container');
-    
-    // Efecto de salida
-    modal.style.opacity = '0';
-    container.style.transform = 'translateX(100%)';
-    
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
-    
-    // Restaurar scroll del body
-    document.body.style.overflow = 'auto';
+// Mostrar carrito vacío
+function showEmptyCartModal() {
+    const modalBody = document.getElementById('cart-modal-body');
+    modalBody.innerHTML = `
+        <div class="empty-cart-state">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h5>Tu carrito está vacío</h5>
+            <p class="mb-4">¡Explora nuestros productos y encuentra algo increíble!</p>
+            <a href="${window.SITE_URL}/productos" class="btn btn-primary" data-bs-dismiss="modal">
+                <i class="fas fa-search me-2"></i>Explorar Productos
+            </a>
+        </div>
+    `;
 }
 
-// Función para formatear precios
+// Mostrar items del carrito
+function showCartItemsModal(data) {
+    const modalBody = document.getElementById('cart-modal-body');
+    
+    let html = '<div class="p-3">';
+    
+    // Items
+    data.items.forEach(item => {
+        html += `
+            <div class="cart-item-card" data-product-id="${item.id}">
+                <div class="row align-items-center">
+                    <!-- Imagen -->
+                    <div class="col-auto">
+                        ${item.image_url ? 
+                            `<img src="${item.image_url}" alt="${item.name}" class="cart-item-image">` :
+                            `<div class="cart-item-no-image"><i class="fas fa-image"></i></div>`
+                        }
+                    </div>
+                    
+                    <!-- Info -->
+                    <div class="col">
+                        <h6 class="mb-1">
+                            <a href="${item.product_url}" class="text-decoration-none text-dark" data-bs-dismiss="modal">
+                                ${item.name}
+                            </a>
+                        </h6>
+                        ${item.category_name ? `<small class="text-muted"><i class="fas fa-tag me-1"></i>${item.category_name}</small><br>` : ''}
+                        <strong class="text-success">
+                            ${item.is_free ? 'GRATIS' : item.subtotal}
+                        </strong>
+                        ${item.quantity > 1 && !item.is_free ? `<small class="text-muted d-block">${item.price} c/u</small>` : ''}
+                    </div>
+                    
+                    <!-- Cantidad -->
+                    <div class="col-auto">
+                        <div class="quantity-control">
+                            <div class="input-group">
+                                <button class="btn btn-outline-primary" type="button" onclick="updateCartQuantityModal(${item.id}, ${item.quantity - 1})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="form-control" value="${item.quantity}" min="1" max="10" 
+                                       onchange="updateCartQuantityModal(${item.id}, this.value)">
+                                <button class="btn btn-outline-primary" type="button" onclick="updateCartQuantityModal(${item.id}, ${item.quantity + 1})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Eliminar -->
+                    <div class="col-auto">
+                        <button class="btn btn-outline-danger btn-sm" onclick="removeCartItemModal(${item.id})" title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    // Totales
+    html += `
+        <div class="cart-totals">
+            <h6 class="mb-3"><i class="fas fa-calculator me-2"></i>Resumen</h6>
+            ${data.totals.subtotal_raw > 0 ? `
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span>${data.totals.subtotal}</span>
+                </div>
+            ` : ''}
+            ${data.totals.tax_raw > 0 ? `
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Impuestos:</span>
+                    <span>${data.totals.tax}</span>
+                </div>
+            ` : ''}
+            <hr>
+            <div class="d-flex justify-content-between">
+                <strong>Total:</strong>
+                <strong class="text-success fs-5">${data.totals.total}</strong>
+            </div>
+        </div>
+    `;
+    
+    html += '</div>';
+    modalBody.innerHTML = html;
+}
+
+// Función para actualizar cantidad desde el modal
+async function updateCartQuantityModal(productId, quantity) {
+    quantity = Math.max(1, Math.min(10, parseInt(quantity)));
+    
+    if (window.cart) {
+        // Usar el módulo cart existente
+        await cart.updateQuantity(productId, quantity);
+        // Recargar modal
+        setTimeout(() => loadCartModalContent(), 500);
+    } else {
+        // Fallback manual
+        try {
+            const response = await fetch(window.SITE_URL + '/api/cart/update.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `product_id=${productId}&quantity=${quantity}`
+            });
+            
+            const text = await response.text();
+            const data = JSON.parse(text);
+            
+            if (data.success) {
+                loadCartModalContent();
+                // Actualizar contador global
+                document.getElementById('cart-count').textContent = data.cart_count;
+            }
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            alert('Error al actualizar cantidad');
+        }
+    }
+}
+
+// Función para eliminar item desde el modal
+async function removeCartItemModal(productId) {
+    if (!confirm('¿Eliminar este producto del carrito?')) return;
+    
+    if (window.cart) {
+        // Usar el módulo cart existente
+        await cart.removeItem(productId);
+        // Recargar modal
+        setTimeout(() => loadCartModalContent(), 500);
+    } else {
+        // Fallback manual
+        try {
+            const response = await fetch(window.SITE_URL + '/api/cart/remove.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `product_id=${productId}`
+            });
+            
+            const text = await response.text();
+            const data = JSON.parse(text);
+            
+            if (data.success) {
+                loadCartModalContent();
+                // Actualizar contador global
+                document.getElementById('cart-count').textContent = data.cart_count;
+            }
+        } catch (error) {
+            console.error('Error removing item:', error);
+            alert('Error al eliminar producto');
+        }
+    }
+}
+
+// Función para vaciar carrito desde el modal
+async function clearCartModal() {
+    if (!confirm('¿Vaciar todo el carrito?')) return;
+    
+    if (window.cart) {
+        await cart.clearCart();
+        setTimeout(() => loadCartModalContent(), 500);
+    } else {
+        try {
+            const response = await fetch(window.SITE_URL + '/api/cart/clear.php', {
+                method: 'POST'
+            });
+            
+            const text = await response.text();
+            const data = JSON.parse(text);
+            
+            if (data.success) {
+                loadCartModalContent();
+                document.getElementById('cart-count').textContent = '0';
+            }
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+            alert('Error al vaciar carrito');
+        }
+    }
+}
+
+// Función helper para formatear precios
 function formatPrice(price) {
     return new Intl.NumberFormat('es-PE', {
         style: 'currency',
@@ -216,176 +420,4 @@ function formatPrice(price) {
         minimumFractionDigits: 2
     }).format(price);
 }
-
-// Manejar controles de cantidad en el modal
-document.addEventListener('click', function(e) {
-    if (e.target.closest('.quantity-btn-modal')) {
-        const btn = e.target.closest('.quantity-btn-modal');
-        const input = btn.parentElement.querySelector('.quantity-input-modal');
-        const productId = btn.dataset.productId;
-        const action = btn.dataset.action;
-        
-        let newValue = parseInt(input.value);
-        if (action === 'increase' && newValue < 10) {
-            newValue++;
-        } else if (action === 'decrease' && newValue > 1) {
-            newValue--;
-        }
-        
-        input.value = newValue;
-        updateModalItemPrice(productId, newValue);
-    }
-    
-    if (e.target.closest('.remove-item-modal')) {
-        const btn = e.target.closest('.remove-item-modal');
-        const productId = btn.dataset.productId;
-        
-        if (confirm('¿Eliminar este producto del carrito?')) {
-            removeItemFromModal(productId);
-        }
-    }
-});
-
-// Manejar cambios directos en inputs de cantidad
-document.addEventListener('change', function(e) {
-    if (e.target.classList.contains('quantity-input-modal')) {
-        const input = e.target;
-        const productId = input.dataset.productId;
-        let newValue = parseInt(input.value);
-        
-        if (newValue < 1) newValue = 1;
-        if (newValue > 10) newValue = 10;
-        input.value = newValue;
-        
-        updateModalItemPrice(productId, newValue);
-    }
-});
-
-// Actualizar precio de item en el modal
-function updateModalItemPrice(productId, quantity) {
-    const item = document.querySelector(`[data-product-id="${productId}"]`);
-    const priceElement = item.querySelector('.item-subtotal-modal');
-    const unitPrice = parseFloat(priceElement.dataset.unitPrice);
-    
-    if (unitPrice > 0) {
-        const newSubtotal = unitPrice * quantity;
-        priceElement.textContent = formatPrice(newSubtotal);
-        
-        // Actualizar texto c/u
-        const perUnit = item.querySelector('small');
-        if (perUnit) {
-            if (quantity > 1) {
-                perUnit.style.display = 'block';
-                perUnit.innerHTML = `${formatPrice(unitPrice)} c/u`;
-            } else {
-                perUnit.style.display = 'none';
-            }
-        }
-    }
-    
-    updateModalTotal();
-}
-
-// Actualizar total del modal
-function updateModalTotal() {
-    let total = 0;
-    let itemCount = 0;
-    
-    document.querySelectorAll('.item-subtotal-modal').forEach(element => {
-        const unitPrice = parseFloat(element.dataset.unitPrice) || 0;
-        const item = element.closest('[data-product-id]');
-        const quantity = parseInt(item.querySelector('.quantity-input-modal').value);
-        
-        total += unitPrice * quantity;
-        itemCount += quantity;
-    });
-    
-    const totalElement = document.querySelector('.cart-total-modal');
-    const countElement = document.getElementById('modal-cart-count');
-    
-    if (totalElement) totalElement.textContent = formatPrice(total);
-    if (countElement) countElement.textContent = itemCount;
-}
-
-// Eliminar item del modal
-function removeItemFromModal(productId) {
-    const item = document.querySelector(`[data-product-id="${productId}"]`);
-    if (item) {
-        item.remove();
-        updateModalTotal();
-        
-        // Si no quedan items, mostrar estado vacío
-        const remainingItems = document.querySelectorAll('[data-product-id]');
-        if (remainingItems.length === 0) {
-            const content = document.getElementById('cart-modal-content');
-            content.innerHTML = `
-                <div class="empty-state-compact text-center py-4">
-                    <div class="empty-icon-compact mb-3">
-                        <i class="fas fa-shopping-cart"></i>
-                    </div>
-                    <h6 class="mb-2">Tu carrito está vacío</h6>
-                    <small class="text-muted">Agrega productos para comenzar</small>
-                    <div class="mt-3">
-                        <a href="${'<?php echo SITE_URL; ?>'}/productos" class="crystal-btn" onclick="closeCartModal()">
-                            <i class="fas fa-search me-2"></i>Explorar
-                        </a>
-                    </div>
-                </div>
-            `;
-        }
-    }
-}
-
-// Vaciar carrito
-function clearCartModal() {
-    if (confirm('¿Vaciar todo el carrito?')) {
-        const content = document.getElementById('cart-modal-content');
-        content.innerHTML = `
-            <div class="empty-state-compact text-center py-4">
-                <div class="empty-icon-compact mb-3">
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-                <h6 class="mb-2">Tu carrito está vacío</h6>
-                <small class="text-muted">Agrega productos para comenzar</small>
-                <div class="mt-3">
-                    <a href="${'<?php echo SITE_URL; ?>'}/productos" class="crystal-btn" onclick="closeCartModal()">
-                        <i class="fas fa-search me-2"></i>Explorar
-                    </a>
-                </div>
-            </div>
-        `;
-    }
-}
-
-// Cerrar modal al hacer click fuera
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('cartModal');
-    if (event.target === modal) {
-        closeCartModal();
-    }
-});
-
-// Cerrar modal con tecla Escape
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && cartModalOpen) {
-        closeCartModal();
-    }
-});
-
-// Prevenir cierre al hacer click dentro del modal
-document.addEventListener('DOMContentLoaded', function() {
-    const modal = document.getElementById('cartModal');
-    const container = modal.querySelector('.cart-modal-container');
-    
-    // Configurar estilos iniciales
-    modal.style.opacity = '0';
-    modal.style.transition = 'opacity 0.3s ease';
-    container.style.transform = 'translateX(100%)';
-    container.style.transition = 'transform 0.3s ease';
-    
-    // Prevenir cierre al hacer click en el contenido
-    container.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-});
 </script>

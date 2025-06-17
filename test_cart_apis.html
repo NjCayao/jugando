@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test APIs del Carrito</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .test-result {
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6c757d;
+        }
+        .test-success {
+            background: #d1e7dd;
+            border-left-color: #28a745;
+            color: #0f5132;
+        }
+        .test-error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        .test-warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .btn-test {
+            margin: 5px;
+        }
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">🧪 Test Completo de APIs del Carrito</h1>
+        
+        <!-- Configuración -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>⚙️ Configuración</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>URL Base:</label>
+                        <input type="text" id="baseUrl" class="form-control" value="http://localhost/jugando">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Producto ID de prueba:</label>
+                        <input type="number" id="testProductId" class="form-control" value="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tests de APIs -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>🔍 Tests de APIs</h5>
+            </div>
+            <div class="card-body">
+                <!-- Botones de test -->
+                <div class="mb-3">
+                    <button class="btn btn-primary btn-test" onclick="testGetCart()">
+                        <span class="spinner" id="spinner-get"></span>
+                        📊 Test GET Cart
+                    </button>
+                    <button class="btn btn-success btn-test" onclick="testAddToCart()">
+                        <span class="spinner" id="spinner-add"></span>
+                        ➕ Test ADD to Cart
+                    </button>
+                    <button class="btn btn-warning btn-test" onclick="testUpdateCart()">
+                        <span class="spinner" id="spinner-update"></span>
+                        📝 Test UPDATE Cart
+                    </button>
+                    <button class="btn btn-danger btn-test" onclick="testRemoveFromCart()">
+                        <span class="spinner" id="spinner-remove"></span>
+                        🗑️ Test REMOVE from Cart
+                    </button>
+                    <button class="btn btn-secondary btn-test" onclick="testClearCart()">
+                        <span class="spinner" id="spinner-clear"></span>
+                        🧹 Test CLEAR Cart
+                    </button>
+                </div>
+                
+                <!-- Botón para ejecutar todos -->
+                <div class="mb-3">
+                    <button class="btn btn-info btn-lg" onclick="runAllTests()">
+                        🚀 Ejecutar Todos los Tests
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="clearResults()">
+                        🧽 Limpiar Resultados
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="card">
+            <div class="card-header">
+                <h5>📋 Resultados de Tests</h5>
+            </div>
+            <div class="card-body" id="results">
+                <p class="text-muted">Haz clic en un test para ver los resultados...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let baseUrl = 'http://localhost/jugando';
+        let testProductId = 1;
+        
+        // Actualizar configuración
+        document.getElementById('baseUrl').addEventListener('change', function() {
+            baseUrl = this.value;
+        });
+        
+        document.getElementById('testProductId').addEventListener('change', function() {
+            testProductId = this.value;
+        });
+
+        // Función para mostrar spinner
+        function showSpinner(id) {
+            document.getElementById(`spinner-${id}`).style.display = 'inline-block';
+        }
+        
+        function hideSpinner(id) {
+            document.getElementById(`spinner-${id}`).style.display = 'none';
+        }
+
+        // Función para agregar resultado
+        function addResult(title, success, response, details = '') {
+            const resultsDiv = document.getElementById('results');
+            const resultClass = success ? 'test-success' : 'test-error';
+            const icon = success ? '✅' : '❌';
+            
+            const resultHTML = `
+                <div class="test-result ${resultClass}">
+                    <h6>${icon} ${title}</h6>
+                    ${details ? `<p>${details}</p>` : ''}
+                    <div class="code-block">${response}</div>
+                </div>
+            `;
+            
+            if (resultsDiv.innerHTML.includes('Haz clic')) {
+                resultsDiv.innerHTML = resultHTML;
+            } else {
+                resultsDiv.innerHTML += resultHTML;
+            }
+            
+            // Scroll al resultado
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        // Test 1: GET Cart
+        async function testGetCart() {
+            showSpinner('get');
+            try {
+                const response = await fetch(`${baseUrl}/api/cart/get.php`);
+                const text = await response.text();
+                
+                let success = false;
+                let details = '';
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        success = data.success !== undefined;
+                        details = success ? 
+                            `Items en carrito: ${data.items_count || 0}` : 
+                            'Respuesta JSON pero sin estructura esperada';
+                    } catch (e) {
+                        details = 'Respuesta no es JSON válido';
+                    }
+                } else {
+                    details = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                
+                addResult('Test GET Cart', success, text, details);
+                
+            } catch (error) {
+                addResult('Test GET Cart', false, error.message, 'Error de conexión');
+            }
+            hideSpinner('get');
+        }
+
+        // Test 2: ADD to Cart
+        async function testAddToCart() {
+            showSpinner('add');
+            try {
+                const formData = new FormData();
+                formData.append('product_id', testProductId);
+                formData.append('quantity', '1');
+                
+                const response = await fetch(`${baseUrl}/api/cart/add.php`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const text = await response.text();
+                
+                let success = false;
+                let details = '';
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        success = data.success !== undefined;
+                        details = data.success ? 
+                            `Producto agregado. Cart count: ${data.cart_count || 0}` : 
+                            `Error: ${data.message || 'Sin mensaje'}`;
+                    } catch (e) {
+                        details = 'Respuesta no es JSON válido';
+                    }
+                } else {
+                    details = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                
+                addResult('Test ADD to Cart', success, text, details);
+                
+            } catch (error) {
+                addResult('Test ADD to Cart', false, error.message, 'Error de conexión');
+            }
+            hideSpinner('add');
+        }
+
+        // Test 3: UPDATE Cart
+        async function testUpdateCart() {
+            showSpinner('update');
+            try {
+                const formData = new FormData();
+                formData.append('product_id', testProductId);
+                formData.append('quantity', '2');
+                
+                const response = await fetch(`${baseUrl}/api/cart/update.php`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const text = await response.text();
+                
+                let success = false;
+                let details = '';
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        success = data.success !== undefined;
+                        details = data.success ? 
+                            `Cantidad actualizada. Cart count: ${data.cart_count || 0}` : 
+                            `Error: ${data.message || 'Sin mensaje'}`;
+                    } catch (e) {
+                        details = 'Respuesta no es JSON válido - posible error de PHP';
+                    }
+                } else {
+                    details = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                
+                addResult('Test UPDATE Cart', success, text, details);
+                
+            } catch (error) {
+                addResult('Test UPDATE Cart', false, error.message, 'Error de conexión');
+            }
+            hideSpinner('update');
+        }
+
+        // Test 4: REMOVE from Cart
+        async function testRemoveFromCart() {
+            showSpinner('remove');
+            try {
+                const formData = new FormData();
+                formData.append('product_id', testProductId);
+                
+                const response = await fetch(`${baseUrl}/api/cart/remove.php`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const text = await response.text();
+                
+                let success = false;
+                let details = '';
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        success = data.success !== undefined;
+                        details = data.success ? 
+                            `Producto eliminado. Cart count: ${data.cart_count || 0}` : 
+                            `Error: ${data.message || 'Sin mensaje'}`;
+                    } catch (e) {
+                        details = 'Respuesta no es JSON válido - posible error de PHP';
+                    }
+                } else {
+                    details = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                
+                addResult('Test REMOVE from Cart', success, text, details);
+                
+            } catch (error) {
+                addResult('Test REMOVE from Cart', false, error.message, 'Error de conexión');
+            }
+            hideSpinner('remove');
+        }
+
+        // Test 5: CLEAR Cart
+        async function testClearCart() {
+            showSpinner('clear');
+            try {
+                const response = await fetch(`${baseUrl}/api/cart/clear.php`, {
+                    method: 'POST'
+                });
+                
+                const text = await response.text();
+                
+                let success = false;
+                let details = '';
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        success = data.success !== undefined;
+                        details = data.success ? 
+                            'Carrito vaciado correctamente' : 
+                            `Error: ${data.message || 'Sin mensaje'}`;
+                    } catch (e) {
+                        details = 'Respuesta no es JSON válido';
+                    }
+                } else {
+                    details = `HTTP ${response.status}: ${response.statusText}`;
+                }
+                
+                addResult('Test CLEAR Cart', success, text, details);
+                
+            } catch (error) {
+                addResult('Test CLEAR Cart', false, error.message, 'Error de conexión');
+            }
+            hideSpinner('clear');
+        }
+
+        // Ejecutar todos los tests
+        async function runAllTests() {
+            clearResults();
+            addResult('🚀 INICIANDO TESTS COMPLETOS', true, 'Ejecutando todos los tests en secuencia...', 'Esto puede tomar unos segundos');
+            
+            await testGetCart();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAddToCart();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testUpdateCart();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testRemoveFromCart();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testClearCart();
+            
+            addResult('✅ TESTS COMPLETADOS', true, 'Todos los tests han sido ejecutados', 'Revisa los resultados arriba para identificar problemas');
+        }
+
+        // Limpiar resultados
+        function clearResults() {
+            document.getElementById('results').innerHTML = '<p class="text-muted">Ejecutando tests...</p>';
+        }
+
+        // Ejecutar test inicial al cargar
+        window.addEventListener('load', function() {
+            // Actualizar configuración desde los inputs
+            baseUrl = document.getElementById('baseUrl').value;
+            testProductId = document.getElementById('testProductId').value;
+            
+            // Agregar instrucciones
+            addResult('🎯 INSTRUCCIONES', true, 
+                'Este tester verificará todas las APIs del carrito paso a paso.\n\n' +
+                '1. Ajusta la URL base si es necesario\n' +
+                '2. Verifica que el Product ID existe en tu base de datos\n' +
+                '3. Ejecuta los tests individuales o todos juntos\n' +
+                '4. Revisa los resultados para identificar problemas\n\n' +
+                '¡Empecemos!', 
+                'Todo listo para iniciar los tests'
+            );
+        });
+    </script>
+</body>
+</html>

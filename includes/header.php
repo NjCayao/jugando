@@ -47,6 +47,29 @@ $currentUser = getCurrentUser();
 <!-- Favicon de Desarrollador -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFFNDBBRiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHN0eWxlPi5jbHMtMXtmaWxsOiMxRTQwQUY7fS5jbHMtMntmaWxsOiMzQjgyRjY7fTwvc3R5bGU+CjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTkuNDEgMTYuNThMNC44MyAxMmw0LjU4LTQuNThMMTIgNmwtNiA2IDYgNi0yLjU5LTEuNDJ6bTUuMTcgMEwxOS4xNyAxMmwtNC41OS00LjU4TDE3IDZsNiA2LTYgNi0yLjU5LTEuNDJ6Ii8+CjxjaXJjbGUgY2xhc3M9ImNscy0yIiBjeD0iMTIiIGN5PSIyMCIgcj0iMiIvPgo8L3N2Zz4K">
 
+<!-- ✅ DEFINIR VARIABLES GLOBALES JAVASCRIPT -->
+<script>
+    // Variables globales para JavaScript
+    window.SITE_URL = '<?php echo SITE_URL; ?>';
+    window.UPLOADS_URL = '<?php echo UPLOADS_URL; ?>';
+    window.ASSETS_URL = '<?php echo ASSETS_URL; ?>';
+    
+    // Configuración global del carrito
+    window.CART_CONFIG = {
+        maxQuantity: 10,
+        currency: '<?php echo Settings::get('currency_symbol', 'S/'); ?>',
+        apiBase: '<?php echo SITE_URL; ?>/api/cart/'
+    };
+    
+    // Usuario actual (si está logueado)
+    window.CURRENT_USER = <?php echo isLoggedIn() ? json_encode([
+        'id' => $currentUser['id'] ?? null,
+        'name' => $currentUser['first_name'] ?? '',
+        'email' => $currentUser['email'] ?? '',
+        'logged_in' => true
+    ]) : 'null'; ?>;
+</script>
+
 <header class="main-header">
     <!-- Quote Bar Simple -->
     <div class="quote-bar">
