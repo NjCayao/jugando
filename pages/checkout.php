@@ -519,31 +519,49 @@ $pageTitle = 'Checkout - Finalizar Compra';
     <?php endif; ?>
     
     <?php if ($paypalEnabled): ?>
-        <script src="https://www.paypal.com/sdk/js?client-id=<?php echo Settings::get('paypal_client_id', ''); ?>&currency=USD"></script>
-        <script>
-            // Configuración de PayPal
-            const paypalClientId = '<?php echo Settings::get('paypal_client_id', ''); ?>';
-            let paypalButtons = null;
-        </script>
+        <script src="https://www.paypal.com/sdk/js?client-id=<?php echo Settings::get('paypal_client_id', ''); ?>&currency=USD" 
+                data-namespace="paypal" onload="console.log('PayPal SDK cargado')" onerror="console.error('Error cargando PayPal SDK')"></script>
     <?php endif; ?>
     
     <?php if ($mercadopagoEnabled): ?>
-        <script src="https://sdk.mercadopago.com/js/v2"></script>
-        <script>
-            // Configuración de MercadoPago
-            const mercadopagoPublicKey = '<?php echo Settings::get('mercadopago_public_key', ''); ?>';
-            let mp = null;
-            
-            if (mercadopagoPublicKey) {
-                mp = new MercadoPago(mercadopagoPublicKey, {
-                    locale: 'es-PE'
-                });
-            }
-        </script>
+        <script src="https://sdk.mercadopago.com/js/v2" 
+                onload="console.log('MercadoPago SDK cargado')" onerror="console.error('Error cargando MercadoPago SDK')"></script>
     <?php endif; ?>
     
     <script>
+        // Variables globales
+        window.SITE_URL = '<?php echo SITE_URL; ?>';
+        let mp = null;
+        let paypalButtons = null;
+        
+        // Configuración de APIs
+        const paymentConfig = {
+            mercadopago: {
+                enabled: <?php echo $mercadopagoEnabled ? 'true' : 'false'; ?>,
+                publicKey: '<?php echo Settings::get('mercadopago_public_key', ''); ?>'
+            },
+            paypal: {
+                enabled: <?php echo $paypalEnabled ? 'true' : 'false'; ?>,
+                clientId: '<?php echo Settings::get('paypal_client_id', ''); ?>'
+            }
+        };
+        
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM cargado, inicializando checkout...');
+            
+            // Verificar si las librerías están disponibles
+            setTimeout(() => {
+                if (paymentConfig.paypal.enabled && typeof window.paypal === 'undefined') {
+                    console.error('PayPal SDK no se cargó correctamente');
+                    showPaymentError('paypal', 'Error cargando PayPal. Intenta recargar la página.');
+                }
+                
+                if (paymentConfig.mercadopago.enabled && typeof window.MercadoPago === 'undefined') {
+                    console.error('MercadoPago SDK no se cargó correctamente');
+                    showPaymentError('mercadopago', 'Error cargando MercadoPago. Intenta recargar la página.');
+                }
+            }, 3000);
+            
             // Manejar selección de método de pago
             const paymentMethods = document.querySelectorAll('.payment-method');
             const paymentForms = document.querySelectorAll('.payment-form');
@@ -552,6 +570,8 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 method.addEventListener('click', function() {
                     const methodType = this.dataset.method;
                     const radio = this.querySelector('input[type="radio"]');
+                    
+                    console.log('Método seleccionado:', methodType);
                     
                     // Actualizar selección visual
                     paymentMethods.forEach(m => m.classList.remove('selected'));
@@ -565,8 +585,6 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     const targetForm = document.getElementById(methodType + '-form');
                     if (targetForm) {
                         targetForm.classList.add('active');
-                        
-                        // Inicializar elementos específicos
                         initializePaymentMethod(methodType);
                     }
                 });
@@ -580,9 +598,10 @@ $pageTitle = 'Checkout - Finalizar Compra';
             
             // Manejar envío del formulario
             const checkoutForm = document.getElementById('checkoutForm');
-            
             checkoutForm.addEventListener('submit', function(e) {
                 e.preventDefault();
+                
+                console.log('Enviando formulario de checkout...');
                 
                 // Validar formulario
                 if (!this.checkValidity()) {
@@ -591,21 +610,27 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 }
                 
                 // Procesar según el método de pago
-                const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+                const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked');
+                if (!selectedPaymentMethod) {
+                    alert('Por favor selecciona un método de pago');
+                    return;
+                }
                 
-                if (selectedPaymentMethod === 'free') {
+                const paymentMethod = selectedPaymentMethod.value;
+                console.log('Procesando pago con:', paymentMethod);
+                
+                if (paymentMethod === 'free') {
                     processFreeOrder();
                 } else {
-                    processPayment(selectedPaymentMethod);
+                    processPayment(paymentMethod);
                 }
             });
         });
         
         function initializePaymentMethod(method) {
+            console.log('Inicializando método:', method);
+            
             switch(method) {
-                case 'stripe':
-                    initializeStripe();
-                    break;
                 case 'paypal':
                     initializePayPal();
                     break;
@@ -615,63 +640,139 @@ $pageTitle = 'Checkout - Finalizar Compra';
             }
         }
         
-        function initializeStripe() {
-            if (stripe && cardElement && !cardElement._mounted) {
-                cardElement.mount('#stripe-card-element');
-                cardElement._mounted = true;
-                
-                cardElement.addEventListener('change', function(event) {
-                    const displayError = document.getElementById('stripe-card-errors');
-                    if (event.error) {
-                        displayError.textContent = event.error.message;
-                    } else {
-                        displayError.textContent = '';
-                    }
-                });
-            }
-        }
-        
         function initializePayPal() {
-            if (typeof paypal !== 'undefined' && paypalClientId && !paypalButtons) {
-                const container = document.getElementById('paypal-button-container');
-                container.innerHTML = ''; // Limpiar contenedor
+            console.log('Inicializando PayPal...');
+            
+            if (!paymentConfig.paypal.enabled) {
+                console.log('PayPal no está habilitado');
+                return;
+            }
+            
+            const container = document.getElementById('paypal-button-container');
+            
+            if (typeof window.paypal === 'undefined') {
+                console.error('PayPal SDK no disponible');
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>Error:</strong> PayPal no se pudo cargar. 
+                        <button onclick="location.reload()" class="btn btn-sm btn-warning ms-2">Recargar</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                // Limpiar contenedor
+                container.innerHTML = '';
                 
-                paypalButtons = paypal.Buttons({
+                // Crear botones de PayPal
+                window.paypal.Buttons({
+                    style: {
+                        layout: 'vertical',
+                        color: 'blue',
+                        shape: 'rect',
+                        label: 'paypal'
+                    },
+                    
                     createOrder: function(data, actions) {
+                        console.log('Creando orden en PayPal...');
                         return createPayPalOrder();
                     },
+                    
                     onApprove: function(data, actions) {
+                        console.log('PayPal aprobado:', data);
                         return handlePayPalApproval(data);
                     },
+                    
                     onError: function(err) {
                         console.error('PayPal Error:', err);
-                        alert('Error con PayPal: ' + err);
                         hideProcessingOverlay();
+                        alert('Error con PayPal: ' + (err.message || 'Error desconocido'));
+                    },
+                    
+                    onCancel: function(data) {
+                        console.log('PayPal cancelado:', data);
+                        hideProcessingOverlay();
+                        alert('Pago cancelado');
                     }
-                });
+                    
+                }).render('#paypal-button-container');
                 
-                paypalButtons.render('#paypal-button-container');
+                console.log('PayPal buttons renderizados correctamente');
+                
+            } catch (error) {
+                console.error('Error inicializando PayPal:', error);
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> No se pudo inicializar PayPal. ${error.message}
+                    </div>
+                `;
             }
         }
         
         function initializeMercadoPago() {
-            if (mp && mercadopagoPublicKey) {
-                const container = document.getElementById('mercadopago-button');
-                container.innerHTML = '<p class="text-muted">Haz clic en "Procesar Pago" para continuar con MercadoPago</p>';
+            console.log('Inicializando MercadoPago...');
+            
+            if (!paymentConfig.mercadopago.enabled) {
+                console.log('MercadoPago no está habilitado');
+                return;
+            }
+            
+            const container = document.getElementById('mercadopago-button');
+            
+            if (typeof window.MercadoPago === 'undefined') {
+                console.error('MercadoPago SDK no disponible');
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>Error:</strong> MercadoPago no se pudo cargar.
+                        <button onclick="location.reload()" class="btn btn-sm btn-warning ms-2">Recargar</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                mp = new MercadoPago(paymentConfig.mercadopago.publicKey, {
+                    locale: 'es-PE'
+                });
+                
+                container.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-credit-card me-2"></i>MercadoPago Listo</h6>
+                        <p class="mb-0">Haz clic en "Procesar Pago" para continuar con MercadoPago</p>
+                        <small class="text-muted">Incluye Yape, tarjetas y más métodos</small>
+                    </div>
+                `;
+                
+                console.log('MercadoPago inicializado correctamente');
+                
+            } catch (error) {
+                console.error('Error inicializando MercadoPago:', error);
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error:</strong> No se pudo inicializar MercadoPago. ${error.message}
+                    </div>
+                `;
             }
         }
         
         function processPayment(paymentMethod) {
+            console.log('Procesando pago:', paymentMethod);
             showProcessingOverlay();
             
             const formData = new FormData(document.getElementById('checkoutForm'));
             
-            fetch('/api/payments/process_payment.php', {
+            fetch(window.SITE_URL + '/api/payments/process_payment.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Respuesta recibida:', response.status);
+                return response.json();
+            })
             .then(data => {
+                console.log('Datos de respuesta:', data);
+                
                 if (data.success) {
                     handlePaymentResponse(data, paymentMethod);
                 } else {
@@ -682,15 +783,14 @@ $pageTitle = 'Checkout - Finalizar Compra';
             .catch(error => {
                 hideProcessingOverlay();
                 console.error('Error:', error);
-                alert('Error al procesar el pedido');
+                alert('Error al procesar el pedido: ' + error.message);
             });
         }
         
         function handlePaymentResponse(data, paymentMethod) {
+            console.log('Manejando respuesta para:', paymentMethod);
+            
             switch(paymentMethod) {
-                case 'stripe':
-                    handleStripeResponse(data);
-                    break;
                 case 'paypal':
                     handlePayPalResponse(data);
                     break;
@@ -699,82 +799,75 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     break;
                 default:
                     hideProcessingOverlay();
-                    alert('Método de pago no soportado');
-            }
-        }
-        
-        function handleStripeResponse(data) {
-            if (stripe && data.client_secret) {
-                stripe.confirmCardPayment(data.client_secret, {
-                    payment_method: {
-                        card: cardElement,
-                        billing_details: {
-                            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-                            email: document.getElementById('email').value
-                        }
-                    }
-                }).then(function(result) {
-                    hideProcessingOverlay();
-                    
-                    if (result.error) {
-                        alert('Error en el pago: ' + result.error.message);
-                    } else {
-                        window.location.href = '/pages/success.php?order=' + data.order_number;
-                    }
-                });
-            } else {
-                hideProcessingOverlay();
-                alert('Error de configuración de Stripe');
+                    alert('Método de pago no soportado: ' + paymentMethod);
             }
         }
         
         function handlePayPalResponse(data) {
+            console.log('Respuesta PayPal:', data);
+            
             if (data.approval_url) {
+                console.log('Redirigiendo a PayPal:', data.approval_url);
                 window.location.href = data.approval_url;
             } else {
                 hideProcessingOverlay();
-                alert('Error obteniendo URL de PayPal');
+                alert('Error: No se obtuvo la URL de PayPal');
             }
         }
         
         function handleMercadoPagoResponse(data) {
-            if (data.init_point) {
-                window.location.href = data.init_point;
+            console.log('Respuesta MercadoPago:', data);
+            
+            const url = data.init_point || data.sandbox_init_point;
+            if (url) {
+                console.log('Redirigiendo a MercadoPago:', url);
+                window.location.href = url;
             } else {
                 hideProcessingOverlay();
-                alert('Error obteniendo URL de MercadoPago');
+                alert('Error: No se obtuvo la URL de MercadoPago');
             }
         }
         
         function createPayPalOrder() {
-            // Esta función se llama desde PayPal Buttons
+            console.log('Creando orden PayPal...');
+            showProcessingOverlay();
+            
             const formData = new FormData(document.getElementById('checkoutForm'));
             
-            return fetch('/api/payments/process_payment.php', {
+            return fetch(window.SITE_URL + '/api/payments/process_payment.php', {
                 method: 'POST',
                 body: formData
             })
             .then(response => response.json())
             .then(data => {
+                console.log('Orden PayPal creada:', data);
+                
                 if (data.success && data.paypal_order_id) {
                     return data.paypal_order_id;
                 } else {
                     throw new Error(data.message || 'Error creando orden PayPal');
                 }
+            })
+            .catch(error => {
+                console.error('Error creando orden PayPal:', error);
+                hideProcessingOverlay();
+                throw error;
             });
         }
         
         function handlePayPalApproval(data) {
+            console.log('PayPal aprobado, redirigiendo...', data);
             showProcessingOverlay();
-            window.location.href = '/api/payments/paypal_return.php?token=' + data.orderID + '&PayerID=' + data.payerID;
+            window.location.href = window.SITE_URL + '/api/payments/paypal_return.php?token=' + data.orderID + '&PayerID=' + data.payerID;
         }
         
         function processFreeOrder() {
+            console.log('Procesando orden gratuita...');
             showProcessingOverlay();
             
             const formData = new FormData(document.getElementById('checkoutForm'));
             
-            fetch('/api/payments/process_payment.php', {
+            fetch(window.SITE_URL + '/api/payments/process_payment.php', {
                 method: 'POST',
                 body: formData
             })
@@ -783,7 +876,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 hideProcessingOverlay();
                 
                 if (data.success) {
-                    window.location.href = data.redirect_url || '/pages/success.php?order=' + data.order_number;
+                    window.location.href = data.redirect_url || window.SITE_URL + '/pages/success.php?order=' + data.order_number;
                 } else {
                     alert('Error: ' + data.message);
                 }
@@ -791,16 +884,33 @@ $pageTitle = 'Checkout - Finalizar Compra';
             .catch(error => {
                 hideProcessingOverlay();
                 console.error('Error:', error);
-                alert('Error al procesar el pedido gratuito');
+                alert('Error al procesar el pedido gratuito: ' + error.message);
             });
         }
         
+        function showPaymentError(method, message) {
+            const container = document.getElementById(method + '-form');
+            if (container) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Error con ${method}:</strong> ${message}
+                    </div>
+                `;
+            }
+        }
+        
         function showProcessingOverlay() {
-            document.getElementById('processing-overlay').style.display = 'flex';
+            const overlay = document.getElementById('processing-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
         }
         
         function hideProcessingOverlay() {
-            document.getElementById('processing-overlay').style.display = 'none';
+            const overlay = document.getElementById('processing-overlay');
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
         }
         
         // Validación en tiempo real

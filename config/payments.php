@@ -1,5 +1,6 @@
 <?php
-// config/payments.php - Sistema de procesamiento de pagos
+// config/payments.php - Sistema de procesamiento de pagos COMPLETO
+require_once __DIR__ . '/email.php';
 
 /**
  * Clase para manejar procesamiento de pagos
@@ -25,10 +26,11 @@ class PaymentProcessor {
             // Crear orden principal
             $stmt = $db->prepare("
                 INSERT INTO orders (
-                    user_id, order_number, total_amount, payment_method, 
-                    payment_status, customer_email, customer_name, is_donation,
-                    payment_data, created_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+                    user_id, order_number, total_amount, subtotal, tax_amount, tax_rate,
+                    currency, items_count, payment_method, payment_status, 
+                    customer_email, customer_name, customer_phone, customer_country,
+                    is_donation, payment_data, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
             ");
             
             $userId = $customerData['user_id'] ?? null;
@@ -50,10 +52,17 @@ class PaymentProcessor {
                 $userId,
                 $orderNumber,
                 $totals['total'],
+                $totals['subtotal'],
+                $totals['tax'],
+                $totals['tax_rate'],
+                Settings::get('currency', 'USD'),
+                $totals['items_count'],
                 $paymentMethod,
                 $paymentStatus,
                 $customerData['email'],
                 $customerName,
+                $customerData['phone'] ?? '',
+                $customerData['country'] ?? '',
                 $isDonation ? 1 : 0,
                 $paymentData
             ]);
@@ -62,17 +71,19 @@ class PaymentProcessor {
             
             // Crear items de la orden
             $stmt = $db->prepare("
-                INSERT INTO order_items (order_id, product_id, product_name, price, quantity)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO order_items (order_id, product_id, product_name, price, quantity, subtotal)
+                VALUES (?, ?, ?, ?, ?, ?)
             ");
             
             foreach ($cartData['items'] as $item) {
+                $itemSubtotal = ($item['is_free'] ? 0 : $item['price']) * $item['quantity'];
                 $stmt->execute([
                     $orderId,
                     $item['id'],
                     $item['name'],
                     $item['is_free'] ? 0 : $item['price'],
-                    $item['quantity']
+                    $item['quantity'],
+                    $itemSubtotal
                 ]);
             }
             
@@ -153,12 +164,12 @@ class PaymentProcessor {
                     
                     $stmt = $db->prepare("
                         INSERT INTO user_licenses (
-                            user_id, product_id, order_id, downloads_used, downloads_limit,
-                            updates_until, is_active, created_at
+                            user_id, product_id, order_id, downloads_used, download_limit,
+                            expires_at, is_active, created_at
                         ) VALUES (?, ?, ?, 0, ?, ?, 1, NOW())
                         ON DUPLICATE KEY UPDATE
-                            downloads_limit = downloads_limit + VALUES(downloads_limit),
-                            updates_until = GREATEST(updates_until, VALUES(updates_until)),
+                            download_limit = download_limit + VALUES(download_limit),
+                            expires_at = GREATEST(expires_at, VALUES(expires_at)),
                             updated_at = NOW()
                     ");
                     
@@ -173,8 +184,8 @@ class PaymentProcessor {
                     $licenses[] = [
                         'product_id' => $item['product_id'],
                         'product_name' => $item['product_name'],
-                        'downloads_limit' => $item['download_limit'],
-                        'updates_until' => $updatesUntil
+                        'download_limit' => $item['download_limit'],
+                        'expires_at' => $updatesUntil
                     ];
                 }
             } else {
@@ -183,8 +194,8 @@ class PaymentProcessor {
                     $licenses[] = [
                         'product_id' => $item['product_id'],
                         'product_name' => $item['product_name'],
-                        'downloads_limit' => $item['download_limit'],
-                        'updates_until' => date('Y-m-d H:i:s', strtotime("+{$item['update_months']} months"))
+                        'download_limit' => $item['download_limit'],
+                        'expires_at' => date('Y-m-d H:i:s', strtotime("+{$item['update_months']} months"))
                     ];
                 }
             }
@@ -251,10 +262,20 @@ class PaymentProcessor {
                 throw new Exception('Orden no encontrada');
             }
             
+            // Verificar que no esté ya completada
+            if ($order['payment_status'] === 'completed') {
+                return [
+                    'success' => true,
+                    'order_number' => $order['order_number'],
+                    'message' => 'Orden ya completada'
+                ];
+            }
+            
             // Actualizar orden como completada
             $stmt = $db->prepare("
                 UPDATE orders 
-                SET payment_status = 'completed', payment_id = ?, payment_data = ?, updated_at = NOW()
+                SET payment_status = 'completed', payment_id = ?, payment_date = NOW(),
+                    payment_data = ?, updated_at = NOW()
                 WHERE id = ?
             ");
             
@@ -285,6 +306,9 @@ class PaymentProcessor {
             
             self::sendConfirmationEmail($orderData, $customerData, $licenses);
             
+            // Limpiar carrito
+            Cart::clear();
+            
             return [
                 'success' => true,
                 'order_number' => $order['order_number'],
@@ -306,10 +330,10 @@ class PaymentProcessor {
             
             $stmt = $db->prepare("
                 UPDATE orders 
-                SET payment_status = 'failed', updated_at = NOW()
+                SET payment_status = 'failed', failure_reason = ?, updated_at = NOW()
                 WHERE id = ?
             ");
-            $stmt->execute([$orderId]);
+            $stmt->execute([$reason, $orderId]);
             
             logError("Pago fallido para orden $orderId: $reason", 'payments.log');
             
@@ -369,7 +393,7 @@ class PaymentProcessor {
     public static function calculateFinalPrice($basePrice, $gateway) {
         $config = self::getGatewayConfig($gateway);
         
-        if (!$config['enabled']) {
+        if (!$config['enabled'] || $basePrice <= 0) {
             return $basePrice;
         }
         
@@ -439,6 +463,55 @@ class PaymentProcessor {
         
         return hash_equals($expectedSignature, $signature);
     }
+    
+    /**
+     * Crear usuario para checkout de invitado
+     */
+    public static function createGuestUser($customerData) {
+        try {
+            $db = Database::getInstance()->getConnection();
+            
+            // Verificar si el email ya existe
+            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$customerData['email']]);
+            $existingUser = $stmt->fetch();
+            
+            if ($existingUser) {
+                return $existingUser['id'];
+            }
+            
+            // Crear nuevo usuario
+            $password = bin2hex(random_bytes(8)); // Contraseña temporal
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            
+            $stmt = $db->prepare("
+                INSERT INTO users (
+                    email, password, first_name, last_name, phone, country, 
+                    is_verified, created_at
+                ) VALUES (?, ?, ?, ?, ?, ?, 1, NOW())
+            ");
+            
+            $stmt->execute([
+                $customerData['email'],
+                $hashedPassword,
+                $customerData['first_name'],
+                $customerData['last_name'],
+                $customerData['phone'] ?? '',
+                $customerData['country'] ?? ''
+            ]);
+            
+            $userId = $db->lastInsertId();
+            
+            // Enviar email con credenciales
+            EmailSystem::sendWelcomeEmail($customerData['email'], $customerData['first_name']);
+            
+            return $userId;
+            
+        } catch (Exception $e) {
+            logError("Error creando usuario invitado: " . $e->getMessage());
+            return null;
+        }
+    }
 }
 
 // Funciones helper
@@ -456,5 +529,16 @@ function completePayment($orderId, $paymentId, $paymentData = []) {
 
 function failPayment($orderId, $reason = '') {
     return PaymentProcessor::failPayment($orderId, $reason);
+}
+
+function generateRandomPassword($length = 12) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $password = '';
+    
+    for ($i = 0; $i < $length; $i++) {
+        $password .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    
+    return $password;
 }
 ?>

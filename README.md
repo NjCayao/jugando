@@ -5,9 +5,16 @@ misistema/
 │   ├── includes/                   # Headers, sidebars del admin
 │   ├── pages/                      # Páginas del dashboard
 │   │   ├── config/                 # Configuraciones
+│   │   │   ├── general.php         # ✅ Configuración general
+│   │   │   ├── email.php          # ✅ Configuración de emails
+│   │   │   └── payments.php       # ✅ Configuración de pagos
 │   │   ├── products/               # Gestión de productos
 │   │   ├── users/                  # Gestión de usuarios
 │   │   ├── orders/                 # Gestión de órdenes
+│   │   ├── donations/              # 🆕 Gestión de donaciones
+│   │   │   ├── index.php          # 🆕 Lista de donaciones
+│   │   │   ├── view.php           # 🆕 Ver detalle donación
+│   │   │   └── reports.php        # 🆕 Reportes de donaciones
 │   │   └── reports/                # Reportes y estadísticas
 │   ├── login.php                   # Login del admin
 │   └── index.php                   # Dashboard principal
@@ -17,10 +24,10 @@ misistema/
 │   ├── js/                         # JavaScript del sitio
 │   ├── images/                     # Imágenes generales
 │   ├── uploads/                    # Imágenes subidas
-|   │   ├── products/                   # Para imágenes de productos
-|   │   ├── categories/                 # Para imágenes de categorías 
-|   │   ├── banners/                    # Para imágenes de banners 
-|   │   └── logos/                      # Para logos del sitio 
+│   │   ├── products/               # Para imágenes de productos
+│   │   ├── categories/             # Para imágenes de categorías 
+│   │   ├── banners/                # Para imágenes de banners 
+│   │   └── logos/                  # Para logos del sitio 
 │
 ├── config/                         # Configuraciones generales
 │   ├── database.php                # Conexión a BD
@@ -40,6 +47,9 @@ misistema/
 │   ├── category.php                # ✅ Página de categoría
 │   ├── search.php                  # ✅ Sistema de búsqueda
 │   ├── page.php                    # ✅ Páginas dinámicas del CMS
+│   ├── donar-cafe.php              # 🆕 Página de donaciones
+│   ├── donation-success.php        # 🆕 Página de éxito
+│   ├── donation-failed.php         # 🆕 Página de error
 │   ├── cart.php                    # 
 │   ├── checkout.php                # 
 │   ├── login.php                   # 
@@ -49,6 +59,12 @@ misistema/
 ├── api/                            # APIs y webhooks
 │   ├── payments/                   # Webhooks de pagos
 │   ├── downloads/                  # Control de descargas
+│   ├── donations/                  # 🆕 API de donaciones
+│   │   ├── process.php             # 🆕 Procesador principal
+│   │   ├── mercadopago_process.php # 🆕 Procesador MercadoPago
+│   │   ├── paypal_process.php      # 🆕 Procesador PayPal
+│   │   ├── mercadopago_webhook.php # 🆕 Webhook MercadoPago
+│   │   └── paypal_webhook.php      # 🆕 Webhook PayPal
 │   └── auth/                       # Autenticación
 │
 ├── downloads/                      # Archivos de productos
@@ -69,9 +85,16 @@ misistema/
 ├── logs/                           # Archivos de log
 │   ├── errors.log
 │   ├── payments.log
+│   ├── donations.log               # 🆕 Log específico de donaciones
 │   └── downloads.log
 │
-├── .htaccess                       # URLs amigables
+├── database/                       # 🆕 Scripts de base de datos
+│   ├── migrations/                 # 🆕 Migraciones
+│   │   └── 001_create_donations_table.sql # 🆕 Tabla donaciones
+│   └── seeds/                      # 🆕 Datos de prueba
+│       └── sample_donations.sql    # 🆕 Donaciones de ejemplo
+│
+├── .htaccess                       # URLs amigables (ACTUALIZADO)
 ├── index.php                       # Página principal
 ├── robots.txt                      # SEO
 └── sitemap.xml                     # Sitemap automático
