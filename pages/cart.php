@@ -1,5 +1,5 @@
 <?php
-// pages/cart.php - Página completa del carrito (MEJORADA)
+// pages/cart.php - Página completa del carrito (LIMPIA)
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/constants.php';
 require_once __DIR__ . '/../config/functions.php';
@@ -21,23 +21,25 @@ $siteName = Settings::get('site_name', 'MiSistema');
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carrito de Compras - <?php echo htmlspecialchars($siteName); ?></title>
-    
+
     <meta name="description" content="Revisa los productos en tu carrito de compras">
     <meta name="robots" content="noindex, follow">
-    
+
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
-    
+
     <!-- Hero Header del Carrito -->
     <div class="hero-cards-section py-5 mb-4">
         <div class="container">
@@ -99,7 +101,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
             </div>
         </nav>
     </div>
-    
+
     <!-- Main Content -->
     <div class="container cart-page mb-5">
         <?php if ($cartEmpty): ?>
@@ -116,7 +118,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                     </div>
                                     <h3 class="crystal-title-small mb-3">Tu carrito está vacío</h3>
                                     <p class="crystal-description mb-4">
-                                        ¡Descubre nuestros increíbles productos y sistemas! 
+                                        ¡Descubre nuestros increíbles productos y sistemas!
                                         Tenemos soluciones perfectas esperándote.
                                     </p>
                                     <div class="row g-3 justify-content-center">
@@ -164,30 +166,30 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                             <!-- Imagen del Producto -->
                                             <div class="product-image-compact me-3">
                                                 <?php if ($item['image']): ?>
-                                                    <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
-                                                         alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                                         class="w-100 h-100" style="object-fit: cover; border-radius: 6px;">
+                                                    <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>"
+                                                        alt="<?php echo htmlspecialchars($item['name']); ?>"
+                                                        class="w-100 h-100" style="object-fit: cover; border-radius: 6px;">
                                                 <?php else: ?>
                                                     <i class="fas fa-image text-muted"></i>
                                                 <?php endif; ?>
                                             </div>
-                                            
+
                                             <!-- Información del Producto -->
                                             <div class="product-info-compact flex-grow-1">
                                                 <h5 class="product-title-compact mb-2">
-                                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $item['slug']; ?>" 
-                                                       class="text-decoration-none">
+                                                    <a href="<?php echo SITE_URL; ?>/producto/<?php echo $item['slug']; ?>"
+                                                        class="text-decoration-none">
                                                         <?php echo htmlspecialchars($item['name']); ?>
                                                     </a>
                                                 </h5>
-                                                
+
                                                 <?php if ($item['category_name']): ?>
                                                     <div class="product-meta-compact mb-2">
                                                         <i class="fas fa-tag text-primary me-1"></i>
                                                         <span class="text-muted"><?php echo htmlspecialchars($item['category_name']); ?></span>
                                                     </div>
                                                 <?php endif; ?>
-                                                
+
                                                 <div class="license-info-compact">
                                                     <div class="row g-2 align-items-center">
                                                         <!-- Precio Unitario -->
@@ -199,28 +201,28 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                                                 <strong class="text-primary" data-unit-price="<?php echo $item['price']; ?>"><?php echo formatPrice($item['price']); ?></strong>
                                                             <?php endif; ?>
                                                         </div>
-                                                        
+
                                                         <!-- Controles de Cantidad -->
                                                         <div class="col-md-4">
                                                             <small class="text-muted d-block mb-1">Cantidad:</small>
                                                             <div class="input-group input-group-sm">
-                                                                <button class="btn btn-outline-primary quantity-btn" type="button" 
-                                                                        data-action="decrease" data-product-id="<?php echo $productId; ?>"
-                                                                        title="Disminuir cantidad">
+                                                                <button class="btn btn-outline-primary quantity-btn" type="button"
+                                                                    data-action="decrease" data-product-id="<?php echo $productId; ?>"
+                                                                    title="Disminuir cantidad">
                                                                     <i class="fas fa-minus"></i>
                                                                 </button>
-                                                                <input type="number" class="form-control quantity-input text-center" 
-                                                                       value="<?php echo $item['quantity']; ?>" min="1" max="10" 
-                                                                       data-product-id="<?php echo $productId; ?>"
-                                                                       aria-label="Cantidad del producto">
-                                                                <button class="btn btn-outline-primary quantity-btn" type="button" 
-                                                                        data-action="increase" data-product-id="<?php echo $productId; ?>"
-                                                                        title="Aumentar cantidad">
+                                                                <input type="number" class="form-control quantity-input text-center"
+                                                                    value="<?php echo $item['quantity']; ?>" min="1" max="10"
+                                                                    data-product-id="<?php echo $productId; ?>"
+                                                                    aria-label="Cantidad del producto">
+                                                                <button class="btn btn-outline-primary quantity-btn" type="button"
+                                                                    data-action="increase" data-product-id="<?php echo $productId; ?>"
+                                                                    title="Aumentar cantidad">
                                                                     <i class="fas fa-plus"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         <!-- Subtotal -->
                                                         <div class="col-md-3">
                                                             <small class="text-muted d-block">Subtotal:</small>
@@ -233,12 +235,12 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                                                 </div>
                                                             <?php endif; ?>
                                                         </div>
-                                                        
+
                                                         <!-- Acciones -->
                                                         <div class="col-md-2 text-end">
-                                                            <button class="btn btn-outline-danger btn-sm remove-item" 
-                                                                    data-product-id="<?php echo $productId; ?>" 
-                                                                    title="Eliminar del carrito">
+                                                            <button class="btn btn-outline-danger btn-sm remove-item"
+                                                                data-product-id="<?php echo $productId; ?>"
+                                                                title="Eliminar del carrito">
                                                                 <i class="fas fa-trash"></i>
                                                             </button>
                                                         </div>
@@ -251,7 +253,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                             </div>
                         <?php endforeach; ?>
                     </div>
-                    
+
                     <!-- Acciones del Carrito -->
                     <div class="dashboard-section">
                         <div class="section-body-compact">
@@ -262,7 +264,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                     </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <button type="button" class="btn btn-outline-danger w-100" onclick="clearCart()">
+                                    <button type="button" class="btn btn-outline-danger w-100" onclick="cart.clearCart()">
                                         <i class="fas fa-trash me-2"></i>Vaciar Carrito
                                     </button>
                                 </div>
@@ -270,7 +272,7 @@ $siteName = Settings::get('site_name', 'MiSistema');
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Sidebar: Resumen del Carrito -->
                 <div class="col-lg-4">
                     <!-- Resumen del Pedido -->
@@ -293,30 +295,30 @@ $siteName = Settings::get('site_name', 'MiSistema');
                                         <?php endif; ?>
                                     </span>
                                 </div>
-                                
+
                                 <?php if ($cartTotals['tax'] > 0): ?>
                                     <div class="d-flex justify-content-between mb-2">
                                         <span>Impuestos (<?php echo $cartTotals['tax_rate']; ?>%):</span>
                                         <span class="cart-tax"><?php echo formatPrice($cartTotals['tax']); ?></span>
                                     </div>
                                 <?php endif; ?>
-                                
+
                                 <hr>
-                                
+
                                 <div class="d-flex justify-content-between">
                                     <h5>Total Final:</h5>
                                     <h5 class="text-success cart-total"><?php echo formatPrice($cartTotals['total']); ?></h5>
                                 </div>
                             </div>
-                            
+
                             <!-- Botón de Checkout -->
                             <div class="d-grid mb-3">
-                                <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-corporate btn-lg">
+                                <a href="<?php echo SITE_URL; ?>/checkout" class="btn btn-corporate btn-lg">
                                     <i class="fas fa-credit-card me-2"></i>
                                     <?php echo $cartTotals['total'] > 0 ? 'Proceder al Pago' : 'Confirmar Pedido Gratuito'; ?>
                                 </a>
                             </div>
-                            
+
                             <!-- Información de Seguridad -->
                             <div class="text-center">
                                 <small class="text-muted">
@@ -365,231 +367,50 @@ $siteName = Settings::get('site_name', 'MiSistema');
             </div>
         <?php endif; ?>
     </div>
-    
+
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-    <script>
-        window.SITE_URL = '<?php echo SITE_URL; ?>';
-    </script>
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
     <script src="<?php echo ASSETS_URL; ?>/js/modules/cart.js"></script>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Los event listeners para el carrito ya están en main.js
-            updateCartDisplay();
-            
-            // Añadir efectos visuales
+            // Solo efectos visuales
             const cartItems = document.querySelectorAll('.dashboard-section[data-product-id]');
             cartItems.forEach((item, index) => {
                 item.style.animationDelay = `${index * 0.1}s`;
                 item.classList.add('fade-in-up');
             });
-        });
-        
-        function clearCart() {
-            if (!confirm('¿Estás seguro de que quieres vaciar todo el carrito?')) {
-                return;
-            }
-            
-            // Añadir efecto de carga
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Vaciando...';
-            button.disabled = true;
-            
-            fetch('/api/cart/clear.php', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Error: ' + data.message);
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al vaciar el carrito');
-                button.innerHTML = originalText;
-                button.disabled = false;
+
+            // Escuchar cambios y actualizar precios
+            document.addEventListener('cartItemUpdated', function(e) {
+                const {
+                    productId,
+                    quantity,
+                    newSubtotal
+                } = e.detail;
+                updateProductSubtotal(productId, quantity, newSubtotal);
             });
-        }
-        
-        // Almacenar precios unitarios para cálculos
-        const productPrices = {};
-        
-        // Inicializar precios al cargar la página
-        document.querySelectorAll('[data-product-id]').forEach(function(item) {
-            const productId = item.dataset.productId;
-            const priceElement = item.querySelector('[data-unit-price]');
-            if (priceElement) {
-                productPrices[productId] = parseFloat(priceElement.dataset.unitPrice);
-            }
         });
-        
-        // Mejorar experiencia de cantidad
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.quantity-btn')) {
-                const btn = e.target.closest('.quantity-btn');
-                const input = btn.parentElement.querySelector('.quantity-input');
-                const productId = btn.dataset.productId;
-                const action = btn.dataset.action;
-                
-                // Efecto visual
-                btn.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    btn.style.transform = 'scale(1)';
-                }, 150);
-                
-                let newValue = parseInt(input.value);
-                if (action === 'increase' && newValue < 10) {
-                    newValue++;
-                } else if (action === 'decrease' && newValue > 1) {
-                    newValue--;
-                }
-                
-                input.value = newValue;
-                
-                // Actualizar precios inmediatamente
-                updateProductPrice(productId, newValue);
-                updateCartTotals();
-                
-                // Actualizar carrito en el servidor
-                updateCartQuantity(productId, newValue);
-            }
-        });
-        
-        // También manejar cambios directos en el input
-        document.addEventListener('change', function(e) {
-            if (e.target.classList.contains('quantity-input')) {
-                const input = e.target;
-                const productId = input.dataset.productId;
-                let newValue = parseInt(input.value);
-                
-                // Validar rango
-                if (newValue < 1) newValue = 1;
-                if (newValue > 10) newValue = 10;
-                input.value = newValue;
-                
-                // Actualizar precios
-                updateProductPrice(productId, newValue);
-                updateCartTotals();
-                
-                // Actualizar carrito en el servidor
-                updateCartQuantity(productId, newValue);
-            }
-        });
-        
-        function updateProductPrice(productId, quantity) {
+
+        function updateProductSubtotal(productId, quantity, newSubtotal) {
             const item = document.querySelector(`[data-product-id="${productId}"]`);
             if (!item) return;
-            
-            const unitPrice = productPrices[productId];
-            if (!unitPrice || unitPrice === 0) return; // Es gratis
-            
+
             const subtotalElement = item.querySelector('.product-subtotal');
-            const newSubtotal = unitPrice * quantity;
-            
-            if (subtotalElement) {
-                subtotalElement.textContent = formatPrice(newSubtotal);
+            if (subtotalElement && !subtotalElement.textContent.includes('GRATIS')) {
+                subtotalElement.textContent = newSubtotal;
             }
-            
-            // Actualizar texto de precio por unidad si hay más de 1
+
             const perUnitElement = item.querySelector('.per-unit-price');
             if (perUnitElement) {
-                if (quantity > 1) {
-                    perUnitElement.style.display = 'block';
-                    perUnitElement.innerHTML = `<small class="text-muted">${formatPrice(unitPrice)} c/u</small>`;
-                } else {
-                    perUnitElement.style.display = 'none';
-                }
+                perUnitElement.style.display = quantity > 1 ? 'block' : 'none';
             }
-        }
-        
-        function updateCartTotals() {
-            let subtotal = 0;
-            let itemCount = 0;
-            
-            // Calcular nuevo subtotal
-            document.querySelectorAll('[data-product-id]').forEach(function(item) {
-                const productId = item.dataset.productId;
-                const unitPrice = productPrices[productId] || 0;
-                const quantity = parseInt(item.querySelector('.quantity-input').value);
-                
-                subtotal += unitPrice * quantity;
-                itemCount += quantity;
-            });
-            
-            // Actualizar contador de items
-            const itemCountElements = document.querySelectorAll('.items-count');
-            itemCountElements.forEach(el => el.textContent = itemCount);
-            
-            // Actualizar subtotal
-            const subtotalElements = document.querySelectorAll('.cart-subtotal');
-            subtotalElements.forEach(el => {
-                if (subtotal > 0) {
-                    el.textContent = formatPrice(subtotal);
-                } else {
-                    el.innerHTML = '<span class="text-success">GRATIS</span>';
-                }
-            });
-            
-            // Calcular impuestos (si aplica)
-            const taxRate = 0; // Ajustar según configuración
-            const tax = subtotal * (taxRate / 100);
-            const total = subtotal + tax;
-            
-            // Actualizar total
-            const totalElements = document.querySelectorAll('.cart-total');
-            totalElements.forEach(el => el.textContent = formatPrice(total));
-            
-            // Actualizar badge del header
-            const headerBadge = document.querySelector('.badge');
-            if (headerBadge) {
-                headerBadge.textContent = `${itemCount} productos`;
-            }
-        }
-        
-        function formatPrice(price) {
-            return new Intl.NumberFormat('es-PE', {
-                style: 'currency',
-                currency: 'PEN',
-                minimumFractionDigits: 2
-            }).format(price);
-        }
-        
-        function updateCartQuantity(productId, quantity) {
-            // Hacer petición al servidor para actualizar el carrito
-            fetch('/api/cart/update.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    quantity: quantity
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    console.error('Error actualizando carrito:', data.message);
-                    // Revertir cambios locales si hay error
-                    location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revertir cambios locales si hay error
-                location.reload();
-            });
         }
     </script>
 </body>
+
 </html>

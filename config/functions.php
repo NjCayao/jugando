@@ -58,7 +58,7 @@ function generateOrderNumber() {
 // Función para formatear precio - CORREGIDA
 function formatPrice($amount, $currency = null) {
     if ($currency === null) {
-        $currency = Settings::get('currency_symbol', '$');
+        $currency = getSetting('currency_symbol', '$');
     }
     
     if ($amount == 0) {

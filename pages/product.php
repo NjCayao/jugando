@@ -312,6 +312,11 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
                                     <button class="btn btn-success btn-lg" onclick="downloadFree(<?php echo $product['id']; ?>)">
                                         <i class="fas fa-download me-2"></i>Descargar Gratis
                                     </button>
+
+                                    <button class="btn btn-warning" onclick="donateCoffee(<?php echo $product['id']; ?>)">
+                                        <i class="fas fa-coffee me-2"></i> Donar un Café al Dev
+                                    </button>
+
                                 <?php else: ?>
                                     <button class="btn btn-primary btn-lg" onclick="addToCart(<?php echo $product['id']; ?>)">
                                         <i class="fas fa-cart-plus me-2"></i>Agregar al Carrito
@@ -356,9 +361,9 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <hr class="my-3">
-                            
+
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <span class="text-muted small">Categoría:</span>
                                 <span class="fw-bold"><?php echo htmlspecialchars($product['category_name'] ?: 'Sin categoría'); ?></span>
@@ -461,7 +466,7 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
 
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
-    
+
     <script>
         window.SITE_URL = '<?php echo SITE_URL; ?>';
     </script>
@@ -505,6 +510,13 @@ $pageDescription = $product['meta_description'] ?: $product['short_description']
                 button.dataset.originalText = button.innerHTML;
             });
         });
+    </script>
+
+    <script>
+        function donateCoffee(productId) {
+            // Redirigir a página de donación con el producto como referencia
+            window.location.href = window.SITE_URL + '/donar-cafe?producto=' + productId;
+        }
     </script>
 </body>
 

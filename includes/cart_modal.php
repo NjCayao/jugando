@@ -30,26 +30,26 @@ require_once __DIR__ . '/../config/cart.php';
             
             <!-- Footer -->
             <div class="modal-footer d-none" id="cart-modal-footer">
-                <div class="w-100">
-                    <div class="row g-2">
-                        <div class="col-md-4">
-                            <button type="button" class="btn btn-outline-danger w-100" onclick="clearCartModal()">
-                                <i class="fas fa-trash me-2"></i>Vaciar
-                            </button>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="<?php echo SITE_URL; ?>/pages/cart.php" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
-                                <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
-                            </a>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="<?php echo SITE_URL; ?>/pages/checkout.php" class="btn btn-success w-100" data-bs-dismiss="modal">
-                                <i class="fas fa-credit-card me-2"></i>Checkout
-                            </a>
-                        </div>
-                    </div>
-                </div>
+    <div class="w-100">
+        <div class="row g-2">
+            <div class="col-md-4">
+                <button type="button" class="btn btn-outline-danger w-100" onclick="clearCartModal()">
+                    <i class="fas fa-trash me-2"></i>Vaciar
+                </button>
             </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-outline-primary w-100" onclick="goToCart()">
+                    <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
+                </button>
+            </div>
+            <div class="col-md-4">
+                <button type="button" class="btn btn-success w-100" onclick="goToCheckout()">
+                    <i class="fas fa-credit-card me-2"></i>Pagar Ahora
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>
@@ -179,7 +179,7 @@ async function loadCartModalContent() {
         }
         
         const text = await response.text();
-        console.log('Respuesta del servidor:', text); // Para debug
+       
         
         const data = JSON.parse(text);
         
@@ -412,6 +412,16 @@ async function clearCartModal() {
     }
 }
 
+window.goToCart = function() {
+    console.log('Navegando al carrito...');
+    window.location.href = window.SITE_URL + '/carrito';
+};
+
+window.goToCheckout = function() {
+    console.log('Navegando al checkout...');
+    window.location.href = window.SITE_URL + '/checkout';
+};
+
 // Función helper para formatear precios
 function formatPrice(price) {
     return new Intl.NumberFormat('es-PE', {
@@ -420,4 +430,6 @@ function formatPrice(price) {
         minimumFractionDigits: 2
     }).format(price);
 }
+
+
 </script>

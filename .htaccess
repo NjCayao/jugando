@@ -108,6 +108,9 @@ RewriteRule ^configuracion/?$ pages/settings.php [QSA,L]
 RewriteRule ^productos/?$ pages/products.php [QSA,L]
 RewriteRule ^producto/([a-zA-Z0-9\-]+)/?$ pages/product.php?slug=$1 [QSA,L]
 
+# Página de donación
+RewriteRule ^donar-cafe/?$ pages/donar-cafe.php [QSA,L]
+
 # 9. PÁGINAS DE CATEGORÍAS
 RewriteRule ^categoria/([a-zA-Z0-9\-]+)/?$ pages/category.php?slug=$1 [QSA,L]
 
