@@ -48,6 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'donation_email_template' => $_POST['donation_email_template'] ?? '',
                 'verification_email_subject' => sanitize($_POST['verification_email_subject'] ?? ''),
                 'verification_email_template' => $_POST['verification_email_template'] ?? '',
+                'new_account_email_subject' => sanitize($_POST['new_account_email_subject'] ?? ''),
+                'new_account_email_template' => $_POST['new_account_email_template'] ?? '',
 
                 // Configuraciones adicionales
                 'email_footer' => $_POST['email_footer'] ?? '',
@@ -107,6 +109,8 @@ $config = [
     'donation_email_template' => Settings::get('donation_email_template', 'Hola {USER_NAME},\n\n¡Muchas gracias por tu donación de {DONATION_AMOUNT}!\n\nTu apoyo nos ayuda a seguir creando software de calidad.\n\nCon gratitud,\nEl equipo de {SITE_NAME}'),
     'verification_email_subject' => Settings::get('verification_email_subject', 'Verificar tu cuenta - Código: {VERIFICATION_CODE}'),
     'verification_email_template' => Settings::get('verification_email_template', 'Hola {USER_NAME},\n\nTu código de verificación es: {VERIFICATION_CODE}\n\nEste código expira en 30 minutos.\n\nSaludos,\nEl equipo de {SITE_NAME}'),
+    'new_account_email_subject' => Settings::get('new_account_email_subject', 'Tu cuenta ha sido creada - {SITE_NAME}'),
+    'new_account_email_template' => Settings::get('new_account_email_template', 'Hola {USER_NAME},\n\n¡Tu cuenta ha sido creada exitosamente después de tu compra!\n\n🔐 Tus credenciales:\nEmail: {USER_EMAIL}\nContraseña: {USER_PASSWORD}\n\n🔗 Acceder: {LOGIN_URL}\n\nGracias por tu compra,\nEl equipo de {SITE_NAME}'),
 
     'email_footer' => Settings::get('email_footer', '<p>© ' . date('Y') . ' {SITE_NAME}. Todos los derechos reservados.</p><p>Si no deseas recibir estos emails, <a href="{UNSUBSCRIBE_LINK}">haz clic aquí</a>.</p>'),
     'email_notifications_enabled' => Settings::get('email_notifications_enabled', '1'),
@@ -327,6 +331,19 @@ $config = [
                                         <textarea class="form-control" id="verification_email_template" name="verification_email_template"
                                             rows="3" form="email_form"><?php echo htmlspecialchars($config['verification_email_template']); ?></textarea>
                                     </div>
+                                    <!-- Cuenta Nueva -->
+                                    <div class="form-group">
+                                        <label for="new_account_email_subject">Asunto - Cuenta Nueva</label>
+                                        <input type="text" class="form-control" id="new_account_email_subject" name="new_account_email_subject"
+                                            value="<?php echo htmlspecialchars($config['new_account_email_subject']); ?>" form="email_form">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="new_account_email_template">Template - Cuenta Nueva - cuando compra producto</label>
+                                        <textarea class="form-control" id="new_account_email_template" name="new_account_email_template"
+                                            rows="4" form="email_form"><?php echo htmlspecialchars($config['new_account_email_template']); ?></textarea>
+                                        <small class="text-muted">Variables: {USER_NAME}, {USER_EMAIL}, {USER_PASSWORD}, {LOGIN_URL}, {DASHBOARD_URL}</small>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -437,6 +454,14 @@ $config = [
                                                 <li><code>{VERIFICATION_CODE}</code></li>
                                                 <li><code>{DONATION_AMOUNT}</code></li>
                                                 <li><code>{UNSUBSCRIBE_LINK}</code></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Cuenta Nueva:</strong>
+                                            <ul class="list-unstyled">
+                                                <li><code>{USER_PASSWORD}</code></li>
+                                                <li><code>{LOGIN_URL}</code></li>
+                                                <li><code>{DASHBOARD_URL}</code></li>
                                             </ul>
                                         </div>
                                     </div>

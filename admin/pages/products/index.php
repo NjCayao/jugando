@@ -1090,35 +1090,35 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
             const version = $('#version').val();
             const file = $('#version_file')[0].files[0];
 
-            // Validar formato de versión
             if (!/^\d+\.\d+(\.\d+)?$/.test(version)) {
                 alert('El formato de versión debe ser: 1.0, 1.1, 2.0, etc.');
                 e.preventDefault();
                 return;
             }
 
-            // Validar archivo
             if (!file) {
                 alert('Debe seleccionar un archivo');
                 e.preventDefault();
                 return;
             }
 
-            // Validar tamaño (500MB)
             if (file.size > 500 * 1024 * 1024) {
                 alert('El archivo no puede ser mayor a 500MB');
                 e.preventDefault();
                 return;
             }
 
-            // Validar extensión
-            const allowedExtensions = ['zip', 'rar'];
+            const allowedExtensions = ['zip', 'rar', '7z'];
             const fileExtension = file.name.split('.').pop().toLowerCase();
             if (!allowedExtensions.includes(fileExtension)) {
-                alert('Solo se permiten archivos ZIP o RAR');
+                alert('Solo se permiten archivos ZIP, RAR o 7Z');
                 e.preventDefault();
                 return;
             }
+
+            // Mostrar progreso
+            const submitBtn = $(this).find('button[type="submit"]');
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Subiendo...');
         });
 
         // Mostrar progreso de subida
@@ -1336,7 +1336,12 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
 
         // Validación adicional en el formulario
-        $('form').on('submit', function(e) {
+        $('form[method="post"]').not('#versionForm, #customLinkForm').on('submit', function(e) {
+            // Solo validar si tiene campos de precio
+            if ($(this).find('#price, #is_free').length === 0) {
+                return;
+            }
+
             const isFree = $('#is_free').is(':checked');
             const price = parseFloat($('#price').val()) || 0;
 

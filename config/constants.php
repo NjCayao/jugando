@@ -63,6 +63,19 @@ if (!defined('LOGIN_LOCKOUT_TIME')) {
     define('LOGIN_LOCKOUT_TIME', 900); // 15 minutos
 }
 
+
+// Rutas del sistema de archivos
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', dirname(__FILE__, 2));
+}
+if (!defined('UPLOADS_PATH')) {
+    define('UPLOADS_PATH', ROOT_PATH . '/assets/uploads');
+}
+if (!defined('DOWNLOADS_PATH')) {
+    define('DOWNLOADS_PATH', ROOT_PATH . '/downloads');
+}
+
+
 // Configuraciones de productos
 if (!defined('MAX_FILE_SIZE')) {
     define('MAX_FILE_SIZE', 100 * 1024 * 1024); // 100MB
@@ -79,6 +92,7 @@ if (!defined('DEFAULT_DOWNLOAD_LIMIT')) {
 if (!defined('DEFAULT_UPDATE_MONTHS')) {
     define('DEFAULT_UPDATE_MONTHS', 12);
 }
+
 
 // Configuraciones de email
 if (!defined('FROM_EMAIL')) {

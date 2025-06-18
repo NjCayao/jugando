@@ -54,23 +54,25 @@ $pageTitle = 'Checkout - Finalizar Compra';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($pageTitle); ?> - <?php echo htmlspecialchars($siteName); ?></title>
-    
+
     <meta name="description" content="Finaliza tu compra de forma segura">
     <meta name="robots" content="noindex, follow">
-    
+
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?php echo ASSETS_URL; ?>/css/style.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <?php include __DIR__ . '/../includes/header.php'; ?>
-    
+
     <!-- Breadcrumb -->
     <div class="container mt-4">
         <nav aria-label="breadcrumb">
@@ -81,7 +83,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
             </ol>
         </nav>
     </div>
-    
+
     <!-- Main Content -->
     <div class="container checkout-page my-5">
         <!-- Header -->
@@ -91,7 +93,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
             </h1>
             <p class="section-subtitle">Completa tu información para procesar el pedido</p>
         </div>
-        
+
         <div class="row">
             <!-- Formulario de Checkout -->
             <div class="col-lg-8">
@@ -107,7 +109,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <?php if (!$isLoggedIn): ?>
                             <div class="alert alert-info">
                                 <h6><i class="fas fa-info-circle me-2"></i>¿Ya tienes cuenta?</h6>
@@ -117,42 +119,42 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                 </a>
                             </div>
                         <?php endif; ?>
-                        
+
                         <div class="checkout-form">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="first_name" class="form-label">Nombre *</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name" 
-                                               value="<?php echo $user['first_name'] ?? ''; ?>" required>
+                                        <input type="text" class="form-control" id="first_name" name="first_name"
+                                            value="<?php echo $user['first_name'] ?? ''; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="last_name" class="form-label">Apellido *</label>
-                                        <input type="text" class="form-control" id="last_name" name="last_name" 
-                                               value="<?php echo $user['last_name'] ?? ''; ?>" required>
+                                        <input type="text" class="form-control" id="last_name" name="last_name"
+                                            value="<?php echo $user['last_name'] ?? ''; ?>" required>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="email" class="form-label">Email *</label>
-                                        <input type="email" class="form-control" id="email" name="email" 
-                                               value="<?php echo $user['email'] ?? ''; ?>" required>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                            value="<?php echo $user['email'] ?? ''; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="phone" class="form-label">Teléfono</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone" 
-                                               value="<?php echo $user['phone'] ?? ''; ?>">
+                                        <input type="tel" class="form-control" id="phone" name="phone"
+                                            value="<?php echo $user['phone'] ?? ''; ?>">
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="country" class="form-label">País *</label>
                                 <select class="form-select" id="country" name="country" required>
@@ -167,7 +169,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                     <option value="other">Otro</option>
                                 </select>
                             </div>
-                            
+
                             <?php if (!$isLoggedIn): ?>
                                 <div class="form-group">
                                     <div class="form-check">
@@ -180,7 +182,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             <?php endif; ?>
                         </div>
                     </div>
-                    
+
                     <!-- Paso 2: Método de Pago -->
                     <?php if ($requiresPayment): ?>
                         <div class="checkout-step">
@@ -193,7 +195,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <?php if (!$hasPaymentMethods): ?>
                                 <div class="alert alert-warning">
                                     <h6><i class="fas fa-exclamation-triangle me-2"></i>Métodos de pago no disponibles</h6>
@@ -202,11 +204,11 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             <?php else: ?>
                                 <div class="payment-methods">
                                     <?php if ($mercadopagoEnabled): ?>
-                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'mercadopago' ? 'selected' : ''; ?>" 
-                                             data-method="mercadopago">
+                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'mercadopago' ? 'selected' : ''; ?>"
+                                            data-method="mercadopago">
                                             <div class="d-flex align-items-center">
                                                 <input type="radio" name="payment_method" value="mercadopago" id="mercadopago"
-                                                       <?php echo $defaultPaymentMethod == 'mercadopago' ? 'checked' : ''; ?>>
+                                                    <?php echo $defaultPaymentMethod == 'mercadopago' ? 'checked' : ''; ?>>
                                                 <label for="mercadopago" class="flex-grow-1">
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-grow-1">
@@ -226,7 +228,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                                     </div>
                                                 </label>
                                             </div>
-                                            
+
                                             <div class="payment-form" id="mercadopago-form">
                                                 <div id="mercadopago-button" class="payment-button-container">
                                                     <!-- MercadoPago Button se insertará aquí -->
@@ -240,14 +242,14 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <?php if ($paypalEnabled): ?>
-                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'paypal' ? 'selected' : ''; ?>" 
-                                             data-method="paypal">
+                                        <div class="payment-method <?php echo $defaultPaymentMethod == 'paypal' ? 'selected' : ''; ?>"
+                                            data-method="paypal">
                                             <div class="d-flex align-items-center">
-                                                <input type="radio" name="payment_method" value="paypal" id="paypal"
-                                                       <?php echo $defaultPaymentMethod == 'paypal' ? 'checked' : ''; ?>>
-                                                <label for="paypal" class="flex-grow-1">
+                                                <input type="radio" name="payment_method" value="paypal" id="paypal-radio"
+                                                    <?php echo $defaultPaymentMethod == 'paypal' ? 'checked' : ''; ?>>
+                                                <label for="paypal-radio" class="flex-grow-1">
                                                     <div class="d-flex align-items-center">
                                                         <div>
                                                             <h6 class="mb-1">PayPal</h6>
@@ -259,7 +261,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                                     </div>
                                                 </label>
                                             </div>
-                                            
+
                                             <div class="payment-form" id="paypal-form">
                                                 <div id="paypal-button-container" class="payment-button-container">
                                                     <!-- PayPal Buttons se insertarán aquí -->
@@ -273,7 +275,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    
+
                                     <!-- <?php if ($stripeEnabled): ?>
                                         <div class="payment-method <?php echo $defaultPaymentMethod == 'stripe' ? 'selected' : ''; ?>" 
                                              data-method="stripe">
@@ -322,26 +324,26 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="alert alert-success">
                                 <h6><i class="fas fa-gift me-2"></i>¡Productos Gratuitos!</h6>
                                 <p class="mb-0">Tu pedido no requiere pago. Haz clic en "Confirmar Pedido" para proceder con la descarga.</p>
                             </div>
-                            
+
                             <input type="hidden" name="payment_method" value="free">
                         </div>
                     <?php endif; ?>
-                    
+
                     <!-- Términos y Condiciones -->
                     <div class="checkout-step">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="accept_terms" name="accept_terms" required>
                             <label class="form-check-label" for="accept_terms">
-                                Acepto los <a href="/terminos-condiciones" target="_blank">Términos y Condiciones</a> 
+                                Acepto los <a href="/terminos-condiciones" target="_blank">Términos y Condiciones</a>
                                 y la <a href="/poltica-de-privacidad" target="_blank">Política de Privacidad</a> *
                             </label>
                         </div>
-                        
+
                         <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" id="newsletter" name="newsletter" value="1">
                             <label class="form-check-label" for="newsletter">
@@ -349,21 +351,21 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             </label>
                         </div>
                     </div>
-                    
+
                     <!-- Botón de envío -->
                     <div class="d-grid gap-2">
-                        <button type="submit" id="submit-button" class="btn btn-corporate btn-lg" 
-                                <?php echo (!$hasPaymentMethods && $requiresPayment) ? 'disabled' : ''; ?>>
+                        <button type="submit" id="submit-button" class="btn btn-corporate btn-lg"
+                            <?php echo (!$hasPaymentMethods && $requiresPayment) ? 'disabled' : ''; ?>>
                             <i class="fas fa-lock me-2"></i>
                             <?php echo $requiresPayment ? 'Procesar Pago' : 'Confirmar Pedido Gratuito'; ?>
                         </button>
-                        
+
                         <a href="<?php echo SITE_URL; ?>/pages/cart.php" class="btn btn-outline-secondary">
                             <i class="fas fa-arrow-left me-2"></i>Volver al Carrito
                         </a>
                     </div>
                 </form>
-                
+
                 <!-- Badges de seguridad -->
                 <div class="security-badges">
                     <div class="security-badge">
@@ -380,23 +382,23 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     </div>
                 </div>
             </div>
-            
+
             <!-- Resumen del Pedido -->
             <div class="col-lg-4">
                 <div class="order-summary">
                     <h4 class="mb-4">
                         <i class="fas fa-receipt me-2"></i>Resumen del Pedido
                     </h4>
-                    
+
                     <!-- Items -->
                     <?php foreach ($checkoutData['items'] as $item): ?>
                         <div class="order-item">
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <?php if ($item['image']): ?>
-                                        <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>" 
-                                             alt="<?php echo htmlspecialchars($item['name']); ?>" 
-                                             class="order-item-image">
+                                        <img src="<?php echo UPLOADS_URL; ?>/products/<?php echo $item['image']; ?>"
+                                            alt="<?php echo htmlspecialchars($item['name']); ?>"
+                                            class="order-item-image">
                                     <?php else: ?>
                                         <div class="order-item-image no-image">
                                             <i class="fas fa-image text-muted"></i>
@@ -415,7 +417,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             </div>
                         </div>
                     <?php endforeach; ?>
-                    
+
                     <!-- Totales -->
                     <div class="order-totals">
                         <?php if ($checkoutData['totals']['subtotal'] > 0): ?>
@@ -423,7 +425,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                 <span>Subtotal:</span>
                                 <span><?php echo formatPrice($checkoutData['totals']['subtotal']); ?></span>
                             </div>
-                            
+
                             <?php if ($checkoutData['totals']['tax'] > 0): ?>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Impuestos:</span>
@@ -431,12 +433,12 @@ $pageTitle = 'Checkout - Finalizar Compra';
                                 </div>
                             <?php endif; ?>
                         <?php endif; ?>
-                        
+
                         <div class="d-flex justify-content-between">
                             <h5>Total:</h5>
                             <h5 class="text-success"><?php echo formatPrice($checkoutData['totals']['total']); ?></h5>
                         </div>
-                        
+
                         <?php if (!empty($checkoutData['free_items'])): ?>
                             <div class="alert alert-success py-2 mt-3">
                                 <small>
@@ -446,7 +448,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                             </div>
                         <?php endif; ?>
                     </div>
-                    
+
                     <!-- Información adicional -->
                     <div class="order-benefits">
                         <small class="text-muted">
@@ -462,7 +464,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
             </div>
         </div>
     </div>
-    
+
     <!-- Processing Overlay -->
     <div class="processing-overlay" id="processing-overlay">
         <div class="text-center">
@@ -473,18 +475,18 @@ $pageTitle = 'Checkout - Finalizar Compra';
             <p>Por favor no cierres esta ventana</p>
         </div>
     </div>
-    
+
     <!-- Footer -->
     <?php include __DIR__ . '/../includes/footer.php'; ?>
     <script>
         window.SITE_URL = '<?php echo SITE_URL; ?>';
     </script>
-    
+
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script> 
-    
-    
+    <script src="<?php echo ASSETS_URL; ?>/js/main.js"></script>
+
+
     <!-- Scripts de pasarelas de pago -->
     <?php if ($stripeEnabled): ?>
         <script src="https://js.stripe.com/v3/"></script>
@@ -494,11 +496,11 @@ $pageTitle = 'Checkout - Finalizar Compra';
             let stripe = null;
             let elements = null;
             let cardElement = null;
-            
+
             if (stripePublishableKey) {
                 stripe = Stripe(stripePublishableKey);
                 elements = stripe.elements();
-                
+
                 // Crear elemento de tarjeta
                 cardElement = elements.create('card', {
                     style: {
@@ -517,23 +519,22 @@ $pageTitle = 'Checkout - Finalizar Compra';
             }
         </script>
     <?php endif; ?>
-    
+
     <?php if ($paypalEnabled): ?>
-        <script src="https://www.paypal.com/sdk/js?client-id=<?php echo Settings::get('paypal_client_id', ''); ?>&currency=USD" 
-                data-namespace="paypal" onload="console.log('PayPal SDK cargado')" onerror="console.error('Error cargando PayPal SDK')"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=<?php echo Settings::get('paypal_client_id', ''); ?>&currency=USD&intent=capture&components=buttons&enable-funding=venmo,paylater&disable-funding=credit,card"></script>
     <?php endif; ?>
-    
+
     <?php if ($mercadopagoEnabled): ?>
-        <script src="https://sdk.mercadopago.com/js/v2" 
-                onload="console.log('MercadoPago SDK cargado')" onerror="console.error('Error cargando MercadoPago SDK')"></script>
+        <script src="https://sdk.mercadopago.com/js/v2"
+            onload="console.log('MercadoPago SDK cargado')" onerror="console.error('Error cargando MercadoPago SDK')"></script>
     <?php endif; ?>
-    
+
     <script>
         // Variables globales
         window.SITE_URL = '<?php echo SITE_URL; ?>';
         let mp = null;
         let paypalButtons = null;
-        
+
         // Configuración de APIs
         const paymentConfig = {
             mercadopago: {
@@ -545,41 +546,41 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 clientId: '<?php echo Settings::get('paypal_client_id', ''); ?>'
             }
         };
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM cargado, inicializando checkout...');
-            
+
             // Verificar si las librerías están disponibles
             setTimeout(() => {
                 if (paymentConfig.paypal.enabled && typeof window.paypal === 'undefined') {
                     console.error('PayPal SDK no se cargó correctamente');
                     showPaymentError('paypal', 'Error cargando PayPal. Intenta recargar la página.');
                 }
-                
+
                 if (paymentConfig.mercadopago.enabled && typeof window.MercadoPago === 'undefined') {
                     console.error('MercadoPago SDK no se cargó correctamente');
                     showPaymentError('mercadopago', 'Error cargando MercadoPago. Intenta recargar la página.');
                 }
             }, 3000);
-            
+
             // Manejar selección de método de pago
             const paymentMethods = document.querySelectorAll('.payment-method');
             const paymentForms = document.querySelectorAll('.payment-form');
-            
+
             paymentMethods.forEach(method => {
                 method.addEventListener('click', function() {
                     const methodType = this.dataset.method;
                     const radio = this.querySelector('input[type="radio"]');
-                    
+
                     console.log('Método seleccionado:', methodType);
-                    
+
                     // Actualizar selección visual
                     paymentMethods.forEach(m => m.classList.remove('selected'));
                     this.classList.add('selected');
-                    
+
                     // Marcar radio button
                     radio.checked = true;
-                    
+
                     // Mostrar/ocultar formularios
                     paymentForms.forEach(form => form.classList.remove('active'));
                     const targetForm = document.getElementById(methodType + '-form');
@@ -589,36 +590,36 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     }
                 });
             });
-            
+
             // Inicializar método seleccionado
             const selectedMethod = document.querySelector('.payment-method.selected');
             if (selectedMethod) {
                 selectedMethod.click();
             }
-            
+
             // Manejar envío del formulario
             const checkoutForm = document.getElementById('checkoutForm');
             checkoutForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
+
                 console.log('Enviando formulario de checkout...');
-                
+
                 // Validar formulario
                 if (!this.checkValidity()) {
                     this.classList.add('was-validated');
                     return;
                 }
-                
+
                 // Procesar según el método de pago
                 const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked');
                 if (!selectedPaymentMethod) {
                     alert('Por favor selecciona un método de pago');
                     return;
                 }
-                
+
                 const paymentMethod = selectedPaymentMethod.value;
                 console.log('Procesando pago con:', paymentMethod);
-                
+
                 if (paymentMethod === 'free') {
                     processFreeOrder();
                 } else {
@@ -626,11 +627,11 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 }
             });
         });
-        
+
         function initializePaymentMethod(method) {
             console.log('Inicializando método:', method);
-            
-            switch(method) {
+
+            switch (method) {
                 case 'paypal':
                     initializePayPal();
                     break;
@@ -639,87 +640,48 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     break;
             }
         }
-        
+
         function initializePayPal() {
             console.log('Inicializando PayPal...');
-            
+
             if (!paymentConfig.paypal.enabled) {
                 console.log('PayPal no está habilitado');
                 return;
             }
-            
+
             const container = document.getElementById('paypal-button-container');
-            
-            if (typeof window.paypal === 'undefined') {
+
+            if (typeof window.paypal === 'undefined' || typeof window.paypal.Buttons !== 'function') {
                 console.error('PayPal SDK no disponible');
                 container.innerHTML = `
-                    <div class="alert alert-warning">
-                        <strong>Error:</strong> PayPal no se pudo cargar. 
-                        <button onclick="location.reload()" class="btn btn-sm btn-warning ms-2">Recargar</button>
-                    </div>
-                `;
+                <div class="alert alert-warning">
+                    <strong>Error:</strong> PayPal no se pudo cargar.
+                    <button onclick="location.reload()" class="btn btn-sm btn-warning ms-2">Recargar</button>
+                </div>`;
                 return;
             }
-            
-            try {
-                // Limpiar contenedor
-                container.innerHTML = '';
-                
-                // Crear botones de PayPal
-                window.paypal.Buttons({
-                    style: {
-                        layout: 'vertical',
-                        color: 'blue',
-                        shape: 'rect',
-                        label: 'paypal'
-                    },
-                    
-                    createOrder: function(data, actions) {
-                        console.log('Creando orden en PayPal...');
-                        return createPayPalOrder();
-                    },
-                    
-                    onApprove: function(data, actions) {
-                        console.log('PayPal aprobado:', data);
-                        return handlePayPalApproval(data);
-                    },
-                    
-                    onError: function(err) {
-                        console.error('PayPal Error:', err);
-                        hideProcessingOverlay();
-                        alert('Error con PayPal: ' + (err.message || 'Error desconocido'));
-                    },
-                    
-                    onCancel: function(data) {
-                        console.log('PayPal cancelado:', data);
-                        hideProcessingOverlay();
-                        alert('Pago cancelado');
-                    }
-                    
-                }).render('#paypal-button-container');
-                
-                console.log('PayPal buttons renderizados correctamente');
-                
-            } catch (error) {
-                console.error('Error inicializando PayPal:', error);
-                container.innerHTML = `
-                    <div class="alert alert-danger">
-                        <strong>Error:</strong> No se pudo inicializar PayPal. ${error.message}
-                    </div>
-                `;
-            }
+
+            // CAMBIAR: Mostrar mensaje informativo en lugar de botón directo
+            container.innerHTML = `
+            <div class="alert alert-success">
+                <h6><i class="fab fa-paypal me-2"></i>PayPal Listo</h6>
+                <p class="mb-0">Haz clic en "Procesar Pago" para continuar con PayPal</p>
+                <small class="text-muted">Pago seguro con protección al comprador</small>
+            </div>`;
+
+            console.log('PayPal inicializado - Esperando clic en Procesar Pago');
         }
-        
+
         function initializeMercadoPago() {
             console.log('Inicializando MercadoPago...');
-            
+
             if (!paymentConfig.mercadopago.enabled) {
                 console.log('MercadoPago no está habilitado');
                 return;
             }
-            
+
             const container = document.getElementById('mercadopago-button');
-            
+
             if (typeof window.MercadoPago === 'undefined') {
                 console.error('MercadoPago SDK no disponible');
                 container.innerHTML = `
@@ -730,12 +692,12 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 `;
                 return;
             }
-            
+
             try {
                 mp = new MercadoPago(paymentConfig.mercadopago.publicKey, {
                     locale: 'es-PE'
                 });
-                
+
                 container.innerHTML = `
                     <div class="alert alert-success">
                         <h6><i class="fas fa-credit-card me-2"></i>MercadoPago Listo</h6>
@@ -743,9 +705,9 @@ $pageTitle = 'Checkout - Finalizar Compra';
                         <small class="text-muted">Incluye Yape, tarjetas y más métodos</small>
                     </div>
                 `;
-                
+
                 console.log('MercadoPago inicializado correctamente');
-                
+
             } catch (error) {
                 console.error('Error inicializando MercadoPago:', error);
                 container.innerHTML = `
@@ -755,42 +717,42 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 `;
             }
         }
-        
+
         function processPayment(paymentMethod) {
             console.log('Procesando pago:', paymentMethod);
             showProcessingOverlay();
-            
+
             const formData = new FormData(document.getElementById('checkoutForm'));
-            
+
             fetch(window.SITE_URL + '/api/payments/process_payment.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                console.log('Respuesta recibida:', response.status);
-                return response.json();
-            })
-            .then(data => {
-                console.log('Datos de respuesta:', data);
-                
-                if (data.success) {
-                    handlePaymentResponse(data, paymentMethod);
-                } else {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    console.log('Respuesta recibida:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Datos de respuesta:', data);
+
+                    if (data.success) {
+                        handlePaymentResponse(data, paymentMethod);
+                    } else {
+                        hideProcessingOverlay();
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
                     hideProcessingOverlay();
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                hideProcessingOverlay();
-                console.error('Error:', error);
-                alert('Error al procesar el pedido: ' + error.message);
-            });
+                    console.error('Error:', error);
+                    alert('Error al procesar el pedido: ' + error.message);
+                });
         }
-        
+
         function handlePaymentResponse(data, paymentMethod) {
             console.log('Manejando respuesta para:', paymentMethod);
-            
-            switch(paymentMethod) {
+
+            switch (paymentMethod) {
                 case 'paypal':
                     handlePayPalResponse(data);
                     break;
@@ -802,10 +764,10 @@ $pageTitle = 'Checkout - Finalizar Compra';
                     alert('Método de pago no soportado: ' + paymentMethod);
             }
         }
-        
+
         function handlePayPalResponse(data) {
             console.log('Respuesta PayPal:', data);
-            
+
             if (data.approval_url) {
                 console.log('Redirigiendo a PayPal:', data.approval_url);
                 window.location.href = data.approval_url;
@@ -814,10 +776,10 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 alert('Error: No se obtuvo la URL de PayPal');
             }
         }
-        
+
         function handleMercadoPagoResponse(data) {
             console.log('Respuesta MercadoPago:', data);
-            
+
             const url = data.init_point || data.sandbox_init_point;
             if (url) {
                 console.log('Redirigiendo a MercadoPago:', url);
@@ -827,67 +789,67 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 alert('Error: No se obtuvo la URL de MercadoPago');
             }
         }
-        
+
         function createPayPalOrder() {
             console.log('Creando orden PayPal...');
             showProcessingOverlay();
-            
+
             const formData = new FormData(document.getElementById('checkoutForm'));
-            
+
             return fetch(window.SITE_URL + '/api/payments/process_payment.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Orden PayPal creada:', data);
-                
-                if (data.success && data.paypal_order_id) {
-                    return data.paypal_order_id;
-                } else {
-                    throw new Error(data.message || 'Error creando orden PayPal');
-                }
-            })
-            .catch(error => {
-                console.error('Error creando orden PayPal:', error);
-                hideProcessingOverlay();
-                throw error;
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Orden PayPal creada:', data);
+
+                    if (data.success && data.paypal_order_id) {
+                        return data.paypal_order_id;
+                    } else {
+                        throw new Error(data.message || 'Error creando orden PayPal');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error creando orden PayPal:', error);
+                    hideProcessingOverlay();
+                    throw error;
+                });
         }
-        
+
         function handlePayPalApproval(data) {
             console.log('PayPal aprobado, redirigiendo...', data);
             showProcessingOverlay();
             window.location.href = window.SITE_URL + '/api/payments/paypal_return.php?token=' + data.orderID + '&PayerID=' + data.payerID;
         }
-        
+
         function processFreeOrder() {
             console.log('Procesando orden gratuita...');
             showProcessingOverlay();
-            
+
             const formData = new FormData(document.getElementById('checkoutForm'));
-            
+
             fetch(window.SITE_URL + '/api/payments/process_payment.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                hideProcessingOverlay();
-                
-                if (data.success) {
-                    window.location.href = data.redirect_url || window.SITE_URL + '/pages/success.php?order=' + data.order_number;
-                } else {
-                    alert('Error: ' + data.message);
-                }
-            })
-            .catch(error => {
-                hideProcessingOverlay();
-                console.error('Error:', error);
-                alert('Error al procesar el pedido gratuito: ' + error.message);
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    hideProcessingOverlay();
+
+                    if (data.success) {
+                        window.location.href = data.redirect_url || window.SITE_URL + '/pages/success.php?order=' + data.order_number;
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    hideProcessingOverlay();
+                    console.error('Error:', error);
+                    alert('Error al procesar el pedido gratuito: ' + error.message);
+                });
         }
-        
+
         function showPaymentError(method, message) {
             const container = document.getElementById(method + '-form');
             if (container) {
@@ -898,21 +860,21 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 `;
             }
         }
-        
+
         function showProcessingOverlay() {
             const overlay = document.getElementById('processing-overlay');
             if (overlay) {
                 overlay.style.display = 'flex';
             }
         }
-        
+
         function hideProcessingOverlay() {
             const overlay = document.getElementById('processing-overlay');
             if (overlay) {
                 overlay.style.display = 'none';
             }
         }
-        
+
         // Validación en tiempo real
         document.querySelectorAll('input[required], select[required]').forEach(input => {
             input.addEventListener('blur', function() {
@@ -924,7 +886,7 @@ $pageTitle = 'Checkout - Finalizar Compra';
                 }
             });
         });
-        
+
         // Validación de email
         document.getElementById('email').addEventListener('blur', function() {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -937,4 +899,5 @@ $pageTitle = 'Checkout - Finalizar Compra';
         });
     </script>
 </body>
+
 </html>

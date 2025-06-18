@@ -45,6 +45,10 @@ class EmailSystem
             'donation' => [
                 'subject' => Settings::get('donation_email_subject', 'Gracias por tu donación'),
                 'body' => Settings::get('donation_email_template', 'Hola {USER_NAME},\n\n¡Muchas gracias por tu donación de {DONATION_AMOUNT}!\n\nTu apoyo nos ayuda a seguir creando software de calidad.\n\nCon gratitud,\nEl equipo de {SITE_NAME}')
+            ],
+            'new_account' => [
+                'subject' => Settings::get('new_account_email_subject', 'Tu cuenta ha sido creada - {SITE_NAME}'),
+                'body' => Settings::get('new_account_email_template', 'Hola {USER_NAME},\n\n¡Tu cuenta ha sido creada exitosamente después de tu compra!\n\n🔐 Tus credenciales:\nEmail: {USER_EMAIL}\nContraseña: {USER_PASSWORD}\n\n🔗 Acceder: {LOGIN_URL}\n\nGracias por tu compra,\nEl equipo de {SITE_NAME}')
             ]
         ];
 
@@ -168,9 +172,142 @@ class EmailSystem
     }
 
     /**
+     * Email para nueva cuenta creada después de compra
+     */
+    public static function sendNewAccountEmail($userEmail, $userName, $password) {
+        return self::sendTemplateEmail($userEmail, 'new_account', [
+            '{USER_NAME}' => $userName,
+            '{USER_EMAIL}' => $userEmail,
+            '{USER_PASSWORD}' => $password,
+            '{LOGIN_URL}' => SITE_URL . '/pages/login.php',
+            '{DASHBOARD_URL}' => SITE_URL . '/pages/dashboard.php'
+        ]);
+    }
+
+    /**
+     * Email para usuario existente con nueva compra
+     */
+    public static function sendExistingUserEmail($userEmail, $userName) {
+        $siteName = Settings::get('site_name', 'MiSistema');
+        $subject = "Nueva compra realizada - $siteName";
+        
+        $body = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <div style='background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
+                <h2 style='margin: 0; font-size: 28px;'>🎉 ¡Nueva Compra Realizada!</h2>
+                <p style='margin: 10px 0 0 0; opacity: 0.9;'>$siteName</p>
+            </div>
+            
+            <div style='background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+                <h3 style='color: #333; margin-bottom: 20px;'>Hola $userName,</h3>
+                
+                <p style='color: #666; line-height: 1.6; margin-bottom: 20px;'>
+                    ¡Gracias por tu nueva compra! Tu pedido ha sido procesado exitosamente.
+                </p>
+                
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='" . SITE_URL . "/pages/login.php' style='
+                        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                        color: white;
+                        padding: 15px 30px;
+                        text-decoration: none;
+                        border-radius: 25px;
+                        font-weight: bold;
+                        display: inline-block;
+                        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                    '>🔐 Acceder a mi Dashboard</a>
+                </div>
+                
+                <div style='background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;'>
+                    <h6 style='margin: 0 0 10px 0; color: #333;'>En tu dashboard puedes:</h6>
+                    <ul style='color: #666; margin: 0; padding-left: 20px;'>
+                        <li>Ver todas tus compras</li>
+                        <li>Descargar productos nuevamente</li>
+                        <li>Recibir actualizaciones automáticas</li>
+                        <li>Gestionar tu cuenta</li>
+                    </ul>
+                </div>
+                
+                <hr style='border: none; border-top: 1px solid #eee; margin: 30px 0;'>
+                
+                <div style='text-align: center; color: #999; font-size: 12px;'>
+                    <p>Gracias por confiar en nosotros</p>
+                    <p>El equipo de $siteName</p>
+                </div>
+            </div>
+        </div>
+        ";
+        
+        return self::sendEmail($userEmail, $subject, $body, true);
+    }
+
+    /**
+     * Email para reactivar cuenta inactiva
+     */
+    public static function sendReactivationEmail($userEmail, $userName, $resetToken) {
+        $siteName = Settings::get('site_name', 'MiSistema');
+        $subject = "Reactivar tu cuenta - $siteName";
+        
+        $resetUrl = SITE_URL . "/pages/reset-password.php?token=" . $resetToken;
+        
+        $body = "
+        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+            <div style='background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
+                <h2 style='margin: 0; font-size: 28px;'>🔄 Reactivar Cuenta</h2>
+                <p style='margin: 10px 0 0 0; opacity: 0.9;'>$siteName</p>
+            </div>
+            
+            <div style='background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+                <h3 style='color: #333; margin-bottom: 20px;'>Hola $userName,</h3>
+                
+                <p style='color: #666; line-height: 1.6; margin-bottom: 20px;'>
+                    ¡Gracias por tu compra! Detectamos que tu cuenta necesita ser reactivada.
+                </p>
+                
+                <p style='color: #666; line-height: 1.6; margin-bottom: 20px;'>
+                    Haz clic en el siguiente enlace para crear una nueva contraseña y activar tu cuenta:
+                </p>
+                
+                <div style='text-align: center; margin: 30px 0;'>
+                    <a href='$resetUrl' style='
+                        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+                        color: white;
+                        padding: 15px 30px;
+                        text-decoration: none;
+                        border-radius: 25px;
+                        font-weight: bold;
+                        display: inline-block;
+                        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+                    '>🔑 Reactivar mi Cuenta</a>
+                </div>
+                
+                <div style='background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #ffc107; margin: 20px 0;'>
+                    <p style='margin: 0; color: #856404; font-size: 14px;'>
+                        <strong>⏰ Importante:</strong> Este enlace expira en 24 horas por seguridad.
+                    </p>
+                </div>
+                
+                <p style='color: #666; line-height: 1.6; font-size: 14px; margin-top: 30px;'>
+                    Si el botón no funciona, copia y pega este enlace:<br>
+                    <a href='$resetUrl' style='color: #007bff; word-break: break-all;'>$resetUrl</a>
+                </p>
+                
+                <hr style='border: none; border-top: 1px solid #eee; margin: 30px 0;'>
+                
+                <div style='text-align: center; color: #999; font-size: 12px;'>
+                    <p>Saludos cordiales</p>
+                    <p>El equipo de $siteName</p>
+                </div>
+            </div>
+        </div>
+        ";
+        
+        return self::sendEmail($userEmail, $subject, $body, true);
+    }
+
+    /**
      * Funciones específicas para cada tipo de email
      */
-
     public static function sendWelcomeEmail($userEmail, $userName)
     {
         return self::sendTemplateEmail($userEmail, 'welcome', [
@@ -345,3 +482,4 @@ function sendVerificationEmail($userEmail, $userName, $verificationCode)
 {
     return EmailSystem::sendVerificationEmail($userEmail, $userName, $verificationCode);
 }
+?>

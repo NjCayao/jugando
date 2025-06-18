@@ -467,20 +467,38 @@ class PaymentProcessor {
     /**
      * Crear usuario para checkout de invitado
      */
-    public static function createGuestUser($customerData) {
-        try {
-            $db = Database::getInstance()->getConnection();
-            
-            // Verificar si el email ya existe
-            $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$customerData['email']]);
-            $existingUser = $stmt->fetch();
-            
-            if ($existingUser) {
+   public static function createGuestUser($customerData) {
+    try {
+        $db = Database::getInstance()->getConnection();
+        
+        // VERIFICAR SI EL EMAIL YA EXISTE
+        $stmt = $db->prepare("SELECT id, is_active, is_verified FROM users WHERE email = ?");
+        $stmt->execute([$customerData['email']]);
+        $existingUser = $stmt->fetch();
+        
+        if ($existingUser) {
+            // CASO B: Usuario existe
+            if ($existingUser['is_active'] && $existingUser['is_verified']) {
+                // Usuario activo → NO enviar contraseña, enviar "inicia sesión"
+                EmailSystem::sendExistingUserEmail(
+                    $customerData['email'], 
+                    $customerData['first_name']
+                );
+                
+                return $existingUser['id'];
+            } else {
+                // Usuario inactivo → Reactivar + enviar contraseña reset
+                $resetToken = generateResetToken();
+                EmailSystem::sendReactivationEmail(
+                    $customerData['email'], 
+                    $customerData['first_name'], 
+                    $resetToken
+                );
+                
                 return $existingUser['id'];
             }
-            
-            // Crear nuevo usuario
+        } else {
+            // CASO C: Usuario nuevo → Crear cuenta
             $password = bin2hex(random_bytes(8)); // Contraseña temporal
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             
@@ -502,17 +520,17 @@ class PaymentProcessor {
             
             $userId = $db->lastInsertId();
             
-            // Enviar email con credenciales
-            EmailSystem::sendWelcomeEmail($customerData['email'], $customerData['first_name']);
+            // Enviar email con credenciales NUEVAS
+            EmailSystem::sendNewAccountEmail($customerData['email'], $customerData['first_name'], $password);
             
             return $userId;
-            
+        }
+        
         } catch (Exception $e) {
             logError("Error creando usuario invitado: " . $e->getMessage());
             return null;
         }
     }
-}
 
 // Funciones helper
 function createOrder($customerData, $cartData, $paymentMethod = 'pending') {
