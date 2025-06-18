@@ -372,7 +372,7 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                     <i class="fas fa-eye me-1"></i>Ver
                                                 </button>
                                                 <?php if ($order['payment_status'] === 'completed'): ?>
-                                                    <a href="<?php echo SITE_URL; ?>/download?order=<?php echo $order['id']; ?>" class="btn btn-success btn-sm">
+                                                    <a href="<?php echo SITE_URL; ?>/mis-descargas" class="btn btn-success btn-sm">
                                                         <i class="fas fa-download me-1"></i>Descargar
                                                     </a>
                                                 <?php endif; ?>
@@ -429,7 +429,7 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                                     <div class="fw-bold text-primary"><?php echo formatPrice($item['price']); ?></div>
                                                                 </div>
                                                                 <?php if ($order['payment_status'] === 'completed' && $item['product_id']): ?>
-                                                                    <a href="<?php echo SITE_URL; ?>/download?product=<?php echo $item['product_id']; ?>" class="btn btn-success btn-sm">
+                                                                    <a href="<?php echo SITE_URL; ?>/download/<?php echo $item['product_id']; ?>?order=<?php echo $order['order_number']; ?>" class="btn btn-success btn-sm">
                                                                         <i class="fas fa-download"></i>
                                                                     </a>
                                                                 <?php endif; ?>

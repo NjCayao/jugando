@@ -286,11 +286,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
 
                     // Insertar nueva versión
+                    $relativePath = 'products/' . $productSlug . '/' . $version . '/' . $fileName;
+
+                    // Insertar nueva versión con ruta relativa
                     $stmt = $db->prepare("
                         INSERT INTO product_versions (product_id, version, file_path, file_size, changelog, is_current) 
                         VALUES (?, ?, ?, ?, ?, ?)
                     ");
-                    $stmt->execute([$product_id, $version, $filePath, $file['size'], $changelog, $is_current]);
+                    $stmt->execute([$product_id, $version, $relativePath, $file['size'], $changelog, $is_current]);
 
                     $success = 'Versión agregada exitosamente';
                     // Redirigir de vuelta al modal

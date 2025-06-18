@@ -1,0 +1,2 @@
+[2025-06-17 21:21:14] MercadoPago API Error: HTTP 400 - Response: {"message":"auto_return invalid. back_url.success must be defined","error":"invalid_auto_return","status":400,"cause":null}
+[2025-06-17 21:21:14] Error en process_payment: Error procesando pago con MercadoPago: Error creando preferencia en MercadoPago

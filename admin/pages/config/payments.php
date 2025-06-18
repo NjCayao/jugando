@@ -189,68 +189,6 @@ $config = [
                     <form method="post">
                         <div class="row">
 
-                            <!-- Stripe -->
-                            <div class="col-md-12">
-                                <div class="card card-primary">
-                                    <div class="card-header">
-                                        <h3 class="card-title">
-                                            <i class="fab fa-cc-stripe"></i> Stripe
-                                        </h3>
-                                        <div class="card-tools">
-                                            <div class="custom-control custom-switch">
-                                                <input type="checkbox" class="custom-control-input" id="stripe_enabled" name="stripe_enabled"
-                                                    <?php echo $config['stripe_enabled'] == '1' ? 'checked' : ''; ?>>
-                                                <label class="custom-control-label" for="stripe_enabled">Habilitar</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="stripe_publishable_key">Publishable Key</label>
-                                                    <input type="text" class="form-control" id="stripe_publishable_key" name="stripe_publishable_key"
-                                                        value="<?php echo htmlspecialchars($config['stripe_publishable_key']); ?>"
-                                                        placeholder="pk_test_...">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="stripe_secret_key">Secret Key</label>
-                                                    <input type="password" class="form-control" id="stripe_secret_key" name="stripe_secret_key"
-                                                        value="<?php echo htmlspecialchars($config['stripe_secret_key']); ?>"
-                                                        placeholder="sk_test_...">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="stripe_webhook_secret">Webhook Secret</label>
-                                                    <input type="text" class="form-control" id="stripe_webhook_secret" name="stripe_webhook_secret"
-                                                        value="<?php echo htmlspecialchars($config['stripe_webhook_secret']); ?>"
-                                                        placeholder="whsec_...">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="stripe_commission">Comisión (%)</label>
-                                                    <input type="number" class="form-control" id="stripe_commission" name="stripe_commission"
-                                                        value="<?php echo $config['stripe_commission']; ?>" step="0.1" min="0" max="20">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="stripe_fixed_fee">Tarifa Fija ($)</label>
-                                                    <input type="number" class="form-control" id="stripe_fixed_fee" name="stripe_fixed_fee"
-                                                        value="<?php echo $config['stripe_fixed_fee']; ?>" step="0.01" min="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- PayPal -->
                             <div class="col-md-12">
                                 <div class="card card-info">
@@ -289,6 +227,23 @@ $config = [
                                                     <label for="paypal_webhook_id">Webhook ID</label>
                                                     <input type="text" class="form-control" id="paypal_webhook_id" name="paypal_webhook_id"
                                                         value="<?php echo htmlspecialchars($config['paypal_webhook_id']); ?>">
+                                                    <small class="form-text text-muted">
+                                                        <i class="fas fa-info-circle"></i> Obtén este ID al crear el webhook en PayPal
+                                                    </small>
+                                                </div>
+                                                
+                                                <!-- URL del Webhook -->
+                                                <div class="form-group">
+                                                    <label>URL del Webhook</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" value="<?php echo SITE_URL; ?>/webhook/paypal" readonly id="paypal-webhook-url">
+                                                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('paypal-webhook-url')" title="Copiar URL">
+                                                            <i class="fas fa-copy"></i>
+                                                        </button>
+                                                    </div>
+                                                    <small class="form-text text-success">
+                                                        <i class="fas fa-link"></i> Copia esta URL y pégala en tu panel de PayPal
+                                                    </small>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -355,6 +310,23 @@ $config = [
                                                     <label for="mercadopago_webhook_secret">Webhook Secret</label>
                                                     <input type="text" class="form-control" id="mercadopago_webhook_secret" name="mercadopago_webhook_secret"
                                                         value="<?php echo htmlspecialchars($config['mercadopago_webhook_secret']); ?>">
+                                                    <small class="form-text text-muted">
+                                                        <i class="fas fa-info-circle"></i> Obtén este secret al crear el webhook en MercadoPago
+                                                    </small>
+                                                </div>
+                                                
+                                                <!-- URL del Webhook -->
+                                                <div class="form-group">
+                                                    <label>URL del Webhook</label>
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" value="<?php echo SITE_URL; ?>/webhook/mercadopago" readonly id="mercadopago-webhook-url">
+                                                        <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard('mercadopago-webhook-url')" title="Copiar URL">
+                                                            <i class="fas fa-copy"></i>
+                                                        </button>
+                                                    </div>
+                                                    <small class="form-text text-success">
+                                                        <i class="fas fa-link"></i> Copia esta URL y pégala en tu panel de MercadoPago
+                                                    </small>
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
@@ -395,7 +367,6 @@ $config = [
                                                 <div class="form-group">
                                                     <label for="default_payment_method">Método de Pago por Defecto</label>
                                                     <select class="form-control" id="default_payment_method" name="default_payment_method">
-                                                        <option value="stripe" <?php echo $config['default_payment_method'] == 'stripe' ? 'selected' : ''; ?>>Stripe</option>
                                                         <option value="paypal" <?php echo $config['default_payment_method'] == 'paypal' ? 'selected' : ''; ?>>PayPal</option>
                                                         <option value="mercadopago" <?php echo $config['default_payment_method'] == 'mercadopago' ? 'selected' : ''; ?>>MercadoPago</option>
                                                     </select>
@@ -467,6 +438,74 @@ $config = [
                         </div>
                     </form>
 
+                    <!-- Panel de Instrucciones para Webhooks -->
+                    <div class="row mt-5">
+                        <div class="col-12">
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-info-circle"></i> Instrucciones para Configurar Webhooks
+                                    </h3>
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <!-- PayPal -->
+                                        <div class="col-md-6">
+                                            <h5><i class="fab fa-paypal text-primary"></i> PayPal Webhooks</h5>
+                                            <ol>
+                                                <li>Ingresa a <a href="https://developer.paypal.com" target="_blank">developer.paypal.com</a></li>
+                                                <li>Ve a "My Apps & Credentials"</li>
+                                                <li>Selecciona tu aplicación</li>
+                                                <li>En la sección "Webhooks", haz clic en "Add Webhook"</li>
+                                                <li>Pega la URL mostrada arriba</li>
+                                                <li>Selecciona estos eventos:
+                                                    <ul>
+                                                        <li><code>CHECKOUT.ORDER.APPROVED</code></li>
+                                                        <li><code>PAYMENT.CAPTURE.COMPLETED</code></li>
+                                                        <li><code>PAYMENT.CAPTURE.DENIED</code></li>
+                                                    </ul>
+                                                </li>
+                                                <li>Guarda y copia el Webhook ID generado</li>
+                                                <li>Pega el Webhook ID en el campo correspondiente arriba</li>
+                                            </ol>
+                                        </div>
+                                        
+                                        <!-- MercadoPago -->
+                                        <div class="col-md-6">
+                                            <h5><i class="fas fa-credit-card text-warning"></i> MercadoPago Webhooks</h5>
+                                            <ol>
+                                                <li>Ingresa a tu <a href="https://www.mercadopago.com/developers/panel" target="_blank">Panel de MercadoPago</a></li>
+                                                <li>Ve a "Tu negocio" → "Configurar notificaciones"</li>
+                                                <li>Selecciona "Webhooks" o "Notificaciones IPN"</li>
+                                                <li>Haz clic en "Configurar notificaciones"</li>
+                                                <li>Pega la URL mostrada arriba</li>
+                                                <li>Selecciona el evento "Pagos"</li>
+                                                <li>Guarda la configuración</li>
+                                                <li>MercadoPago te mostrará un "Signature" o "Secret"</li>
+                                                <li>Copia ese valor y pégalo en el campo "Webhook Secret" arriba</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-warning mt-3">
+                                        <h6><i class="fas fa-exclamation-triangle"></i> Importante:</h6>
+                                        <ul class="mb-0">
+                                            <li>Los webhooks permiten que tu sistema reciba notificaciones automáticas cuando se completa un pago</li>
+                                            <li>Sin webhooks configurados, los pagos podrían no actualizarse correctamente</li>
+                                            <li>Asegúrate de usar HTTPS en producción para mayor seguridad</li>
+                                            <li>Guarda siempre los IDs/Secrets de forma segura</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
         </div>
@@ -481,6 +520,31 @@ $config = [
     <script src="<?php echo ADMINLTE_URL; ?>/dist/js/adminlte.min.js"></script>
 
     <script>
+        // Función para copiar URL al portapapeles
+        function copyToClipboard(elementId) {
+            const input = document.getElementById(elementId);
+            input.select();
+            input.setSelectionRange(0, 99999); // Para móviles
+            
+            try {
+                document.execCommand('copy');
+                // Mostrar notificación
+                const button = input.nextElementSibling;
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check"></i>';
+                button.classList.add('btn-success');
+                button.classList.remove('btn-outline-secondary');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-outline-secondary');
+                }, 2000);
+            } catch (err) {
+                alert('Error al copiar: ' + err);
+            }
+        }
+
         $(document).ready(function() {
             // Calculadora de precios
             function calculatePrices() {
@@ -490,12 +554,7 @@ $config = [
                     return;
                 }
 
-                const gateways = [{
-                        name: 'Stripe',
-                        commission: parseFloat($('#stripe_commission').val()) || 0,
-                        fixedFee: parseFloat($('#stripe_fixed_fee').val()) || 0,
-                        enabled: $('#stripe_enabled').is(':checked')
-                    },
+                const gateways = [
                     {
                         name: 'PayPal',
                         commission: parseFloat($('#paypal_commission').val()) || 0,

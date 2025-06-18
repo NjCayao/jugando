@@ -444,7 +444,7 @@ $siteName = getSetting('site_name', 'MiSistema');
         function downloadProduct(productId) {
             // Mostrar modal de descarga o redirigir
             if (confirm('¿Deseas descargar este producto? Se contabilizará como una descarga utilizada.')) {
-                window.location.href = '<?php echo SITE_URL; ?>/download?product=' + productId;
+                window.location.href = '<?php echo SITE_URL; ?>/download/' + productId;
             }
         }
         

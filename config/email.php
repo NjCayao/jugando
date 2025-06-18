@@ -353,7 +353,7 @@ class EmailSystem
 
         $body = "
         <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
-            <div style='background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
+            <div style='background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;'>
                 <h2 style='margin: 0; font-size: 28px;'>🔐 Recuperar Contraseña</h2>
                 <p style='margin: 10px 0 0 0; opacity: 0.9;'>$siteName</p>
             </div>
@@ -367,7 +367,7 @@ class EmailSystem
                 
                 <div style='text-align: center; margin: 30px 0;'>
                     <a href='$resetUrl' style='
-                        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
                         color: white;
                         padding: 15px 30px;
                         text-decoration: none;
