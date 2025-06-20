@@ -467,7 +467,7 @@ class CartModule {
                 <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
                 <h5 class="text-muted">Tu carrito está vacío</h5>
                 <p class="text-muted mb-4">Explora nuestros productos y agrega algunos al carrito</p>
-                <a href="${window.SITE_URL}/productos" class="btn btn-primary" data-bs-dismiss="modal">
+                <a href="/productos" class="btn btn-primary" data-bs-dismiss="modal">
                     <i class="fas fa-search me-2"></i>Explorar Productos
                 </a>
             </div>
@@ -500,12 +500,12 @@ class CartModule {
             <div class="w-100">
                 <div class="row g-2">
                     <div class="col-6">
-                        <a href="${window.SITE_URL}/carrito" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
+                        <a href="/pages/cart.php" class="btn btn-outline-primary w-100" data-bs-dismiss="modal">
                             <i class="fas fa-shopping-cart me-2"></i>Ver Carrito
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="${window.SITE_URL}/checkout" class="btn btn-success w-100" data-bs-dismiss="modal">
+                        <a href="/pages/checkout.php" class="btn btn-success w-100" data-bs-dismiss="modal">
                             <i class="fas fa-credit-card me-2"></i>Proceder al Pago
                         </a>
                     </div>
@@ -653,12 +653,12 @@ function buyNow(productId) {
     // Agregar al carrito y redirigir al checkout
     if (cart) {
         cart.addItem(productId, 1).then(() => {
-            window.location.href = window.SITE_URL + '/checkout';
+            window.location.href = '/pages/checkout.php';
         });
     }
 }
 
 function downloadFree(productId) {
     // Para productos gratuitos, redirigir al enlace correcto
-    window.location.href = window.SITE_URL + '/download/' + productId;
+    window.location.href = window.SITE_URL + `/download/${productId}`;
 }

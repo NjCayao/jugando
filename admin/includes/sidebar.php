@@ -187,6 +187,129 @@
                     </ul>
                 </li>
 
+
+
+
+
+
+
+
+
+                <!-- Gestión de Licencias -->
+<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'menu-open' : ''; ?>">
+    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-key"></i>
+        <p>
+            Licencias
+            <i class="right fas fa-angle-left"></i>
+            <?php 
+            // Mostrar badge con licencias por expirar
+            try {
+                $db = Database::getInstance()->getConnection();
+                $stmt = $db->query("
+                    SELECT COUNT(*) as expiring 
+                    FROM user_licenses 
+                    WHERE is_active = 1 
+                    AND update_expires_at BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)
+                ");
+                $expiringCount = $stmt->fetch()['expiring'];
+                if ($expiringCount > 0):
+            ?>
+            <span class="badge badge-warning right"><?php echo $expiringCount; ?></span>
+            <?php 
+                endif;
+            } catch (Exception $e) {
+                // Ignorar error
+            }
+            ?>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Todas las Licencias</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/expired.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'expired.php') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Expiradas
+                    <?php 
+                    try {
+                        $stmt = $db->query("
+                            SELECT COUNT(*) as expired 
+                            FROM user_licenses 
+                            WHERE is_active = 1 
+                            AND update_expires_at < NOW()
+                        ");
+                        $expiredCount = $stmt->fetch()['expired'];
+                        if ($expiredCount > 0):
+                    ?>
+                    <span class="badge badge-danger right"><?php echo $expiredCount; ?></span>
+                    <?php 
+                        endif;
+                    } catch (Exception $e) {
+                        // Ignorar error
+                    }
+                    ?>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/report.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'report.php' && strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reportes</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/bulk-extend.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'bulk-extend.php') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Extensión Masiva</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+<!-- Sistema de Actualizaciones -->
+<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'menu-open' : ''; ?>">
+    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-sync-alt"></i>
+        <p>
+            Actualizaciones
+            <i class="right fas fa-angle-left"></i>
+            <span class="badge badge-info right">Nuevo</span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/updates/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/updates/notifications.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'notifications.php') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Notificaciones</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/updates/settings.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Configuración</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
+
+
+
+
+
                 <!-- Separador -->
                 <li class="nav-header">FRONTEND</li>
 

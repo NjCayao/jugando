@@ -1,0 +1,416 @@
+/* assets/css/phase5.css - Estilos para Fase 5 */
+
+/* ========== Sistema de Actualizaciones ========== */
+
+/* Contenedor de información de actualizaciones */
+.update-info-container {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+/* Lista de actualizaciones */
+.update-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.update-item {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+.update-item:hover:not(.disabled) {
+    border-color: #007bff;
+    box-shadow: 0 2px 10px rgba(0, 123, 255, 0.1);
+}
+
+.update-item.disabled {
+    opacity: 0.7;
+    background: #f8f9fa;
+}
+
+/* Detalles de actualización */
+.update-details h6 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.update-details .badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Changelog */
+.changelog-preview a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.changelog-preview a:hover {
+    text-decoration: underline;
+}
+
+.changelog-content {
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Loader de actualizaciones */
+.update-loader {
+    text-align: center;
+    padding: 2rem;
+}
+
+.update-loader .spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3rem;
+}
+
+/* Resumen de actualizaciones */
+.update-summary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.update-summary h5 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.update-summary p {
+    margin-bottom: 0;
+    opacity: 0.9;
+}
+
+/* Botones de actualización */
+.update-actions .btn {
+    min-width: 120px;
+}
+
+/* ========== Historial de Actualizaciones ========== */
+
+.update-timeline {
+    position: relative;
+    padding-left: 40px;
+}
+
+.update-timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #007bff, transparent);
+}
+
+.update-timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.5s ease;
+}
+
+.update-timeline-dot {
+    position: absolute;
+    left: -33px;
+    top: 1.5rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #007bff;
+    z-index: 1;
+}
+
+.update-timeline-dot.success {
+    border-color: #28a745;
+}
+
+.update-timeline-dot.failed {
+    border-color: #dc3545;
+}
+
+.update-timeline-dot.major {
+    width: 24px;
+    height: 24px;
+    left: -35px;
+    border-width: 4px;
+    background: #ffc107;
+    border-color: #ffc107;
+}
+
+/* ========== Gestión de Licencias (Admin) ========== */
+
+.license-table .license-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.license-status.active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.license-status.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.license-status.expiring {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.license-status.expired {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* Progress bars */
+.license-progress {
+    height: 6px;
+    background: #e9ecef;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.license-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    transition: width 0.3s ease;
+}
+
+/* ========== Renovación de Licencias ========== */
+
+.renewal-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.renewal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.renewal-header h2 {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.renewal-body {
+    padding: 2rem;
+}
+
+.renewal-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.renewal-option {
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.renewal-option:hover {
+    border-color: #007bff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.renewal-option.selected {
+    border-color: #007bff;
+    background: #f0f7ff;
+}
+
+.renewal-option .price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #007bff;
+    margin: 0.5rem 0;
+}
+
+.renewal-option .period {
+    font-size: 1.125rem;
+    color: #495057;
+    margin-bottom: 0.5rem;
+}
+
+.renewal-option .discount {
+    display: inline-block;
+    background: #28a745;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* ========== Notificaciones de Actualizaciones ========== */
+
+.update-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    max-width: 400px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    z-index: 1050;
+    animation: slideInUp 0.5s ease;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.update-notification-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.update-notification-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+}
+
+.update-notification-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #6c757d;
+    cursor: pointer;
+}
+
+/* ========== Responsive ========== */
+
+@media (max-width: 768px) {
+    .update-timeline {
+        padding-left: 20px;
+    }
+    
+    .update-timeline::before {
+        left: 5px;
+    }
+    
+    .update-timeline-dot {
+        left: -7px;
+        width: 16px;
+        height: 16px;
+    }
+    
+    .renewal-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .update-notification {
+        left: 10px;
+        right: 10px;
+        max-width: none;
+    }
+}
+
+/* ========== Animaciones Adicionales ========== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.update-available-badge {
+    animation: pulse 2s infinite;
+}
+
+/* ========== Utilidades ========== */
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.shadow-soft {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.border-gradient {
+    border: 2px solid;
+    border-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) 1;
+}
