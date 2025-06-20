@@ -1,0 +1,35 @@
+[2025-06-19 17:28:36] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-1YT95972GP9141605-387598233P959743V
+[2025-06-19 17:28:37] PayPal pago capturado - Order ID: 9B461474AY901935B
+[2025-06-19 17:28:56] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-3K744649NU217525A-0ED98307BV426182H
+[2025-06-19 17:28:56] Orden completada sin licencias, generando ahora...
+[2025-06-19 17:28:56] Licencias generadas por webhook para orden completada: ORD-20250619-22FB35
+[2025-06-19 17:30:21] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 17:30:22] Error procesando CHECKOUT.ORDER.APPROVED: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 17:30:22] Error en PayPal webhook: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 17:30:33] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-7Y7254563A4550640-11V2185806837105M
+[2025-06-19 17:30:33] Error procesando PAYMENT.CAPTURE.COMPLETED: Orden no encontrada para PayPal Order ID: 8U481631H66031715
+[2025-06-19 17:30:33] Error en PayPal webhook: Orden no encontrada para PayPal Order ID: 8U481631H66031715
+[2025-06-19 18:03:48] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 18:03:49] Error procesando CHECKOUT.ORDER.APPROVED: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 18:03:49] Error en PayPal webhook: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 18:04:22] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-58D329510W468432D-8HN650336L201105X
+[2025-06-19 18:04:22] Error procesando PAYMENT.CAPTURE.COMPLETED: Orden no encontrada para PayPal Order ID: 1AB234567A1234567
+[2025-06-19 18:04:22] Error en PayPal webhook: Orden no encontrada para PayPal Order ID: 1AB234567A1234567
+[2025-06-19 18:34:24] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 18:34:24] Error procesando CHECKOUT.ORDER.APPROVED: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 18:34:24] Error en PayPal webhook: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 18:34:35] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-7Y7254563A4550640-11V2185806837105M
+[2025-06-19 18:34:35] Error procesando PAYMENT.CAPTURE.COMPLETED: Orden no encontrada para PayPal Order ID: 8U481631H66031715
+[2025-06-19 18:34:35] Error en PayPal webhook: Orden no encontrada para PayPal Order ID: 8U481631H66031715
+[2025-06-19 20:03:51] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 20:03:52] Error procesando CHECKOUT.ORDER.APPROVED: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 20:03:52] Error en PayPal webhook: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 20:04:24] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-58D329510W468432D-8HN650336L201105X
+[2025-06-19 20:04:24] Error procesando PAYMENT.CAPTURE.COMPLETED: Orden no encontrada para PayPal Order ID: 1AB234567A1234567
+[2025-06-19 20:04:24] Error en PayPal webhook: Orden no encontrada para PayPal Order ID: 1AB234567A1234567
+[2025-06-19 20:34:26] PayPal webhook recibido: CHECKOUT.ORDER.APPROVED - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 20:34:27] Error procesando CHECKOUT.ORDER.APPROVED: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 20:34:27] Error en PayPal webhook: Error capturando pago de PayPal: HTTP 404
+[2025-06-19 20:34:39] PayPal webhook recibido: PAYMENT.CAPTURE.COMPLETED - ID: WH-7Y7254563A4550640-11V2185806837105M
+[2025-06-19 20:34:39] Error procesando PAYMENT.CAPTURE.COMPLETED: Orden no encontrada para PayPal Order ID: 8U481631H66031715
+[2025-06-19 20:34:39] Error en PayPal webhook: Orden no encontrada para PayPal Order ID: 8U481631H66031715

@@ -1,0 +1,15 @@
+[2025-06-19 17:27:46] createOrder iniciado - Email: demo@nilcf.com - Items: 1
+[2025-06-19 17:27:46] Creando orden - Email: demo@nilcf.com - User ID final: 39
+[2025-06-19 17:27:46] Creando orden - Email: demo@nilcf.com - User ID: 39
+[2025-06-19 17:27:46] INSERT orden - user_id: 39 - order_number: ORD-20250619-22FB35
+[2025-06-19 17:27:46] Orden creada exitosamente - ID: 48 - User ID: 39
+[2025-06-19 17:55:23] createOrder iniciado - Email: test_user_1852723492@testuser.com - Items: 1
+[2025-06-19 17:55:23] Creando orden - Email: test_user_1852723492@testuser.com - User ID final: 40
+[2025-06-19 17:55:23] Creando orden - Email: test_user_1852723492@testuser.com - User ID: 40
+[2025-06-19 17:55:23] INSERT orden - user_id: 40 - order_number: ORD-20250619-B4B347
+[2025-06-19 17:55:23] Orden creada exitosamente - ID: 49 - User ID: 40
+[2025-06-19 18:12:52] createOrder iniciado - Email: test_user_1852723492@testuser.com - Items: 1
+[2025-06-19 18:12:52] Creando orden - Email: test_user_1852723492@testuser.com - User ID final: 41
+[2025-06-19 18:12:52] Creando orden - Email: test_user_1852723492@testuser.com - User ID: 41
+[2025-06-19 18:12:52] INSERT orden - user_id: 41 - order_number: ORD-20250619-4EE56F
+[2025-06-19 18:12:52] Orden creada exitosamente - ID: 50 - User ID: 41

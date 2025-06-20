@@ -28,7 +28,7 @@ class PaymentProcessor
             }
 
             // Log de entrada
-            
+            logError("createOrder iniciado - Email: {$customerData['email']} - Items: " . count($cartData['items']), 'orders.log');
 
 
             $db = Database::getInstance()->getConnection();
@@ -48,7 +48,7 @@ class PaymentProcessor
 
             // Si no hay usuario logueado Y eligió crear cuenta
             if (!$userId && isset($customerData['create_account']) && $customerData['create_account'] == '1') {
-                
+                logError("Intentando crear usuario para: {$customerData['email']}", 'orders.log');
 
                 // Crear usuario automáticamente
                 $createdUserId = self::createGuestUser($customerData);
@@ -60,29 +60,32 @@ class PaymentProcessor
 
                     if ($checkStmt->fetch()) {
                         $userId = $createdUserId;
-                        
+                        logError("Usuario creado y verificado - ID: $userId - Email: {$customerData['email']}", 'orders.log');
                         $customerData['user_id'] = $userId;
                     } else {
-                        
+                        logError("ERROR: createGuestUser devolvió ID $createdUserId pero no existe en BD", 'orders.log');
                         $userId = null; // No usar un ID inválido
                     }
                 } else {
-                   
+                    logError("No se pudo crear usuario para {$customerData['email']} - Continuando sin cuenta", 'orders.log');
                     $userId = null; // Continuar sin user_id (compra como invitado)
                 }
             } else if (!$userId) {
                 // Usuario no quiere crear cuenta o no marcó el checkbox
-               
+                logError("Compra sin cuenta - Email: {$customerData['email']}", 'orders.log');
                 $userId = null;
             }
 
             // IMPORTANTE: Si userId no es null, debe ser un ID válido
             if ($userId !== null && !is_numeric($userId)) {
-               
+                logError("ADVERTENCIA: user_id no es numérico: " . var_export($userId, true), 'orders.log');
                 $userId = null;
             }
 
-            
+            logError("Creando orden - Email: {$customerData['email']} - User ID final: " . ($userId ?? 'NULL'), 'orders.log');
+            // Log para debug
+            logError("Creando orden - Email: {$customerData['email']} - User ID: " . ($userId ? $userId : 'NULL'), 'orders.log');
+
             // Crear orden principal con el user_id (nuevo o existente)
             $stmt = $db->prepare("
                 INSERT INTO orders (
@@ -106,7 +109,10 @@ class PaymentProcessor
                     'total' => $totals['total']
                 ],
                 'created_at' => date('Y-m-d H:i:s')
-            ]);       
+            ]);
+
+            // Antes del execute(), agregar un log para verificar:
+            logError("INSERT orden - user_id: " . ($userId ? $userId : 'NULL') . " - order_number: $orderNumber", 'orders.log');
 
             $stmt->execute([
                 $userId,  // <-- Ahora este $userId tendrá el valor correcto
@@ -128,7 +134,9 @@ class PaymentProcessor
             ]);
 
             $orderId = $db->lastInsertId();
-            
+
+            // Agregar log después de crear la orden
+            logError("Orden creada exitosamente - ID: $orderId - User ID: " . ($userId ? $userId : 'NULL'), 'orders.log');
             // Crear items de la orden
             $stmt = $db->prepare("
                 INSERT INTO order_items (order_id, product_id, product_name, price, quantity, subtotal)
@@ -161,7 +169,11 @@ class PaymentProcessor
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),
                 'trace' => $e->getTraceAsString()
-            ];            
+            ];
+
+            logError("Error creando orden - Detalles: " . json_encode($errorDetails), 'errors.log');
+            logError("Datos recibidos - Customer: " . json_encode($customerData), 'errors.log');
+            logError("Datos recibidos - Cart: " . json_encode($cartData), 'errors.log');
 
             // Devolver mensaje más específico
             return [
@@ -204,7 +216,7 @@ class PaymentProcessor
                 'redirect_url' => SITE_URL . '/pages/success.php?order=' . $orderData['order_number']
             ];
         } catch (Exception $e) {
-            
+            logError("Error procesando orden gratuita: " . $e->getMessage());
             return ['success' => false, 'message' => 'Error al procesar la orden'];
         }
     }
@@ -274,7 +286,7 @@ class PaymentProcessor
 
             return $licenses;
         } catch (Exception $e) {
-           
+            logError("Error generando licencias: " . $e->getMessage());
             return [];
         }
     }
@@ -312,7 +324,7 @@ class PaymentProcessor
 
             return true;
         } catch (Exception $e) {
-           
+            logError("Error enviando email de confirmación: " . $e->getMessage());
             return false;
         }
     }
@@ -342,9 +354,14 @@ class PaymentProcessor
                     'message' => 'Orden ya completada'
                 ];
             }
+
+            // Log para debug
+            logError("completePayment - Orden: {$order['order_number']} - User ID: " . ($order['user_id'] ? $order['user_id'] : 'NULL'), 'payments.log');
+
             // AGREGAR: Verificar si la orden tiene user_id
             if (!$order['user_id']) {
-               
+                logError("ALERTA: Orden {$order['order_number']} sin user_id - Email: {$order['customer_email']}", 'payments.log');
+
                 // Buscar usuario por email
                 $stmt = $db->prepare("SELECT id FROM users WHERE email = ?");
                 $stmt->execute([$order['customer_email']]);
@@ -355,8 +372,10 @@ class PaymentProcessor
                     $updateStmt = $db->prepare("UPDATE orders SET user_id = ? WHERE id = ?");
                     $updateStmt->execute([$user['id'], $orderId]);
                     $order['user_id'] = $user['id'];
-                   
-                } else {                   
+
+                    logError("User_id recuperado: {$user['id']} para orden {$order['order_number']}", 'payments.log');
+                } else {
+                    logError("ERROR: No se encontró usuario con email {$order['customer_email']}", 'payments.log');
                     // Si no existe, intentar crear el usuario
                     $customerData = json_decode($order['payment_data'], true)['customer_data'];
                     $newUserId = self::createGuestUser($customerData);
@@ -364,7 +383,9 @@ class PaymentProcessor
                     if ($newUserId) {
                         $updateStmt = $db->prepare("UPDATE orders SET user_id = ? WHERE id = ?");
                         $updateStmt->execute([$newUserId, $orderId]);
-                        $order['user_id'] = $newUserId;                       
+                        $order['user_id'] = $newUserId;
+
+                        logError("Usuario creado en completePayment - ID: $newUserId", 'payments.log');
                     }
                 }
             }
@@ -397,10 +418,12 @@ class PaymentProcessor
             $licenseResult = LicenseManager::generateLicensesFromOrder($orderId);
 
             if ($licenseResult['success']) {
-                $licenses = $licenseResult['licenses'];                
+                $licenses = $licenseResult['licenses'];
+                logError("Licencias generadas en completePayment - Orden: {$order['order_number']} - Total: " . count($licenses), 'licenses.log');
             } else {
                 // Si falla, intentar con el método antiguo como fallback
-                $licenses = self::generateUserLicenses($orderId, $order['user_id']);              
+                $licenses = self::generateUserLicenses($orderId, $order['user_id']);
+                logError("Error con LicenseManager, usando método alternativo: " . $licenseResult['message'], 'licenses.log');
             }
 
             // Enviar confirmación
@@ -422,7 +445,8 @@ class PaymentProcessor
                 'order_number' => $order['order_number'],
                 'licenses' => $licenses
             ];
-        } catch (Exception $e) {           
+        } catch (Exception $e) {
+            logError("Error completando pago: " . $e->getMessage());
             return ['success' => false, 'message' => $e->getMessage()];
         }
     }
@@ -440,10 +464,13 @@ class PaymentProcessor
                 SET payment_status = 'failed', failure_reason = ?, updated_at = NOW()
                 WHERE id = ?
             ");
-            $stmt->execute([$reason, $orderId]);          
+            $stmt->execute([$reason, $orderId]);
+
+            logError("Pago fallido para orden $orderId: $reason", 'payments.log');
 
             return true;
         } catch (Exception $e) {
+            logError("Error marcando pago como fallido: " . $e->getMessage());
             return false;
         }
     }
@@ -582,9 +609,12 @@ class PaymentProcessor
             $db = Database::getInstance()->getConnection();
 
             // Validar datos requeridos
-            if (empty($customerData['email'])) {               
+            if (empty($customerData['email'])) {
+                logError("createGuestUser: Email vacío", 'users.log');
                 return null;
-            }           
+            }
+
+            logError("createGuestUser iniciado - Email: {$customerData['email']}", 'users.log');
 
             // VERIFICAR SI EL EMAIL YA EXISTE
             $stmt = $db->prepare("SELECT id, is_active, is_verified FROM users WHERE email = ?");
@@ -592,7 +622,8 @@ class PaymentProcessor
             $existingUser = $stmt->fetch();
 
             if ($existingUser) {
-                // Usuario existe              
+                // Usuario existe
+                logError("Usuario ya existe - ID: {$existingUser['id']} - Activo: {$existingUser['is_active']}", 'users.log');
 
                 if ($existingUser['is_active'] && $existingUser['is_verified']) {
                     // Usuario activo → Devolver su ID
@@ -626,14 +657,14 @@ class PaymentProcessor
                 }
             } else {
                 // CASO C: Usuario nuevo → Crear cuenta
-                
+                logError("Creando nuevo usuario - Email: {$customerData['email']}", 'users.log');
 
                 // Validar datos necesarios
                 $firstName = trim($customerData['first_name'] ?? '');
                 $lastName = trim($customerData['last_name'] ?? '');
 
                 if (empty($firstName) || empty($lastName)) {
-                   
+                    logError("Nombre o apellido vacíos - No se puede crear usuario", 'users.log');
                     return null;
                 }
 
@@ -657,18 +688,18 @@ class PaymentProcessor
                 ]);
 
                 if (!$result) {
-                    
+                    logError("Error al ejecutar INSERT de usuario", 'users.log');
                     return null;
                 }
 
                 $userId = $db->lastInsertId();
 
                 if (!$userId || $userId <= 0) {
-                    
+                    logError("lastInsertId devolvió ID inválido: " . var_export($userId, true), 'users.log');
                     return null;
                 }
 
-                
+                logError("Usuario creado exitosamente - ID: $userId", 'users.log');
 
                 // Enviar email con credenciales
                 EmailSystem::sendNewAccountEmail(
@@ -688,7 +719,7 @@ class PaymentProcessor
                 return intval($userId); // Asegurar que sea entero
             }
         } catch (Exception $e) {
-     
+            logError("Error en createGuestUser: " . $e->getMessage() . " - Línea: " . $e->getLine(), 'users.log');
             return null;
         }
     }

@@ -324,7 +324,7 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                         <strong>Versión:</strong> <?php echo htmlspecialchars($product['current_version'] ?? 'N/A'); ?>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <strong>Descargas:</strong> <?php echo $product['downloads_used']; ?>/<?php echo $product['downloads_limit']; ?>
+                                                        <strong>Descargas:</strong> <?php echo $product['downloads_used']; ?>/<?php echo $product['download_limit']; ?>
                                                     </div>
                                                     <div class="col-md-4">
                                                         <strong>Updates:</strong> 
@@ -338,8 +338,8 @@ $siteName = getSetting('site_name', 'MiSistema');
                                             </div>
                                         </div>
                                         <div class="ms-auto">
-                                            <a href="<?php echo SITE_URL; ?>/download?product=<?php echo $product['product_id']; ?>" 
-                                               class="btn btn-corporate">
+                                             <a href="<?php echo SITE_URL; ?>/download/<?php echo $product['product_id']; ?>"
+                                                class="btn btn-corporate">
                                                 <i class="fas fa-download me-2"></i>Descargar
                                             </a>
                                             <div class="text-center mt-2">

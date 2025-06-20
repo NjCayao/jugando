@@ -48,12 +48,12 @@ try {
     
     $stmt = $db->prepare("
         SELECT ul.*, p.name as product_name, p.slug as product_slug, p.image as product_image,
-               p.short_description, p.is_free, p.demo_url,
-               c.name as category_name, c.slug as category_slug,
-               o.order_number, o.created_at as purchase_date,
-               (SELECT COUNT(*) FROM product_versions pv WHERE pv.product_id = p.id) as version_count,
-               (SELECT version FROM product_versions pv WHERE pv.product_id = p.id AND pv.is_current = 1) as current_version,
-               (SELECT COUNT(*) FROM download_logs dl WHERE dl.user_id = ul.user_id AND dl.product_id = ul.product_id) as total_downloads
+            p.short_description, p.is_free, p.demo_url,
+            c.name as category_name, c.slug as category_slug,
+            o.order_number, o.created_at as purchase_date,
+            (SELECT COUNT(*) FROM product_versions pv WHERE pv.product_id = p.id) as version_count,
+            (SELECT version FROM product_versions pv WHERE pv.product_id = p.id AND pv.is_current = 1) as current_version,
+            (SELECT COUNT(*) FROM download_logs dl WHERE dl.user_id = ul.user_id AND dl.product_id = ul.product_id) as total_downloads
         FROM user_licenses ul
         INNER JOIN products p ON ul.product_id = p.id
         LEFT JOIN categories c ON p.category_id = c.id
@@ -94,8 +94,8 @@ try {
     $statsStmt = $db->prepare("
         SELECT 
             COUNT(DISTINCT ul.product_id) as total_products,
-            COUNT(CASE WHEN ul.downloads_used < ul.downloads_limit THEN 1 END) as available_downloads,
-            COUNT(CASE WHEN ul.updates_until IS NULL OR ul.updates_until > NOW() THEN 1 END) as with_updates,
+            COUNT(CASE WHEN ul.downloads_used < ul.download_limit THEN 1 END) as available_downloads,
+            COUNT(CASE WHEN ul.expires_at IS NULL OR ul.expires_at > NOW() THEN 1 END) as with_updates,
             SUM(ul.downloads_used) as total_downloads_used
         FROM user_licenses ul
         WHERE ul.user_id = ? AND ul.is_active = 1
@@ -324,19 +324,19 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                     v<?php echo htmlspecialchars($product['current_version'] ?? '1.0'); ?>
                                                 </span>
                                                 
-                                                <?php if ($product['updates_until']): ?>
-                                                    <?php if (strtotime($product['updates_until']) > time()): ?>
+                                                <?php if ($product['expires_at']): ?>
+                                                    <?php if (strtotime($product['expires_at']) > time()): ?>
                                                         <div class="badge bg-success mt-2">
-                                                            Updates hasta <?php echo formatDate($product['updates_until']); ?>
+                                                            Licencia activa hasta <?php echo formatDate($product['expires_at']); ?>
                                                         </div>
                                                     <?php else: ?>
                                                         <div class="badge bg-danger mt-2">
-                                                            Updates expirados
+                                                            Licencia expirada
                                                         </div>
                                                     <?php endif; ?>
                                                 <?php else: ?>
                                                     <div class="badge bg-success mt-2">
-                                                        Updates ilimitados
+                                                        Licencia permanente
                                                     </div>
                                                 <?php endif; ?>
                                             </div>
@@ -346,8 +346,8 @@ $siteName = getSetting('site_name', 'MiSistema');
                                                 <small class="text-muted d-block">
                                                     Descargas: <?php echo $product['downloads_used']; ?>/<?php echo $product['downloads_limit']; ?>
                                                 </small>
-                                                <?php 
-                                                $percentage = $product['downloads_limit'] > 0 ? ($product['downloads_used'] / $product['downloads_limit']) * 100 : 0;
+                                                <?php
+                                                    $percentage = $product['download_limit'] > 0 ? ($product['downloads_used'] / $product['download_limit']) * 100 : 0;
                                                 ?>
                                                 <div class="progress" style="height: 6px;">
                                                     <div class="progress-bar bg-success" style="width: <?php echo min(100, $percentage); ?>%"></div>
@@ -356,27 +356,27 @@ $siteName = getSetting('site_name', 'MiSistema');
                                             
                                             <!-- Botones de Acción -->
                                             <div class="product-actions">
-                                                <?php if ($product['demo_url']): ?>
-                                                    <a href="<?php echo $product['demo_url']; ?>" target="_blank" 
-                                                       class="btn btn-outline-info btn-sm mb-2">
-                                                        <i class="fas fa-eye me-1"></i>Demo
-                                                    </a>
-                                                <?php endif; ?>
+                                                <!--<?php if ($product['demo_url']): ?>-->
+                                                <!--    <a href="<?php echo $product['demo_url']; ?>" target="_blank" -->
+                                                <!--       class="btn btn-outline-info btn-sm mb-2">-->
+                                                <!--        <i class="fas fa-eye me-1"></i>Demo-->
+                                                <!--    </a>-->
+                                                <!--<?php endif; ?>-->
                                                 
-                                                <a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" 
-                                                   class="btn btn-outline-primary btn-sm mb-2">
-                                                    <i class="fas fa-info me-1"></i>Detalles
-                                                </a>
+                                                <!--<a href="<?php echo SITE_URL; ?>/producto/<?php echo $product['product_slug']; ?>" -->
+                                                <!--   class="btn btn-outline-primary btn-sm mb-2">-->
+                                                <!--    <i class="fas fa-info me-1"></i>Detalles-->
+                                                <!--</a>-->
                                                 
-                                                <?php if ($product['downloads_used'] < $product['downloads_limit']): ?>
-                                                    <button class="btn btn-corporate btn-sm" onclick="downloadProduct(<?php echo $product['product_id']; ?>)">
-                                                        <i class="fas fa-download me-1"></i>Descargar
-                                                    </button>
-                                                <?php else: ?>
-                                                    <button class="btn btn-secondary btn-sm" disabled>
-                                                        <i class="fas fa-ban me-1"></i>Límite Alcanzado
-                                                    </button>
-                                                <?php endif; ?>
+                                                    <?php if ($product['downloads_used'] < $product['download_limit']): ?>
+                                                        <button class="btn btn-corporate btn-sm" style="width: 150px !important" onclick="downloadProduct(<?php echo $product['product_id']; ?>)">
+                                                            <i class="fas fa-download me-1"></i>Descargar
+                                                        </button>
+                                                    <?php else: ?>
+                                                        <button class="btn btn-secondary btn-sm" style="width: 150px !important; border-radius: 15px !important;" disabled>
+                                                            <i class="fas fa-ban me-1"></i>Límite Alcanzado
+                                                        </button>
+                                                    <?php endif; ?>
                                             </div>
                                             
                                             <div class="mt-2">
@@ -444,6 +444,7 @@ $siteName = getSetting('site_name', 'MiSistema');
         function downloadProduct(productId) {
             // Mostrar modal de descarga o redirigir
             if (confirm('¿Deseas descargar este producto? Se contabilizará como una descarga utilizada.')) {
+                // Ya está correcto:
                 window.location.href = '<?php echo SITE_URL; ?>/download/' + productId;
             }
         }

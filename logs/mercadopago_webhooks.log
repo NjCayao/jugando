@@ -1,0 +1,140 @@
+[2025-06-19 17:56:04] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:05] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:05] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:06] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:06] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:06] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:07] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:07] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:44] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:44] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:46] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 17:56:46] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 18:02:14] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 18:02:39] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 18:09:59] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 18:10:28] Error en MercadoPago webhook: Signature inválida
+[2025-06-19 18:10:58] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:10:58] MercadoPago webhook recibido:  - ID: WH-7Y7254563A4550640-11V2185806837105M
+[2025-06-19 18:10:58] MercadoPago evento no manejado: 
+[2025-06-19 18:13:25] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:13:25] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 18:13:25] MercadoPago evento no manejado: 
+[2025-06-19 18:13:26] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:13:26] MercadoPago webhook recibido: payment - ID: 122308960618
+[2025-06-19 18:13:26] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:13:26] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 18:13:26] MercadoPago evento no manejado: 
+[2025-06-19 18:13:26] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:13:26] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 18:13:26] MercadoPago evento no manejado: 
+[2025-06-19 18:13:27] Pago completado exitosamente - Orden: ORD-20250619-4EE56F - MercadoPago ID: 115725204450
+[2025-06-19 18:15:26] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:15:26] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 18:15:26] MercadoPago evento no manejado: 
+[2025-06-19 18:15:32] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:15:32] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 18:15:32] MercadoPago evento no manejado: 
+[2025-06-19 18:15:51] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 18:15:51] MercadoPago webhook recibido: payment - ID: 122309068390
+[2025-06-19 18:15:51] Orden completada sin licencias, generando ahora...
+[2025-06-19 18:15:51] Licencias generadas por webhook MercadoPago: ORD-20250619-B4B347
+[2025-06-19 19:37:44] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 19:37:44] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 19:37:44] MercadoPago evento no manejado: 
+[2025-06-19 19:56:48] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 19:56:48] MercadoPago webhook recibido: payment - ID: 122236412253
+[2025-06-19 19:56:48] Error procesando evento de pago: Orden no encontrada: ORD-20250617-6C39DF
+[2025-06-19 19:56:48] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-6C39DF
+[2025-06-19 19:56:49] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 19:56:49] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 19:56:49] MercadoPago evento no manejado: 
+[2025-06-19 19:56:50] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 19:56:50] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 19:56:50] MercadoPago evento no manejado: 
+[2025-06-19 20:10:02] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:10:02] MercadoPago webhook recibido:  - ID: WH-COC11055RA711503B-4YM959094A144403T
+[2025-06-19 20:10:02] MercadoPago evento no manejado: 
+[2025-06-19 20:10:32] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:10:32] MercadoPago webhook recibido:  - ID: WH-8Y6524781B2662740-6BA13970S75831204
+[2025-06-19 20:10:32] MercadoPago evento no manejado: 
+[2025-06-19 20:15:36] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:15:36] MercadoPago webhook recibido: payment - ID: 122312193978
+[2025-06-19 20:15:36] Error procesando evento de pago: Orden no encontrada: ORD-20250617-015C88
+[2025-06-19 20:15:36] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-015C88
+[2025-06-19 20:16:18] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:16:18] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:16:18] MercadoPago evento no manejado: 
+[2025-06-19 20:16:50] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:16:50] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:16:50] MercadoPago evento no manejado: 
+[2025-06-19 20:26:37] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:26:37] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:26:37] MercadoPago evento no manejado: 
+[2025-06-19 20:26:39] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:26:39] MercadoPago webhook recibido: payment - ID: 122312531966
+[2025-06-19 20:26:39] Error procesando evento de pago: Orden no encontrada: ORD-20250617-66F701
+[2025-06-19 20:26:39] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-66F701
+[2025-06-19 20:26:43] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:26:43] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:26:43] MercadoPago evento no manejado: 
+[2025-06-19 20:31:34] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:31:34] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:31:34] MercadoPago evento no manejado: 
+[2025-06-19 20:31:49] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:31:49] MercadoPago webhook recibido: payment - ID: 122237234481
+[2025-06-19 20:31:49] Error procesando evento de pago: Orden no encontrada: ORD-20250617-DEDDF0
+[2025-06-19 20:31:49] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-DEDDF0
+[2025-06-19 20:31:49] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:31:49] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:31:49] MercadoPago evento no manejado: 
+[2025-06-19 20:40:59] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:40:59] MercadoPago webhook recibido: payment - ID: 122312847824
+[2025-06-19 20:40:59] Error procesando evento de pago: Orden no encontrada: ORD-20250617-7796B4
+[2025-06-19 20:40:59] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-7796B4
+[2025-06-19 20:41:19] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:41:19] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:41:19] MercadoPago evento no manejado: 
+[2025-06-19 20:41:23] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:41:23] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:41:23] MercadoPago evento no manejado: 
+[2025-06-19 20:45:52] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:45:52] MercadoPago webhook recibido: payment - ID: 122237533851
+[2025-06-19 20:45:52] Error procesando evento de pago: Orden no encontrada: ORD-20250617-FC7031
+[2025-06-19 20:45:52] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-FC7031
+[2025-06-19 20:45:53] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:45:53] MercadoPago webhook recibido: payment - ID: 122312961818
+[2025-06-19 20:45:54] Error procesando evento de pago: Orden no encontrada: ORD-20250617-DBB711
+[2025-06-19 20:45:54] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-DBB711
+[2025-06-19 20:46:00] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:46:01] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:46:01] MercadoPago evento no manejado: 
+[2025-06-19 20:46:14] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:46:14] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:46:14] MercadoPago evento no manejado: 
+[2025-06-19 20:46:16] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:46:16] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:46:16] MercadoPago evento no manejado: 
+[2025-06-19 20:46:28] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 20:46:28] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 20:46:28] MercadoPago evento no manejado: 
+[2025-06-19 21:35:27] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:35:27] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 21:35:27] MercadoPago evento no manejado: 
+[2025-06-19 21:41:00] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:41:00] MercadoPago webhook recibido: payment - ID: 122238532913
+[2025-06-19 21:41:00] Error procesando evento de pago: Orden no encontrada: ORD-20250617-6C0BFC
+[2025-06-19 21:41:00] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-6C0BFC
+[2025-06-19 21:41:09] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:41:09] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 21:41:09] MercadoPago evento no manejado: 
+[2025-06-19 21:41:13] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:41:13] MercadoPago webhook recibido: payment - ID: 122313953508
+[2025-06-19 21:41:14] Error procesando evento de pago: Orden no encontrada: ORD-20250617-E042DE
+[2025-06-19 21:41:14] Error en MercadoPago webhook: Orden no encontrada: ORD-20250617-E042DE
+[2025-06-19 21:41:37] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:41:37] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 21:41:37] MercadoPago evento no manejado: 
+[2025-06-19 21:41:57] SANDBOX: Signature inválida pero continuando (normal en modo prueba)
+[2025-06-19 21:41:57] MercadoPago webhook recibido:  - ID: 
+[2025-06-19 21:41:57] MercadoPago evento no manejado: 

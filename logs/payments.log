@@ -1,2 +1,4 @@
-[2025-06-17 21:21:14] Orden creada: ORD-20250617-A0B304 - Cliente: test_user_1852723492@testuser.com - Método: mercadopago
-[2025-06-17 21:21:14] Pago fallido para orden 7: Error creando preferencia en MercadoPago
+[2025-06-19 17:27:46] Orden creada: ORD-20250619-22FB35 - Cliente: demo@nilcf.com - Método: paypal
+[2025-06-19 17:55:23] Orden creada: ORD-20250619-B4B347 - Cliente: test_user_1852723492@testuser.com - Método: mercadopago
+[2025-06-19 18:12:52] Orden creada: ORD-20250619-4EE56F - Cliente: test_user_1852723492@testuser.com - Método: mercadopago
+[2025-06-19 18:13:26] completePayment - Orden: ORD-20250619-4EE56F - User ID: 41

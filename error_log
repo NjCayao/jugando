@@ -1,0 +1,6 @@
+[18-Jun-2025 20:33:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function logError() in /home1/ntohdchg/web.devcayao.com/config/license_manager.php:156
+Stack trace:
+#0 /home1/ntohdchg/web.devcayao.com/config/license_manager.php(45): LicenseManager::createUserLicense(29, 1, 30, 5, 12)
+#1 /home1/ntohdchg/web.devcayao.com/test_post_payment.php(35): LicenseManager::generateLicensesFromOrder(30)
+#2 {main}
+  thrown in /home1/ntohdchg/web.devcayao.com/config/license_manager.php on line 156
