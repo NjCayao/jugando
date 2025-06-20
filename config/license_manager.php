@@ -4,24 +4,26 @@
 /**
  * Clase para manejar licencias de usuario automáticamente
  */
-class LicenseManager {
-    
+class LicenseManager
+{
+
     /**
      * Generar licencias para una orden completada
      */
-    public static function generateLicensesFromOrder($orderId) {
+    public static function generateLicensesFromOrder($orderId)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             // Obtener orden
             $stmt = $db->prepare("SELECT * FROM orders WHERE id = ? AND payment_status = 'completed'");
             $stmt->execute([$orderId]);
             $order = $stmt->fetch();
-            
+
             if (!$order) {
                 throw new Exception('Orden no encontrada o no completada');
             }
-            
+
             // Obtener items de la orden
             $stmt = $db->prepare("
                 SELECT oi.*, p.download_limit, p.update_months, p.name as product_name
@@ -31,9 +33,9 @@ class LicenseManager {
             ");
             $stmt->execute([$orderId]);
             $orderItems = $stmt->fetchAll();
-            
+
             $generatedLicenses = [];
-            
+
             foreach ($orderItems as $item) {
                 // Solo generar licencias si hay usuario
                 if ($order['user_id']) {
@@ -44,7 +46,7 @@ class LicenseManager {
                         $item['download_limit'],
                         $item['update_months']
                     );
-                    
+
                     if ($license['success']) {
                         $generatedLicenses[] = $license['license'];
                     }
@@ -60,16 +62,15 @@ class LicenseManager {
                     ];
                 }
             }
-            
+
             // Log de licencias generadas
             logError("Licencias generadas para orden {$order['order_number']}: " . count($generatedLicenses), 'licenses.log');
-            
+
             return [
                 'success' => true,
                 'licenses' => $generatedLicenses,
                 'order' => $order
             ];
-            
         } catch (Exception $e) {
             logError("Error generando licencias: " . $e->getMessage());
             return [
@@ -78,14 +79,15 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Crear licencia de usuario
      */
-    public static function createUserLicense($userId, $productId, $orderId, $downloadLimit = null, $updateMonths = null) {
+    public static function createUserLicense($userId, $productId, $orderId, $downloadLimit = null, $updateMonths = null)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             // Obtener configuraciones por defecto si no se especifican
             if ($downloadLimit === null) {
                 $downloadLimit = intval(Settings::get('default_download_limit', DEFAULT_DOWNLOAD_LIMIT));
@@ -93,10 +95,10 @@ class LicenseManager {
             if ($updateMonths === null) {
                 $updateMonths = intval(Settings::get('default_update_months', DEFAULT_UPDATE_MONTHS));
             }
-            
+
             // Calcular fecha de expiración de actualizaciones
-            $updatesUntil = date('Y-m-d H:i:s', strtotime("+{$updateMonths} months"));
-            
+            $expiresAt = date('Y-m-d H:i:s', strtotime("+{$updateMonths} months"));
+
             // Verificar si ya existe licencia para este usuario/producto
             $stmt = $db->prepare("
                 SELECT * FROM user_licenses 
@@ -104,35 +106,35 @@ class LicenseManager {
             ");
             $stmt->execute([$userId, $productId]);
             $existingLicense = $stmt->fetch();
-            
+
             if ($existingLicense) {
                 // Actualizar licencia existente
                 $stmt = $db->prepare("
                     UPDATE user_licenses 
-                    SET downloads_limit = downloads_limit + ?,
-                        updates_until = GREATEST(updates_until, ?),
+                    SET download_limit = download_limit + ?,
+                        expires_at = GREATEST(expires_at, ?),
                         is_active = 1,
                         updated_at = NOW()
                     WHERE id = ?
                 ");
-                $stmt->execute([$downloadLimit, $updatesUntil, $existingLicense['id']]);
-                
+                $stmt->execute([$downloadLimit, $expiresAt, $existingLicense['id']]);
+
                 $licenseId = $existingLicense['id'];
                 $action = 'updated';
             } else {
                 // Crear nueva licencia
                 $stmt = $db->prepare("
                     INSERT INTO user_licenses (
-                        user_id, product_id, order_id, downloads_used, downloads_limit,
-                        updates_until, is_active, created_at
+                        user_id, product_id, order_id, downloads_used, download_limit,
+                        expires_at, is_active, created_at
                     ) VALUES (?, ?, ?, 0, ?, ?, 1, NOW())
                 ");
-                $stmt->execute([$userId, $productId, $orderId, $downloadLimit, $updatesUntil]);
-                
+                $stmt->execute([$userId, $productId, $orderId, $downloadLimit, $expiresAt]);
+
                 $licenseId = $db->lastInsertId();
                 $action = 'created';
             }
-            
+
             // Obtener datos completos de la licencia
             $stmt = $db->prepare("
                 SELECT ul.*, p.name as product_name, p.slug as product_slug
@@ -142,16 +144,15 @@ class LicenseManager {
             ");
             $stmt->execute([$licenseId]);
             $license = $stmt->fetch();
-            
+
             // Log de licencia creada/actualizada
             logError("Licencia $action para usuario $userId - Producto: {$license['product_name']} - ID: $licenseId", 'licenses.log');
-            
+
             return [
                 'success' => true,
                 'license' => $license,
                 'action' => $action
             ];
-            
         } catch (Exception $e) {
             logError("Error creando licencia de usuario: " . $e->getMessage());
             return [
@@ -160,14 +161,15 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Verificar licencia de usuario para descarga
      */
-    public static function verifyLicense($userId, $productId) {
+    public static function verifyLicense($userId, $productId)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             $stmt = $db->prepare("
                 SELECT ul.*, p.name as product_name
                 FROM user_licenses ul
@@ -176,7 +178,7 @@ class LicenseManager {
             ");
             $stmt->execute([$userId, $productId]);
             $license = $stmt->fetch();
-            
+
             if (!$license) {
                 return [
                     'valid' => false,
@@ -184,7 +186,7 @@ class LicenseManager {
                     'message' => 'No tienes licencia para este producto'
                 ];
             }
-            
+
             // Verificar límite de descargas
             if ($license['downloads_used'] >= $license['downloads_limit']) {
                 return [
@@ -194,12 +196,12 @@ class LicenseManager {
                     'license' => $license
                 ];
             }
-            
+
             // Verificar si las actualizaciones han expirado (solo para versiones nuevas)
             $now = new DateTime();
             $expirationDate = new DateTime($license['updates_until']);
             $hasExpiredUpdates = $now > $expirationDate;
-            
+
             return [
                 'valid' => true,
                 'license' => $license,
@@ -207,7 +209,6 @@ class LicenseManager {
                 'updates_expired' => $hasExpiredUpdates,
                 'updates_until' => $license['updates_until']
             ];
-            
         } catch (Exception $e) {
             logError("Error verificando licencia: " . $e->getMessage());
             return [
@@ -217,14 +218,15 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Registrar descarga y actualizar contador
      */
-    public static function recordDownload($licenseId, $versionId, $ipAddress, $userAgent) {
+    public static function recordDownload($licenseId, $versionId, $ipAddress, $userAgent)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             // Obtener licencia
             $stmt = $db->prepare("
                 SELECT ul.*, p.name as product_name
@@ -234,11 +236,11 @@ class LicenseManager {
             ");
             $stmt->execute([$licenseId]);
             $license = $stmt->fetch();
-            
+
             if (!$license) {
                 throw new Exception('Licencia no encontrada');
             }
-            
+
             // Registrar descarga en logs
             $stmt = $db->prepare("
                 INSERT INTO download_logs (
@@ -254,7 +256,7 @@ class LicenseManager {
                 $ipAddress,
                 $userAgent
             ]);
-            
+
             // Actualizar contador de licencia
             $stmt = $db->prepare("
                 UPDATE user_licenses 
@@ -262,15 +264,14 @@ class LicenseManager {
                 WHERE id = ?
             ");
             $stmt->execute([$licenseId]);
-            
+
             // Log de descarga
             logError("Descarga registrada - Usuario: {$license['user_id']} - Producto: {$license['product_name']} - IP: $ipAddress", 'downloads.log');
-            
+
             return [
                 'success' => true,
                 'downloads_remaining' => $license['downloads_limit'] - ($license['downloads_used'] + 1)
             ];
-            
         } catch (Exception $e) {
             logError("Error registrando descarga: " . $e->getMessage());
             return [
@@ -279,16 +280,17 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Obtener licencias de un usuario
      */
-    public static function getUserLicenses($userId, $activeOnly = true) {
+    public static function getUserLicenses($userId, $activeOnly = true)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             $whereClause = $activeOnly ? 'AND ul.is_active = 1' : '';
-            
+
             $stmt = $db->prepare("
                 SELECT ul.*, p.name as product_name, p.slug as product_slug, 
                        p.image as product_image, c.name as category_name,
@@ -302,24 +304,23 @@ class LicenseManager {
             ");
             $stmt->execute([$userId]);
             $licenses = $stmt->fetchAll();
-            
+
             // Enriquecer datos de licencias
             foreach ($licenses as &$license) {
                 $license['downloads_remaining'] = $license['downloads_limit'] - $license['downloads_used'];
                 $license['updates_expired'] = strtotime($license['updates_until']) < time();
                 $license['download_url'] = SITE_URL . '/download/' . $license['product_id'];
                 $license['product_url'] = SITE_URL . '/producto/' . $license['product_slug'];
-                
+
                 if ($license['product_image']) {
                     $license['product_image_url'] = UPLOADS_URL . '/products/' . $license['product_image'];
                 }
             }
-            
+
             return [
                 'success' => true,
                 'licenses' => $licenses
             ];
-            
         } catch (Exception $e) {
             logError("Error obteniendo licencias de usuario: " . $e->getMessage());
             return [
@@ -328,27 +329,28 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Extender licencia (para admins)
      */
-    public static function extendLicense($licenseId, $additionalDownloads, $additionalMonths) {
+    public static function extendLicense($licenseId, $additionalDownloads, $additionalMonths)
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             // Obtener licencia actual
             $stmt = $db->prepare("SELECT * FROM user_licenses WHERE id = ?");
             $stmt->execute([$licenseId]);
             $license = $stmt->fetch();
-            
+
             if (!$license) {
                 throw new Exception('Licencia no encontrada');
             }
-            
+
             // Calcular nueva fecha de expiración
             $currentExpiration = $license['updates_until'];
             $newExpiration = date('Y-m-d H:i:s', strtotime($currentExpiration . " +{$additionalMonths} months"));
-            
+
             // Actualizar licencia
             $stmt = $db->prepare("
                 UPDATE user_licenses 
@@ -358,15 +360,14 @@ class LicenseManager {
                 WHERE id = ?
             ");
             $stmt->execute([$additionalDownloads, $newExpiration, $licenseId]);
-            
+
             // Log de extensión
             logError("Licencia extendida - ID: $licenseId - Descargas: +$additionalDownloads - Meses: +$additionalMonths", 'licenses.log');
-            
+
             return [
                 'success' => true,
                 'message' => 'Licencia extendida exitosamente'
             ];
-            
         } catch (Exception $e) {
             logError("Error extendiendo licencia: " . $e->getMessage());
             return [
@@ -375,29 +376,29 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Revocar licencia (para admins)
      */
-    public static function revokeLicense($licenseId, $reason = '') {
+    public static function revokeLicense($licenseId, $reason = '')
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             $stmt = $db->prepare("
                 UPDATE user_licenses 
                 SET is_active = 0, updated_at = NOW()
                 WHERE id = ?
             ");
             $stmt->execute([$licenseId]);
-            
+
             // Log de revocación
             logError("Licencia revocada - ID: $licenseId - Razón: $reason", 'licenses.log');
-            
+
             return [
                 'success' => true,
                 'message' => 'Licencia revocada exitosamente'
             ];
-            
         } catch (Exception $e) {
             logError("Error revocando licencia: " . $e->getMessage());
             return [
@@ -406,18 +407,19 @@ class LicenseManager {
             ];
         }
     }
-    
+
     /**
      * Obtener estadísticas de licencias (para admin)
      */
-    public static function getLicenseStats() {
+    public static function getLicenseStats()
+    {
         try {
             $db = Database::getInstance()->getConnection();
-            
+
             // Total de licencias
             $stmt = $db->query("SELECT COUNT(*) as total FROM user_licenses WHERE is_active = 1");
             $totalLicenses = $stmt->fetch()['total'];
-            
+
             // Licencias por producto
             $stmt = $db->query("
                 SELECT p.name, COUNT(*) as license_count
@@ -429,7 +431,7 @@ class LicenseManager {
                 LIMIT 10
             ");
             $licensesByProduct = $stmt->fetchAll();
-            
+
             // Licencias expiradas
             $stmt = $db->query("
                 SELECT COUNT(*) as expired_count
@@ -437,7 +439,7 @@ class LicenseManager {
                 WHERE is_active = 1 AND updates_until < NOW()
             ");
             $expiredLicenses = $stmt->fetch()['expired_count'];
-            
+
             // Licencias próximas a expirar (30 días)
             $stmt = $db->query("
                 SELECT COUNT(*) as expiring_count
@@ -447,7 +449,7 @@ class LicenseManager {
                 AND updates_until < DATE_ADD(NOW(), INTERVAL 30 DAY)
             ");
             $expiringLicenses = $stmt->fetch()['expiring_count'];
-            
+
             // Top usuarios por licencias
             $stmt = $db->query("
                 SELECT u.first_name, u.last_name, u.email, COUNT(*) as license_count
@@ -459,7 +461,7 @@ class LicenseManager {
                 LIMIT 10
             ");
             $topUsers = $stmt->fetchAll();
-            
+
             return [
                 'success' => true,
                 'stats' => [
@@ -470,7 +472,6 @@ class LicenseManager {
                     'top_users' => $topUsers
                 ]
             ];
-            
         } catch (Exception $e) {
             logError("Error obteniendo estadísticas de licencias: " . $e->getMessage());
             return [
@@ -482,14 +483,17 @@ class LicenseManager {
 }
 
 // Funciones helper para mantener compatibilidad
-function generateUserLicense($userId, $productId, $orderId, $downloadLimit = null, $updateMonths = null) {
+function generateUserLicense($userId, $productId, $orderId, $downloadLimit = null, $updateMonths = null)
+{
     return LicenseManager::createUserLicense($userId, $productId, $orderId, $downloadLimit, $updateMonths);
 }
 
-function verifyUserLicense($userId, $productId) {
+function verifyUserLicense($userId, $productId)
+{
     return LicenseManager::verifyLicense($userId, $productId);
 }
 
-function getUserLicenses($userId, $activeOnly = true) {
+function getUserLicenses($userId, $activeOnly = true)
+{
     return LicenseManager::getUserLicenses($userId, $activeOnly);
 }

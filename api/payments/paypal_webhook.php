@@ -127,12 +127,34 @@ function handlePaymentCaptureCompleted($event)
         $db = Database::getInstance()->getConnection();
 
         // Buscar orden por payment_id (PayPal Order ID)
-        $stmt = $db->prepare("SELECT * FROM orders WHERE payment_id = ? AND payment_status = 'pending'");
+        $stmt = $db->prepare("SELECT * FROM orders WHERE payment_id = ?");
         $stmt->execute([$paypalOrderId]);
         $order = $stmt->fetch();
 
         if (!$order) {
             throw new Exception("Orden no encontrada para PayPal Order ID: $paypalOrderId");
+        }
+
+        // Si la orden ya está completada pero no tiene licencias, generarlas
+        if ($order['payment_status'] === 'completed') {
+            $stmt = $db->prepare("SELECT COUNT(*) as count FROM user_licenses WHERE order_id = ?");
+            $stmt->execute([$order['id']]);
+            $licenseCount = $stmt->fetch()['count'];
+
+            if ($licenseCount == 0) {
+                logError("Orden completada sin licencias, generando ahora...", 'paypal_webhooks.log');
+
+                // Generar licencias
+                require_once __DIR__ . '/../../config/license_manager.php';
+                $licenseResult = LicenseManager::generateLicensesFromOrder($order['id']);
+
+                if ($licenseResult['success']) {
+                    logError("Licencias generadas por webhook para orden completada: {$order['order_number']}", 'paypal_webhooks.log');
+                }
+            } else {
+                logError("Orden ya procesada completamente, ignorando webhook", 'paypal_webhooks.log');
+            }
+            return; // Salir, ya está procesada
         }
 
         // Datos del pago para guardar - MOVER AQUÍ ARRIBA
