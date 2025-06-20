@@ -308,6 +308,70 @@
 
 
 
+<!-- Gestión de Reseñas -->
+<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'menu-open' : ''; ?>">
+    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-star"></i>
+        <p>
+            Reseñas
+            <i class="right fas fa-angle-left"></i>
+            <?php 
+            // Mostrar contador de pendientes
+            try {
+                $pendingReviews = $db->query("
+                    SELECT COUNT(*) as pending 
+                    FROM product_reviews 
+                    WHERE is_approved = 0
+                ")->fetch()['pending'];
+                
+                if ($pendingReviews > 0):
+            ?>
+            <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
+            <?php 
+                endif;
+            } catch (Exception $e) {
+                // Ignorar error
+            }
+            ?>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Todas las Reseñas</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/pending.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'pending.php') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                    Pendientes
+                    <?php if (isset($pendingReviews) && $pendingReviews > 0): ?>
+                    <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
+                    <?php endif; ?>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/reported.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'reported.php') ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Reportadas</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/settings.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Configuración</p>
+            </a>
+        </li>
+    </ul>
+</li>
+
+
+
+
+
 
 
                 <!-- Separador -->

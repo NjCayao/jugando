@@ -4,3 +4,10 @@
 [2025-06-19 20:17:35] Usando ruta absoluta: /home1/ntohdchg/web.devcayao.com/downloads/products/eccomerce-existente/2.0/eccomerce-existente_v2.0.rar
 [2025-06-19 20:25:54] Usando ruta absoluta: /home1/ntohdchg/web.devcayao.com/downloads/products/eccomerce-existente/2.0/eccomerce-existente_v2.0.rar
 [2025-06-19 21:46:27] Usando ruta absoluta: /home1/ntohdchg/web.devcayao.com/downloads/products/eccomerce-existente/2.0/eccomerce-existente_v2.0.rar
+[2025-06-20 15:52:24] Archivo no encontrado. Path original: products/sistema-ventas-pro/v1.0/sistema-ventas-pro-v1.0.zip, Path procesado: C:\xampp\htdocs\jugando/downloads/products/sistema-ventas-pro/v1.0/sistema-ventas-pro-v1.0.zip
+[2025-06-20 15:52:24] Rutas intentadas:
+1. Original: products/sistema-ventas-pro/v1.0/sistema-ventas-pro-v1.0.zip
+2. Con DOWNLOADS_PATH: C:\xampp\htdocs\jugando/downloads/products/sistema-ventas-pro/v1.0/sistema-ventas-pro-v1.0.zip
+3. Procesada final: C:\xampp\htdocs\jugando/downloads/products/sistema-ventas-pro/v1.0/sistema-ventas-pro-v1.0.zip
+DOWNLOADS_PATH constante: C:\xampp\htdocs\jugando/downloads
+
