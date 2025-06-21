@@ -10,3 +10,8 @@
 [2025-06-19 20:27:49] Error en página de descargas: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ul.downloads_limit' in 'SELECT'
 [2025-06-19 20:29:42] Error en página de descargas: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ul.downloads_limit' in 'SELECT'
 [2025-06-19 21:46:27] Error registrando descarga: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_number' in 'INSERT INTO'
+[2025-06-20 17:28:27] Error en admin donations: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'd.created_at' in 'where clause'
+[2025-06-20 19:36:49] Error en admin donations: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'd.created_at' in 'where clause'
+[2025-06-20 19:38:50] Error en admin donations: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'd.created_at' in 'where clause'
+[2025-06-20 19:39:47] Error en admin donations: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'd.created_at' in 'where clause'
+[2025-06-20 19:39:50] Error en admin donations: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'd.created_at' in 'where clause'

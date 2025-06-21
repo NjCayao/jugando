@@ -29,6 +29,9 @@
                     </a>
                 </li>
 
+                <!-- SECCIÓN: VENTAS -->
+                <li class="nav-header">VENTAS</li>
+
                 <!-- Productos -->
                 <li class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], '/products/') !== false ? 'menu-open' : ''; ?>">
                     <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/products/') !== false ? 'active' : ''; ?>">
@@ -71,8 +74,52 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
+                <!-- Donaciones -->
+                <li class="nav-item has-treeview <?php echo strpos($_SERVER['REQUEST_URI'], '/donations/') !== false ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/donations/') !== false ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-coffee"></i>
+                        <p>
+                            Donaciones
+                            <i class="right fas fa-angle-left"></i>
+                            <?php
+                            try {
+                                $db = Database::getInstance()->getConnection();
+                                $stmt = $db->prepare("SELECT COUNT(*) as pending FROM donations WHERE payment_status = 'pending'");
+                                $stmt->execute();
+                                $pendingDonations = $stmt->fetch()['pending'];
+                                if ($pendingDonations > 0):
+                            ?>
+                                    <span class="badge badge-warning right"><?php echo $pendingDonations; ?></span>
+                            <?php
+                                endif;
+                            } catch (Exception $e) {
+                                // Silenciar error
+                            }
+                            ?>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/donations/" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Todas las Donaciones</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/donations/reports.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Reportes</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- SECCIÓN: USUARIOS Y LICENCIAS -->
+                <li class="nav-header">USUARIOS</li>
+
+                <!-- Usuarios -->
+                <li class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], '/users/') !== false ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/users/') !== false ? 'active' : ''; ?>">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             Usuarios
@@ -107,6 +154,174 @@
                     </ul>
                 </li>
 
+                <!-- Licencias -->
+                <li class="nav-item has-treeview <?php echo strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-key"></i>
+                        <p>
+                            Licencias
+                            <i class="right fas fa-angle-left"></i>
+                            <?php
+                            try {
+                                $db = Database::getInstance()->getConnection();
+                                $stmt = $db->query("
+                                    SELECT COUNT(*) as expiring 
+                                    FROM user_licenses 
+                                    WHERE is_active = 1 
+                                    AND update_expires_at BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)
+                                ");
+                                $expiringCount = $stmt->fetch()['expiring'];
+                                if ($expiringCount > 0):
+                            ?>
+                                    <span class="badge badge-warning right"><?php echo $expiringCount; ?></span>
+                            <?php
+                                endif;
+                            } catch (Exception $e) {
+                                // Ignorar error
+                            }
+                            ?>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Todas las Licencias</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/expired.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Expiradas
+                                    <?php
+                                    try {
+                                        $stmt = $db->query("
+                                            SELECT COUNT(*) as expired 
+                                            FROM user_licenses 
+                                            WHERE is_active = 1 
+                                            AND update_expires_at < NOW()
+                                        ");
+                                        $expiredCount = $stmt->fetch()['expired'];
+                                        if ($expiredCount > 0):
+                                    ?>
+                                            <span class="badge badge-danger right"><?php echo $expiredCount; ?></span>
+                                    <?php
+                                        endif;
+                                    } catch (Exception $e) {
+                                        // Ignorar error
+                                    }
+                                    ?>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/report.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Reportes</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/bulk-extend.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Extensión Masiva</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- Reseñas -->
+                <li class="nav-item has-treeview <?php echo strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-star"></i>
+                        <p>
+                            Reseñas
+                            <i class="right fas fa-angle-left"></i>
+                            <?php
+                            try {
+                                $pendingReviews = $db->query("
+                                    SELECT COUNT(*) as pending 
+                                    FROM product_reviews 
+                                    WHERE is_approved = 0
+                                ")->fetch()['pending'];
+
+                                if ($pendingReviews > 0):
+                            ?>
+                                    <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
+                            <?php
+                                endif;
+                            } catch (Exception $e) {
+                                // Ignorar error
+                            }
+                            ?>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Todas las Reseñas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/pending.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>
+                                    Pendientes
+                                    <?php if (isset($pendingReviews) && $pendingReviews > 0): ?>
+                                        <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
+                                    <?php endif; ?>
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/reported.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Reportadas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/settings.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Configuración</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- SECCIÓN: SISTEMA -->
+                <li class="nav-header">SISTEMA</li>
+
+                <!-- Actualizaciones -->
+                <li class="nav-item has-treeview <?php echo strpos($_SERVER['REQUEST_URI'], '/updates/') !== false ? 'menu-open' : ''; ?>">
+                    <a href="#" class="nav-link <?php echo strpos($_SERVER['REQUEST_URI'], '/updates/') !== false ? 'active' : ''; ?>">
+                        <i class="nav-icon fas fa-sync-alt"></i>
+                        <p>
+                            Actualizaciones
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/updates/" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/updates/notifications.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Notificaciones</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?php echo ADMIN_URL; ?>/pages/updates/settings.php" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Configuración</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
 
                 <!-- Reportes -->
                 <li class="nav-item">
@@ -118,6 +333,9 @@
                         </p>
                     </a>
                 </li>
+
+                <!-- SECCIÓN: CONTENIDO -->
+                <li class="nav-header">CONTENIDO</li>
 
                 <!-- Contenido -->
                 <li class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], '/content/') !== false ? 'menu-open' : ''; ?>">
@@ -134,7 +352,7 @@
                                 <i class="fas fa-file nav-icon"></i>
                                 <p>Páginas</p>
                             </a>
-                        </li>                        
+                        </li>
                         <li class="nav-item">
                             <a href="<?php echo ADMIN_URL; ?>/pages/content/menus.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'menus.php' ? 'active' : ''; ?>">
                                 <i class="fas fa-bars nav-icon"></i>
@@ -149,6 +367,9 @@
                         </li>
                     </ul>
                 </li>
+
+                <!-- SECCIÓN: CONFIGURACIÓN -->
+                <li class="nav-header">CONFIGURACIÓN</li>
 
                 <!-- Configuración -->
                 <li class="nav-item <?php echo strpos($_SERVER['REQUEST_URI'], '/config/') !== false ? 'menu-open' : ''; ?>">
@@ -187,209 +408,16 @@
                     </ul>
                 </li>
 
-
-
-
-
-
-
-
-
-                <!-- Gestión de Licencias -->
-<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'menu-open' : ''; ?>">
-    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
-        <i class="nav-icon fas fa-key"></i>
-        <p>
-            Licencias
-            <i class="right fas fa-angle-left"></i>
-            <?php 
-            // Mostrar badge con licencias por expirar
-            try {
-                $db = Database::getInstance()->getConnection();
-                $stmt = $db->query("
-                    SELECT COUNT(*) as expiring 
-                    FROM user_licenses 
-                    WHERE is_active = 1 
-                    AND update_expires_at BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY)
-                ");
-                $expiringCount = $stmt->fetch()['expiring'];
-                if ($expiringCount > 0):
-            ?>
-            <span class="badge badge-warning right"><?php echo $expiringCount; ?></span>
-            <?php 
-                endif;
-            } catch (Exception $e) {
-                // Ignorar error
-            }
-            ?>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Todas las Licencias</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/expired.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'expired.php') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                    Expiradas
-                    <?php 
-                    try {
-                        $stmt = $db->query("
-                            SELECT COUNT(*) as expired 
-                            FROM user_licenses 
-                            WHERE is_active = 1 
-                            AND update_expires_at < NOW()
-                        ");
-                        $expiredCount = $stmt->fetch()['expired'];
-                        if ($expiredCount > 0):
-                    ?>
-                    <span class="badge badge-danger right"><?php echo $expiredCount; ?></span>
-                    <?php 
-                        endif;
-                    } catch (Exception $e) {
-                        // Ignorar error
-                    }
-                    ?>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/report.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'report.php' && strpos($_SERVER['REQUEST_URI'], '/licenses/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Reportes</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/licenses/bulk-extend.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'bulk-extend.php') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Extensión Masiva</p>
-            </a>
-        </li>
-    </ul>
-</li>
-
-<!-- Sistema de Actualizaciones -->
-<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'menu-open' : ''; ?>">
-    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
-        <i class="nav-icon fas fa-sync-alt"></i>
-        <p>
-            Actualizaciones
-            <i class="right fas fa-angle-left"></i>
-            <span class="badge badge-info right">Nuevo</span>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/updates/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Dashboard</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/updates/notifications.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'notifications.php') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Notificaciones</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/updates/settings.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['REQUEST_URI'], '/updates/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Configuración</p>
-            </a>
-        </li>
-    </ul>
-</li>
-
-
-
-
-
-<!-- Gestión de Reseñas -->
-<li class="nav-item has-treeview <?php echo (strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'menu-open' : ''; ?>">
-    <a href="#" class="nav-link <?php echo (strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
-        <i class="nav-icon fas fa-star"></i>
-        <p>
-            Reseñas
-            <i class="right fas fa-angle-left"></i>
-            <?php 
-            // Mostrar contador de pendientes
-            try {
-                $pendingReviews = $db->query("
-                    SELECT COUNT(*) as pending 
-                    FROM product_reviews 
-                    WHERE is_approved = 0
-                ")->fetch()['pending'];
-                
-                if ($pendingReviews > 0):
-            ?>
-            <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
-            <?php 
-                endif;
-            } catch (Exception $e) {
-                // Ignorar error
-            }
-            ?>
-        </p>
-    </a>
-    <ul class="nav nav-treeview">
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'index.php' && strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Todas las Reseñas</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/pending.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'pending.php') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>
-                    Pendientes
-                    <?php if (isset($pendingReviews) && $pendingReviews > 0): ?>
-                    <span class="badge badge-warning right"><?php echo $pendingReviews; ?></span>
-                    <?php endif; ?>
-                </p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/reported.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'reported.php') ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Reportadas</p>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="<?php echo ADMIN_URL; ?>/pages/reviews/settings.php" class="nav-link <?php echo (basename($_SERVER['PHP_SELF']) == 'settings.php' && strpos($_SERVER['REQUEST_URI'], '/reviews/') !== false) ? 'active' : ''; ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Configuración</p>
-            </a>
-        </li>
-    </ul>
-</li>
-
-
-
-
-
-
-
-                <!-- Separador -->
-                <li class="nav-header">FRONTEND</li>
+                <!-- SECCIÓN: HERRAMIENTAS -->
+                <li class="nav-header">HERRAMIENTAS</li>
 
                 <!-- Ver Sitio -->
                 <li class="nav-item">
                     <a href="<?php echo SITE_URL; ?>" class="nav-link" target="_blank">
                         <i class="nav-icon fas fa-external-link-alt"></i>
-                        <p>
-                            Ver Sitio Web
-                            <span class="badge badge-success right">Nuevo</span>
-                        </p>
+                        <p>Ver Sitio Web</p>
                     </a>
                 </li>
-
-                <!-- Separador -->
-                <li class="nav-header">HERRAMIENTAS</li>
 
                 <!-- Limpiar Cache -->
                 <li class="nav-item">
@@ -407,8 +435,8 @@
                     </a>
                 </li>
 
-                <!-- Separador -->
-                <li class="nav-header">PROGRESO</li>
+                <!-- SECCIÓN: DESARROLLO -->
+                <li class="nav-header">DESARROLLO</li>
 
                 <!-- Progreso del desarrollo -->
                 <li class="nav-item">
@@ -416,7 +444,7 @@
                         <i class="nav-icon fas fa-tasks"></i>
                         <p>
                             Progreso del Proyecto
-                            <span class="badge badge-warning right">47%</span>
+                            <span class="badge badge-success right">83%</span>
                         </p>
                     </a>
                 </li>
@@ -430,20 +458,17 @@
 <script>
     function clearCache() {
         if (confirm('¿Limpiar cache del sistema?')) {
-            // Aquí implementaremos la limpieza de cache
             toastr.info('Funcionalidad próximamente disponible');
         }
     }
 
     function generateBackup() {
         if (confirm('¿Generar backup de la base de datos?')) {
-            // Aquí implementaremos el backup
             toastr.info('Funcionalidad próximamente disponible');
         }
     }
 
     function showProgress() {
-        // Modal con progreso del desarrollo
         const progressModal = `
         <div class="modal fade" id="progressModal" tabindex="-1">
             <div class="modal-dialog modal-lg">
@@ -481,17 +506,17 @@
                         
                         <div class="progress-group">
                             <span class="progress-text">Fase 4: Sistema de Pagos</span>
-                            <span class="float-right"><b>0%</b></span>
+                            <span class="float-right"><b>100%</b></span>
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-secondary" style="width: 0%"></div>
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
                             </div>
                         </div>
                         
                         <div class="progress-group">
                             <span class="progress-text">Fase 5: Funcionalidades Avanzadas</span>
-                            <span class="float-right"><b>0%</b></span>
+                            <span class="float-right"><b>100%</b></span>
                             <div class="progress progress-sm">
-                                <div class="progress-bar bg-secondary" style="width: 0%"></div>
+                                <div class="progress-bar bg-success" style="width: 100%"></div>
                             </div>
                         </div>
                         
@@ -506,15 +531,24 @@
                         <hr>
                         <div class="progress-group">
                             <span class="progress-text"><strong>Progreso Total</strong></span>
-                            <span class="float-right"><b>62%</b></span>
+                            <span class="float-right"><b>83%</b></span>
                             <div class="progress">
-                                <div class="progress-bar bg-primary progress-bar-striped" style="width: 62%"></div>
+                                <div class="progress-bar bg-primary progress-bar-striped" style="width: 83%"></div>
                             </div>
                         </div>
                         
-                        <div class="alert alert-info mt-3">
+                        <div class="alert alert-success mt-3">
+                            <h5><i class="icon fas fa-check"></i> Completado:</h5>
+                            <ul>
+                                <li>✅ Sistema de Actualizaciones (Fase 5.1)</li>
+                                <li>✅ Sistema de Comentarios/Reseñas (Fase 5.2)</li>
+                                <li>✅ Sistema de Donaciones (Fase 5.3)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-info">
                             <h5><i class="icon fas fa-info"></i> Próximo:</h5>
-                            Fase 4 - Sistema de Pagos: Implementación de pasarelas de pago, gestión de transacciones y seguridad.
+                            Fase 6 - Optimización y Lanzamiento: Testing completo, SEO, rendimiento y documentación.
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -525,13 +559,8 @@
         </div>
     `;
 
-        // Remover modal anterior si existe
         $('#progressModal').remove();
-
-        // Agregar modal al body
         $('body').append(progressModal);
-
-        // Mostrar modal
         $('#progressModal').modal('show');
     }
 </script>
